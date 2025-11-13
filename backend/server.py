@@ -12,7 +12,7 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # Import routes
-from routes import auth, audits, plans, admin, chat, api_tokens, reports, payments
+from routes import auth, audits, plans, admin, chat, api_tokens, reports, payments, themes
 
 # Configure logging
 logging.basicConfig(
