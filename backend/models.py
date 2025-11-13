@@ -64,6 +64,7 @@ class Plan(Base):
     description = Column(Text)
     price = Column(Float, nullable=False)  # Monthly price in USD
     stripe_price_id = Column(String)  # Stripe Price ID
+    razorpay_plan_id = Column(String)  # Razorpay Plan ID
     max_audits_per_month = Column(Integer, nullable=False)
     max_pages_per_audit = Column(Integer, nullable=False)
     features = Column(JSON)  # List of feature descriptions
