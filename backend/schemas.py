@@ -89,6 +89,7 @@ class PlanResponse(PlanBase):
     
     id: str
     stripe_price_id: Optional[str] = None
+    razorpay_plan_id: Optional[str] = None
     is_active: bool
     created_at: datetime
 
