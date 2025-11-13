@@ -1619,7 +1619,7 @@ class OnPageSEOChecks:
     
     @staticmethod
     def check_missing_h2(pages: List[CrawledPage]) -> Dict[str, Any]:
-        missing_h2 = sum(1 for p in pages if not p.heading_tags or not any('h2' in str(h).lower() for h in p.heading_tags))
+        missing_h2 = sum(1 for p in pages if not p.h2_tags or len(p.h2_tags) == 0)
         percentage = (missing_h2 / len(pages) * 100) if pages else 0
         status = "warning" if percentage > 30 else ("pass" if percentage == 0 else "info")
         return {
