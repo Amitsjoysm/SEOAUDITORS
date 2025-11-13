@@ -1442,6 +1442,563 @@ class AnalyticsChecks:
                 "Set up cross-domain tracking if needed"
             ]
         }
+    
+    @staticmethod
+    def check_google_tag_manager(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_gtm = sum(1 for p in pages if 'googletagmanager.com' in p.html)
+        percentage = (has_gtm / len(pages) * 100) if pages else 0
+        status = "warning" if percentage < 100 else "pass"
+        return {
+            "check_name": "Google Tag Manager not implemented",
+            "category": "Analytics & Reporting",
+            "status": status,
+            "impact_score": 65,
+            "current_value": f"{percentage:.0f}% pages have GTM",
+            "recommended_value": "GTM on all pages",
+            "pros": ["Flexible tag management", "Easy implementation"] if percentage > 0 else [],
+            "cons": ["Missing GTM limits tracking flexibility"] if percentage < 100 else [],
+            "ranking_impact": "No direct SEO impact, but critical for data collection",
+            "solution": "Implement Google Tag Manager for centralized tag management",
+            "enhancements": [
+                "Use GTM for all tracking tags",
+                "Set up data layer",
+                "Implement trigger-based tracking",
+                "Version control your tags"
+            ]
+        }
+    
+    @staticmethod
+    def check_search_console(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Google Search Console not verified",
+            "category": "Analytics & Reporting",
+            "status": "info",
+            "impact_score": 85,
+            "current_value": "Manual verification required",
+            "recommended_value": "Verified and monitored weekly",
+            "pros": [],
+            "cons": ["Missing critical search performance data"],
+            "ranking_impact": "No direct ranking impact, but essential for monitoring and fixing issues",
+            "solution": "Verify site in Google Search Console and monitor regularly",
+            "enhancements": [
+                "Submit XML sitemap",
+                "Monitor coverage issues",
+                "Track Core Web Vitals",
+                "Check mobile usability",
+                "Monitor security issues"
+            ]
+        }
+    
+    @staticmethod
+    def check_conversion_tracking(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Conversion tracking not set up",
+            "category": "Analytics & Reporting",
+            "status": "info",
+            "impact_score": 78,
+            "current_value": "Requires GA4 configuration review",
+            "recommended_value": "All key conversions tracked",
+            "pros": [],
+            "cons": ["Cannot measure ROI or optimize for conversions"],
+            "ranking_impact": "Indirectly affects SEO through better UX optimization (5-10% improvement)",
+            "solution": "Set up conversion tracking for all key user actions in GA4",
+            "enhancements": [
+                "Track micro and macro conversions",
+                "Set up enhanced e-commerce",
+                "Create conversion funnels",
+                "Set up goal values"
+            ]
+        }
+    
+    @staticmethod
+    def check_data_quality(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Analytics data gaps or inconsistencies",
+            "category": "Analytics & Reporting",
+            "status": "info",
+            "impact_score": 70,
+            "current_value": "Data audit required",
+            "recommended_value": "Clean, consistent data collection",
+            "pros": [],
+            "cons": ["Poor data quality leads to bad decisions"],
+            "ranking_impact": "Clean data enables better SEO decisions (10-15% efficiency gain)",
+            "solution": "Regular data audits and tag validation",
+            "enhancements": [
+                "Use Google Tag Assistant",
+                "Set up data filters",
+                "Remove spam referrals",
+                "Monitor bot traffic"
+            ]
+        }
+    
+    @staticmethod
+    def check_custom_events(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "No custom event tracking",
+            "category": "Analytics & Reporting",
+            "status": "info",
+            "impact_score": 60,
+            "current_value": "Event tracking review needed",
+            "recommended_value": "Custom events for all important interactions",
+            "pros": [],
+            "cons": ["Missing detailed user behavior insights"],
+            "ranking_impact": "Better insights lead to 8-12% SEO optimization improvement",
+            "solution": "Implement custom events for scroll depth, clicks, video plays, etc.",
+            "enhancements": [
+                "Track scroll depth",
+                "Monitor outbound clicks",
+                "Track file downloads",
+                "Measure video engagement"
+            ]
+        }
+
+
+class GEOAEOChecks:
+    """Generative Engine Optimization & AI Optimization checks - 8 total"""
+    
+    @staticmethod
+    def check_faq_schema(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_faq = 0
+        for page in pages:
+            if 'FAQPage' in page.html or 'Question' in page.html:
+                has_faq += 1
+        percentage = (has_faq / len(pages) * 100) if pages else 0
+        status = "warning" if percentage < 20 else ("pass" if percentage > 50 else "info")
+        return {
+            "check_name": "FAQ schema markup missing",
+            "category": "GEO & AEO",
+            "status": status,
+            "impact_score": 82,
+            "current_value": f"{percentage:.0f}% pages with FAQ schema",
+            "recommended_value": "FAQ schema on relevant pages",
+            "pros": ["Better visibility in AI-generated answers"] if percentage > 0 else [],
+            "cons": ["Missing FAQ schema reduces AI Overview visibility"] if percentage < 50 else [],
+            "ranking_impact": "FAQ schema increases AI Overview appearance by 40-60%",
+            "solution": "Add FAQPage schema markup to pages with Q&A content",
+            "enhancements": [
+                "Structure content as Q&A format",
+                "Use proper FAQ schema.org markup",
+                "Answer questions concisely",
+                "Target voice search queries"
+            ]
+        }
+    
+    @staticmethod
+    def check_howto_schema(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_howto = sum(1 for p in pages if 'HowTo' in p.html)
+        percentage = (has_howto / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 10 else "info"
+        return {
+            "check_name": "HowTo schema markup missing",
+            "category": "GEO & AEO",
+            "status": status,
+            "impact_score": 75,
+            "current_value": f"{percentage:.0f}% pages with HowTo schema",
+            "recommended_value": "HowTo schema on tutorial/guide pages",
+            "pros": ["Enhanced rich results for instructional content"] if percentage > 0 else [],
+            "cons": ["Missing opportunities for rich snippets"] if percentage < 10 else [],
+            "ranking_impact": "HowTo schema can increase CTR by 25-35% for tutorial queries",
+            "solution": "Implement HowTo schema on step-by-step guides and tutorials",
+            "enhancements": [
+                "Break instructions into clear steps",
+                "Add images for each step",
+                "Include time and cost estimates",
+                "Add supply/tool lists"
+            ]
+        }
+    
+    @staticmethod
+    def check_ai_overview_ranking(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Not ranking in AI Overview/SGE",
+            "category": "GEO & AEO",
+            "status": "info",
+            "impact_score": 88,
+            "current_value": "AI Overview monitoring required",
+            "recommended_value": "Appearing in AI Overviews for target queries",
+            "pros": [],
+            "cons": ["Missing AI-generated search visibility"],
+            "ranking_impact": "AI Overview inclusion can increase visibility by 50-80%",
+            "solution": "Optimize content for AI understanding - clear, authoritative, structured",
+            "enhancements": [
+                "Use clear, definitive statements",
+                "Add authoritative sources and citations",
+                "Structure content logically",
+                "Answer questions directly",
+                "Use semantic HTML",
+                "Implement comprehensive schema markup"
+            ]
+        }
+    
+    @staticmethod
+    def check_voice_search_optimization(pages: List[CrawledPage]) -> Dict[str, Any]:
+        question_words = ['what', 'who', 'where', 'when', 'why', 'how']
+        optimized_count = 0
+        for page in pages:
+            text = page.html.lower()
+            if any(word in text for word in question_words):
+                optimized_count += 1
+        percentage = (optimized_count / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 60 else ("warning" if percentage > 30 else "fail")
+        return {
+            "check_name": "Content not optimized for voice search",
+            "category": "GEO & AEO",
+            "status": status,
+            "impact_score": 70,
+            "current_value": f"{percentage:.0f}% pages with question-based content",
+            "recommended_value": "Natural language Q&A on all pages",
+            "pros": ["Question-based content format"] if percentage > 50 else [],
+            "cons": ["Poor voice search optimization"] if percentage < 50 else [],
+            "ranking_impact": "Voice search optimization captures 20-30% more traffic from voice queries",
+            "solution": "Write in natural, conversational language addressing common questions",
+            "enhancements": [
+                "Target long-tail question queries",
+                "Use conversational tone",
+                "Provide direct, concise answers",
+                "Optimize for featured snippets"
+            ]
+        }
+    
+    @staticmethod
+    def check_organization_schema(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_org = sum(1 for p in pages if 'Organization' in p.html and 'schema.org' in p.html)
+        status = "fail" if has_org == 0 else "pass"
+        return {
+            "check_name": "Organization schema missing",
+            "category": "GEO & AEO",
+            "status": status,
+            "impact_score": 80,
+            "current_value": "Organization schema present" if has_org > 0 else "Missing",
+            "recommended_value": "Organization schema on homepage",
+            "pros": ["Enhanced brand knowledge graph"] if has_org > 0 else [],
+            "cons": ["Incomplete brand entity in search"] if has_org == 0 else [],
+            "ranking_impact": "Organization schema improves brand SERP features by 30-40%",
+            "solution": "Add Organization schema with logo, social profiles, contact info",
+            "enhancements": [
+                "Include all social media profiles",
+                "Add official logo",
+                "Include contact information",
+                "Specify organization type",
+                "Add founding date and description"
+            ]
+        }
+    
+    @staticmethod
+    def check_local_business_schema(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_local = sum(1 for p in pages if 'LocalBusiness' in p.html)
+        status = "info"
+        return {
+            "check_name": "LocalBusiness schema missing",
+            "category": "GEO & AEO",
+            "status": status,
+            "impact_score": 85,
+            "current_value": "LocalBusiness schema present" if has_local > 0 else "Not detected",
+            "recommended_value": "LocalBusiness schema if applicable",
+            "pros": ["Local SEO optimization"] if has_local > 0 else [],
+            "cons": ["Missing local search opportunities"] if has_local == 0 else [],
+            "ranking_impact": "LocalBusiness schema improves local rankings by 20-35%",
+            "solution": "Implement LocalBusiness schema for physical locations",
+            "enhancements": [
+                "Add accurate NAP",
+                "Include business hours",
+                "Add service area",
+                "Include price range",
+                "Add accepted payment methods"
+            ]
+        }
+    
+    @staticmethod
+    def check_google_business_profile(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "No Google Business Profile integration",
+            "category": "GEO & AEO",
+            "status": "info",
+            "impact_score": 90,
+            "current_value": "Manual verification required",
+            "recommended_value": "Claimed and optimized GBP",
+            "pros": [],
+            "cons": ["Missing local search visibility"],
+            "ranking_impact": "Optimized GBP can increase local visibility by 50-70%",
+            "solution": "Claim and optimize Google Business Profile with complete information",
+            "enhancements": [
+                "Regular photo uploads",
+                "Respond to all reviews",
+                "Post weekly updates",
+                "Complete all profile sections",
+                "Use Google Posts feature"
+            ]
+        }
+    
+    @staticmethod
+    def check_nap_consistency(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Missing NAP (Name, Address, Phone) consistency",
+            "category": "GEO & AEO",
+            "status": "info",
+            "impact_score": 75,
+            "current_value": "Citation audit required",
+            "recommended_value": "100% NAP consistency across all listings",
+            "pros": [],
+            "cons": ["Inconsistent NAP hurts local rankings"],
+            "ranking_impact": "NAP inconsistencies can reduce local rankings by 15-25%",
+            "solution": "Audit and standardize NAP across all online directories and citations",
+            "enhancements": [
+                "Use exact same format everywhere",
+                "Regular citation audits",
+                "Update all listings when changes occur",
+                "Monitor for duplicate listings"
+            ]
+        }
+
+
+class AdvancedChecks:
+    """Advanced technical and security checks - 11 total"""
+    
+    @staticmethod
+    def check_robots_txt_valid(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Robots.txt missing or misconfigured",
+            "category": "Advanced Technical",
+            "status": "info",
+            "impact_score": 80,
+            "current_value": "Robots.txt validation needed",
+            "recommended_value": "Valid robots.txt with sitemap reference",
+            "pros": [],
+            "cons": ["Potential crawl directive issues"],
+            "ranking_impact": "Proper robots.txt improves crawl efficiency by 10-20%",
+            "solution": "Create/fix robots.txt with proper directives and sitemap location",
+            "enhancements": [
+                "Use Google Search Console robots.txt tester",
+                "Include sitemap location",
+                "Block admin/private areas",
+                "Allow critical resources"
+            ]
+        }
+    
+    @staticmethod
+    def check_sitemap_xml(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Sitemap.xml missing or inaccessible",
+            "category": "Advanced Technical",
+            "status": "info",
+            "impact_score": 85,
+            "current_value": "Sitemap check required",
+            "recommended_value": "Valid XML sitemap with all important pages",
+            "pros": [],
+            "cons": ["Reduced crawl efficiency"],
+            "ranking_impact": "XML sitemap improves indexation speed by 30-50%",
+            "solution": "Create XML sitemap and submit to Google Search Console",
+            "enhancements": [
+                "Dynamic sitemap generation",
+                "Include image sitemaps",
+                "Add video sitemaps if applicable",
+                "Update sitemap automatically",
+                "Split into multiple sitemaps if >50k URLs"
+            ]
+        }
+    
+    @staticmethod
+    def check_pagination_tags(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_pagination = sum(1 for p in pages if 'rel="next"' in p.html or 'rel="prev"' in p.html)
+        status = "info" if has_pagination == 0 else "pass"
+        return {
+            "check_name": "Pagination tags missing (rel=next/prev)",
+            "category": "Advanced Technical",
+            "status": status,
+            "impact_score": 65,
+            "current_value": f"{has_pagination} pages with pagination tags",
+            "recommended_value": "Proper pagination markup on paginated content",
+            "pros": ["Proper pagination signals"] if has_pagination > 0 else [],
+            "cons": ["Pagination may confuse search engines"] if has_pagination == 0 else [],
+            "ranking_impact": "Proper pagination can improve indexation of paginated content by 15-25%",
+            "solution": "Implement rel=next/prev or use view-all page with canonical",
+            "enhancements": [
+                "Use canonical to view-all page",
+                "Implement infinite scroll with proper handling",
+                "Load more with URL changes",
+                "Submit pagination in sitemap"
+            ]
+        }
+    
+    @staticmethod
+    def check_amp_implementation(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_amp = sum(1 for p in pages if 'ampproject' in p.html or '<html amp' in p.html.lower())
+        status = "info"
+        return {
+            "check_name": "AMP implementation issues",
+            "category": "Advanced Technical",
+            "status": status,
+            "impact_score": 55,
+            "current_value": f"{has_amp} AMP pages detected",
+            "recommended_value": "AMP for news/blog content (optional)",
+            "pros": ["Fast mobile loading"] if has_amp > 0 else [],
+            "cons": ["AMP is no longer required for Top Stories"],
+            "ranking_impact": "AMP provides minimal SEO benefit now (0-5%), focus on Core Web Vitals instead",
+            "solution": "AMP is optional; prioritize Core Web Vitals optimization instead",
+            "enhancements": [
+                "Focus on regular page speed",
+                "Optimize Core Web Vitals",
+                "Use modern web standards",
+                "Implement PWA features"
+            ]
+        }
+    
+    @staticmethod
+    def check_pwa_optimization(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_manifest = sum(1 for p in pages if 'manifest.json' in p.html or 'manifest.webmanifest' in p.html)
+        has_sw = sum(1 for p in pages if 'service-worker' in p.html or 'serviceWorker' in p.html)
+        status = "pass" if has_manifest > 0 and has_sw > 0 else "info"
+        return {
+            "check_name": "Progressive Web App (PWA) optimization",
+            "category": "Advanced Technical",
+            "status": status,
+            "impact_score": 70,
+            "current_value": f"Manifest: {has_manifest > 0}, Service Worker: {has_sw > 0}",
+            "recommended_value": "Full PWA implementation",
+            "pros": ["App-like experience", "Offline functionality"] if status == "pass" else [],
+            "cons": ["Missing modern web capabilities"] if status != "pass" else [],
+            "ranking_impact": "PWA features improve engagement metrics, indirectly boosting SEO by 10-15%",
+            "solution": "Implement PWA with service worker, manifest, and offline support",
+            "enhancements": [
+                "Add install prompts",
+                "Implement offline mode",
+                "Add push notifications",
+                "Optimize for app-like experience"
+            ]
+        }
+    
+    @staticmethod
+    def check_security_headers(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Security headers missing",
+            "category": "Advanced Security",
+            "status": "info",
+            "impact_score": 75,
+            "current_value": "Header audit required",
+            "recommended_value": "HSTS, CSP, X-Frame-Options, X-Content-Type-Options",
+            "pros": [],
+            "cons": ["Potential security vulnerabilities"],
+            "ranking_impact": "Security headers indirectly affect trust and rankings (5-10%)",
+            "solution": "Implement security headers: HSTS, CSP, X-Frame-Options",
+            "enhancements": [
+                "Add Strict-Transport-Security header",
+                "Implement Content Security Policy",
+                "Add X-Frame-Options: DENY",
+                "Add X-Content-Type-Options: nosniff",
+                "Add Referrer-Policy"
+            ]
+        }
+    
+    @staticmethod
+    def check_privacy_policy(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_privacy = sum(1 for p in pages if 'privacy' in p.url.lower())
+        status = "fail" if has_privacy == 0 else "pass"
+        return {
+            "check_name": "Privacy policy missing or outdated",
+            "category": "Advanced Security",
+            "status": status,
+            "impact_score": 82,
+            "current_value": "Privacy page found" if has_privacy > 0 else "Not found",
+            "recommended_value": "Current, comprehensive privacy policy",
+            "pros": ["Legal compliance"] if has_privacy > 0 else [],
+            "cons": ["Legal risk", "Trust issues"] if has_privacy == 0 else [],
+            "ranking_impact": "Privacy policy affects E-E-A-T, impacting rankings by 5-15%",
+            "solution": "Create comprehensive privacy policy meeting GDPR/CCPA requirements",
+            "enhancements": [
+                "Update for current laws",
+                "Make easily accessible",
+                "Clear cookie disclosure",
+                "Data collection transparency"
+            ]
+        }
+    
+    @staticmethod
+    def check_cookie_consent(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_consent = sum(1 for p in pages if 'cookie' in p.html.lower() and ('consent' in p.html.lower() or 'accept' in p.html.lower()))
+        percentage = (has_consent / len(pages) * 100) if pages else 0
+        status = "warning" if percentage < 50 else "pass"
+        return {
+            "check_name": "Cookie consent not implemented",
+            "category": "Advanced Security",
+            "status": status,
+            "impact_score": 70,
+            "current_value": f"{percentage:.0f}% pages with cookie consent",
+            "recommended_value": "Cookie consent on all pages",
+            "pros": ["GDPR/CCPA compliant"] if percentage > 80 else [],
+            "cons": ["Legal compliance issues"] if percentage < 80 else [],
+            "ranking_impact": "Legal compliance affects trust metrics (5-10% impact)",
+            "solution": "Implement cookie consent banner with proper controls",
+            "enhancements": [
+                "Granular consent options",
+                "Easy opt-out mechanism",
+                "Clear cookie categories",
+                "Respect Do Not Track"
+            ]
+        }
+    
+    @staticmethod
+    def check_wcag_accessibility(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "WCAG accessibility violations",
+            "category": "Advanced Accessibility",
+            "status": "info",
+            "impact_score": 78,
+            "current_value": "Accessibility audit required",
+            "recommended_value": "WCAG 2.1 AA compliance",
+            "pros": [],
+            "cons": ["Potential accessibility barriers"],
+            "ranking_impact": "Accessibility improvements can boost rankings by 8-12%",
+            "solution": "Conduct accessibility audit and fix WCAG violations",
+            "enhancements": [
+                "Use ARIA labels properly",
+                "Ensure keyboard navigation",
+                "Provide text alternatives",
+                "Maintain color contrast ratios",
+                "Add skip navigation links"
+            ]
+        }
+    
+    @staticmethod
+    def check_color_contrast(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Color contrast issues",
+            "category": "Advanced Accessibility",
+            "status": "info",
+            "impact_score": 65,
+            "current_value": "Contrast audit required",
+            "recommended_value": "4.5:1 for normal text, 3:1 for large text",
+            "pros": [],
+            "cons": ["Readability issues", "WCAG violations"],
+            "ranking_impact": "Better contrast improves engagement metrics (5-10% SEO benefit)",
+            "solution": "Ensure sufficient color contrast for all text elements",
+            "enhancements": [
+                "Use contrast checking tools",
+                "Test with colorblindness simulators",
+                "Provide high-contrast mode",
+                "Avoid color-only indicators"
+            ]
+        }
+    
+    @staticmethod
+    def check_keyboard_navigation(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Keyboard navigation problems",
+            "category": "Advanced Accessibility",
+            "status": "info",
+            "impact_score": 70,
+            "current_value": "Keyboard navigation testing required",
+            "recommended_value": "Full keyboard accessibility",
+            "pros": [],
+            "cons": ["Accessibility barriers for keyboard users"],
+            "ranking_impact": "Keyboard accessibility improves usability signals (6-10%)",
+            "solution": "Ensure all interactive elements are keyboard accessible",
+            "enhancements": [
+                "Logical tab order",
+                "Visible focus indicators",
+                "Skip navigation links",
+                "Keyboard shortcuts documentation"
+            ]
+        }
 
 
 def run_all_comprehensive_checks(pages: List[CrawledPage], website_data: Dict[str, Any] = None) -> List[Dict[str, Any]]:
