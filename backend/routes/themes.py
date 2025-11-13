@@ -52,7 +52,7 @@ class ThemeResponse(BaseModel):
     text_secondary: str
     border_radius: str
     font_family: str
-    custom_css: str = None
+    custom_css: Optional[str] = None
     
     class Config:
         from_attributes = True
