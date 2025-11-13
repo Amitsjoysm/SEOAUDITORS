@@ -153,7 +153,9 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
                 
                 # Solution
                 if result.solution:
-                    story.append(Paragraph(f"<b>Solution:</b> {result.solution[:300]}...", styles['BodyText']))
+                    # Escape HTML special characters in solution text
+                    safe_solution = result.solution[:300].replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
+                    story.append(Paragraph(f"<b>Solution:</b> {safe_solution}...", styles['BodyText']))
                 
                 story.append(Spacer(1, 0.15*inch))
             
