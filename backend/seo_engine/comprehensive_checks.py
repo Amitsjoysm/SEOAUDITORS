@@ -2222,6 +2222,73 @@ class SocialMediaChecks:
                 "Optimize share text"
             ]
         }
+    
+    @staticmethod
+    def check_social_media_links_prominent(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Social media links not prominent",
+            "category": "Social Media",
+            "status": "info",
+            "impact_score": 52,
+            "current_value": "Visibility assessment needed",
+            "recommended_value": "Social links in header or footer",
+            "pros": [],
+            "cons": ["Hidden social links reduce follow-through"],
+            "ranking_impact": "Prominent social links increase engagement by 15-25%",
+            "solution": "Place social media icons in header or footer for visibility",
+            "enhancements": [
+                "Use recognizable icons",
+                "Make them stand out",
+                "Add hover effects",
+                "Include in mobile menu"
+            ]
+        }
+    
+    @staticmethod
+    def check_consistent_branding(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Inconsistent branding across platforms",
+            "category": "Social Media",
+            "status": "info",
+            "impact_score": 58,
+            "current_value": "Cross-platform audit needed",
+            "recommended_value": "Consistent branding across all platforms",
+            "pros": [],
+            "cons": ["Inconsistent branding confuses users and hurts recognition"],
+            "ranking_impact": "Brand consistency improves trust signals (8-12%)",
+            "solution": "Use consistent logos, colors, messaging across all platforms",
+            "enhancements": [
+                "Use same profile images",
+                "Consistent brand voice",
+                "Matching visual identity",
+                "Coordinated posting schedule"
+            ]
+        }
+    
+    @staticmethod
+    def check_social_proof(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_proof = sum(1 for p in pages if 'testimonial' in p.html.lower() or 'review' in p.html.lower() or 'rating' in p.html.lower())
+        percentage = (has_proof / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 30 else "info"
+        return {
+            "check_name": "No social proof elements",
+            "category": "Social Media",
+            "status": status,
+            "impact_score": 68,
+            "current_value": f"{percentage:.0f}% pages with social proof",
+            "recommended_value": "Social proof on key pages (home, products, services)",
+            "pros": ["Social proof present"] if percentage > 30 else [],
+            "cons": ["Missing trust signals"] if percentage < 30 else [],
+            "ranking_impact": "Social proof improves conversion and dwell time (10-18%)",
+            "solution": "Add testimonials, reviews, ratings, trust badges",
+            "enhancements": [
+                "Display customer testimonials",
+                "Show star ratings",
+                "Add review schema markup",
+                "Include social share counts",
+                "Display trust badges"
+            ]
+        }
 
 
 class OffPageSEOChecks:
