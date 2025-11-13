@@ -309,7 +309,7 @@ const AuditDetail = () => {
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-white mb-4">Detailed Check Results</h2>
             {Object.entries(groupedResults).map(([category, results]) => (
-              <Card key={category} className="bg-slate-900/80 border-white/10 backdrop-blur-sm">
+              <Card key={category} className="glass-card card-hover">
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     {getCategoryIcon(category)}
