@@ -141,9 +141,11 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
                 
                 # Current vs Recommended
                 if result.current_value:
-                    story.append(Paragraph(f"<b>Current:</b> {result.current_value}", styles['BodyText']))
+                    safe_current = str(result.current_value).replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
+                    story.append(Paragraph(f"<b>Current:</b> {safe_current}", styles['BodyText']))
                 if result.recommended_value:
-                    story.append(Paragraph(f"<b>Recommended:</b> {result.recommended_value}", styles['BodyText']))
+                    safe_recommended = str(result.recommended_value).replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
+                    story.append(Paragraph(f"<b>Recommended:</b> {safe_recommended}", styles['BodyText']))
                 
                 # Cons (issues)
                 if result.cons:
