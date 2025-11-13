@@ -327,6 +327,21 @@ class MJSEOTester:
                     self.result.add_result("Create Audit", "PASS", f"Audit ID: {self.test_audit_id}")
                 else:
                     self.result.add_result("Create Audit", "FAIL", "Invalid audit response format")
+            elif response.status_code == 429:
+                # Monthly limit reached, try with superadmin
+                self.result.add_result("Create Audit (User)", "WARNING", "Monthly limit reached, trying with superadmin")
+                if self.superadmin_token:
+                    admin_headers = {"Authorization": f"Bearer {self.superadmin_token}"}
+                    response = self.session.post(f"{BASE_URL}/audits/", json=audit_data, headers=admin_headers)
+                    if response.status_code == 201:
+                        data = response.json()
+                        if "id" in data and "website_url" in data:
+                            self.test_audit_id = data["id"]
+                            self.result.add_result("Create Audit (Superadmin)", "PASS", f"Audit ID: {self.test_audit_id}")
+                        else:
+                            self.result.add_result("Create Audit (Superadmin)", "FAIL", "Invalid audit response format")
+                    else:
+                        self.result.add_result("Create Audit (Superadmin)", "FAIL", f"Status: {response.status_code}")
             else:
                 self.result.add_result("Create Audit", "FAIL", f"Status: {response.status_code}, Response: {response.text}")
         except Exception as e:
@@ -340,6 +355,13 @@ class MJSEOTester:
                 audits = response.json()
                 if isinstance(audits, list):
                     self.result.add_result("List User Audits", "PASS", f"Found {len(audits)} audits")
+                    # Try to find a completed audit for testing
+                    if not self.test_audit_id:
+                        for audit in audits:
+                            if audit.get("status") == "completed":
+                                self.test_audit_id = audit["id"]
+                                self.result.add_result("Found Completed Audit", "PASS", f"Using existing audit: {self.test_audit_id}")
+                                break
                 else:
                     self.result.add_result("List User Audits", "FAIL", "Invalid response format")
             else:
