@@ -111,9 +111,17 @@ const AuditDetail = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+      toast({
+        title: "Success!",
+        description: "PDF report downloaded successfully.",
+      });
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      alert('Failed to download PDF report. Please try again.');
+      toast({
+        title: "Download Failed",
+        description: error.response?.data?.detail || "Failed to download PDF report. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setDownloadingPdf(false);
     }
@@ -133,9 +141,17 @@ const AuditDetail = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+      toast({
+        title: "Success!",
+        description: "DOCX report downloaded successfully.",
+      });
     } catch (error) {
       console.error('Error downloading DOCX:', error);
-      alert('Failed to download DOCX report. Please try again.');
+      toast({
+        title: "Download Failed",
+        description: error.response?.data?.detail || "Failed to download DOCX report. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setDownloadingDocx(false);
     }
