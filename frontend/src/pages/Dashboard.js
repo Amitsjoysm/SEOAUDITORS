@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { BarChart3, LogOut, Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { BarChart3, LogOut, Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, Loader2, Settings, Key, Shield, CreditCard } from 'lucide-react';
 import { format } from 'date-fns';
 
 const Dashboard = () => {
