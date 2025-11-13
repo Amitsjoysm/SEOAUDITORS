@@ -5,20 +5,18 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 
 load_dotenv()
 
 # Database URL from environment
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://mjseo_user:mjseo_secure_pass_2024@localhost:5432/mjseo_db")
-ASYNC_DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./mjseo.db")
 
 # Create async engine
 engine = create_async_engine(
-    ASYNC_DATABASE_URL,
+    DATABASE_URL,
     echo=False,
-    pool_pre_ping=True,
-    pool_size=10,
-    max_overflow=20
+    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
 )
 
 # Create async session factory
