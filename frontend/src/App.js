@@ -94,6 +94,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <AppRoutes />
+          <Toaster />
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
