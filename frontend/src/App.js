@@ -34,6 +34,7 @@ function AppRoutes() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/plans" element={<Plans />} />
       <Route
         path="/dashboard"
         element={
@@ -43,10 +44,42 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/admin"
+        element={
+          <PrivateRoute>
+            <AdminDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/audit/:id"
         element={
           <PrivateRoute>
             <AuditDetail />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/chat/:auditId"
+        element={
+          <PrivateRoute>
+            <Chat />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/api-tokens"
+        element={
+          <PrivateRoute>
+            <APITokens />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <Settings />
           </PrivateRoute>
         }
       />
