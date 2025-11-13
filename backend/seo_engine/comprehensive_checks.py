@@ -3105,7 +3105,7 @@ def run_all_comprehensive_checks(pages: List[CrawledPage], website_data: Dict[st
     
     results = []
     
-    # Technical SEO Checks (15 checks)
+    # Technical SEO Checks (28 checks)
     tech = TechnicalSEOChecks()
     results.append(tech.check_meta_robots(pages))
     results.append(tech.check_og_tags(pages))
@@ -3122,8 +3122,22 @@ def run_all_comprehensive_checks(pages: List[CrawledPage], website_data: Dict[st
     results.append(tech.check_redirects(pages))
     results.append(tech.check_url_structure(pages))
     results.append(tech.check_hreflang(pages))
+    # Additional technical checks
+    results.append(tech.check_mixed_content(pages))
+    results.append(tech.check_ssl_certificate(pages))
+    results.append(tech.check_multiple_canonicals(pages))
+    results.append(tech.check_canonical_pointing_nonindexable(pages))
+    results.append(tech.check_invalid_schema(pages))
+    results.append(tech.check_url_length(pages))
+    results.append(tech.check_url_case_underscores(pages))
+    results.append(tech.check_404_errors(pages))
+    results.append(tech.check_redirect_loops(pages))
+    results.append(tech.check_excessive_redirects(pages))
+    results.append(tech.check_microdata_issues(pages))
+    results.append(tech.check_html_size(pages))
+    results.append(tech.check_cdn_implementation(pages))
     
-    # Performance & Core Web Vitals Checks (13 checks)
+    # Performance & Core Web Vitals Checks (20 checks)
     perf = PerformanceChecks()
     results.append(perf.check_load_time(pages))
     results.append(perf.check_lcp(pages))
@@ -3138,6 +3152,13 @@ def run_all_comprehensive_checks(pages: List[CrawledPage], website_data: Dict[st
     results.append(perf.check_http2(pages))
     results.append(perf.check_render_blocking(pages))
     results.append(perf.check_dom_size(pages))
+    # Additional performance checks
+    results.append(perf.check_interaction_to_next_paint(pages))
+    results.append(perf.check_desktop_performance(pages))
+    results.append(perf.check_mobile_performance(pages))
+    results.append(perf.check_third_party_scripts(pages))
+    results.append(perf.check_resource_preloading(pages))
+    results.append(perf.check_compressed_resources(pages))
     
     # On-Page SEO Checks (30 checks)
     onpage = OnPageSEOChecks()
