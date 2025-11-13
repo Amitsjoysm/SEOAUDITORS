@@ -1014,6 +1014,463 @@ class OnPageSEOChecks:
                 "Use separators like > or /"
             ]
         }
+    
+    @staticmethod
+    def check_duplicate_titles(pages: List[CrawledPage]) -> Dict[str, Any]:
+        titles = [p.title for p in pages if p.title]
+        duplicates = len(titles) - len(set(titles))
+        percentage = (duplicates / len(titles) * 100) if titles else 0
+        status = "fail" if percentage > 10 else ("warning" if percentage > 0 else "pass")
+        return {
+            "check_name": "Duplicate meta titles across pages",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 85,
+            "current_value": f"{duplicates} duplicate titles ({percentage:.0f}%)",
+            "recommended_value": "All titles should be unique",
+            "pros": [] if duplicates > 0 else ["All titles unique"],
+            "cons": [f"{duplicates} pages have duplicate titles"] if duplicates > 0 else [],
+            "ranking_impact": "Duplicate titles reduce ranking potential by 20-30%",
+            "solution": "Make each title unique and descriptive for its page",
+            "enhancements": [
+                "Add page-specific keywords",
+                "Include location for local pages",
+                "Add differentiating terms",
+                "Use title templates wisely"
+            ]
+        }
+    
+    @staticmethod
+    def check_duplicate_descriptions(pages: List[CrawledPage]) -> Dict[str, Any]:
+        descriptions = [p.meta_description for p in pages if p.meta_description]
+        duplicates = len(descriptions) - len(set(descriptions))
+        percentage = (duplicates / len(descriptions) * 100) if descriptions else 0
+        status = "warning" if percentage > 10 else ("pass" if percentage == 0 else "info")
+        return {
+            "check_name": "Duplicate meta descriptions",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 75,
+            "current_value": f"{duplicates} duplicate descriptions ({percentage:.0f}%)",
+            "recommended_value": "All descriptions should be unique",
+            "pros": [] if duplicates > 0 else ["All descriptions unique"],
+            "cons": [f"{duplicates} pages share descriptions"] if duplicates > 0 else [],
+            "ranking_impact": "Duplicate descriptions reduce CTR by 15-25%",
+            "solution": "Write unique description for each page highlighting its unique value",
+            "enhancements": [
+                "Highlight page-specific benefits",
+                "Include unique CTAs",
+                "Match content specifics",
+                "Test description variants"
+            ]
+        }
+    
+    @staticmethod
+    def check_duplicate_h1(pages: List[CrawledPage]) -> Dict[str, Any]:
+        h1s = [p.h1_tags[0] if p.h1_tags else None for p in pages]
+        h1s = [h for h in h1s if h]
+        duplicates = len(h1s) - len(set(h1s))
+        percentage = (duplicates / len(h1s) * 100) if h1s else 0
+        status = "warning" if duplicates > 0 else "pass"
+        return {
+            "check_name": "Duplicate H1 tags across pages",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 70,
+            "current_value": f"{duplicates} duplicate H1s",
+            "recommended_value": "Unique H1 on each page",
+            "pros": [] if duplicates > 0 else ["All H1s unique"],
+            "cons": [f"{duplicates} pages share H1 tags"] if duplicates > 0 else [],
+            "ranking_impact": "Duplicate H1s dilute page focus (10-15% impact)",
+            "solution": "Create unique, descriptive H1 for each page",
+            "enhancements": [
+                "Align H1 with title but make it unique",
+                "Include primary keyword naturally",
+                "Make H1 compelling for users",
+                "Keep H1 concise (50-70 chars)"
+            ]
+        }
+    
+    @staticmethod
+    def check_keyword_in_title(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Primary keyword missing from title",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 90,
+            "current_value": "Keyword analysis required",
+            "recommended_value": "Primary keyword in first 30 characters of title",
+            "pros": [],
+            "cons": ["Cannot verify keyword optimization without target keywords"],
+            "ranking_impact": "Keyword in title is crucial - affects rankings by 15-25%",
+            "solution": "Place primary keyword naturally at start of title tag",
+            "enhancements": [
+                "Front-load important keywords",
+                "Use variations naturally",
+                "Match user search intent",
+                "Include modifiers (best, guide, 2024)"
+            ]
+        }
+    
+    @staticmethod
+    def check_title_search_intent(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Title doesn't match search intent",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 82,
+            "current_value": "Search intent analysis required",
+            "recommended_value": "Titles aligned with user search intent",
+            "pros": [],
+            "cons": ["Intent mismatch reduces CTR and rankings"],
+            "ranking_impact": "Intent-matched titles improve CTR by 30-50%",
+            "solution": "Analyze SERP intent and align titles accordingly",
+            "enhancements": [
+                "Study competitor titles in SERP",
+                "Match informational/commercial/transactional intent",
+                "Use intent-specific words",
+                "Test title variations"
+            ]
+        }
+    
+    @staticmethod
+    def check_description_cta(pages: List[CrawledPage]) -> Dict[str, Any]:
+        cta_words = ['click', 'learn', 'discover', 'find', 'get', 'try', 'download', 'buy', 'shop', 'read']
+        with_cta = sum(1 for p in pages if p.meta_description and any(word in p.meta_description.lower() for word in cta_words))
+        percentage = (with_cta / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 60 else ("warning" if percentage > 30 else "fail")
+        return {
+            "check_name": "No call-to-action in description",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 65,
+            "current_value": f"{percentage:.0f}% descriptions have CTA",
+            "recommended_value": "CTA in 80%+ of descriptions",
+            "pros": ["Good CTA usage"] if percentage > 60 else [],
+            "cons": ["Missing CTAs reduce click-through"] if percentage < 60 else [],
+            "ranking_impact": "CTA in descriptions improves CTR by 20-35%",
+            "solution": "Add compelling action words to meta descriptions",
+            "enhancements": [
+                "Use power verbs (discover, unlock, master)",
+                "Create urgency when appropriate",
+                "Promise value/benefit",
+                "Match description to page content"
+            ]
+        }
+    
+    @staticmethod
+    def check_keyword_in_h1(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "H1 doesn't include primary keyword",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 80,
+            "current_value": "Keyword analysis required",
+            "recommended_value": "Primary keyword in H1",
+            "pros": [],
+            "cons": ["H1 keyword optimization unverified"],
+            "ranking_impact": "Keyword in H1 affects rankings by 12-18%",
+            "solution": "Include primary keyword naturally in H1 heading",
+            "enhancements": [
+                "Use keyword variations",
+                "Make H1 user-friendly",
+                "Avoid keyword stuffing",
+                "Match H1 to search intent"
+            ]
+        }
+    
+    @staticmethod
+    def check_missing_h2(pages: List[CrawledPage]) -> Dict[str, Any]:
+        missing_h2 = sum(1 for p in pages if not p.heading_tags or not any('h2' in str(h).lower() for h in p.heading_tags))
+        percentage = (missing_h2 / len(pages) * 100) if pages else 0
+        status = "warning" if percentage > 30 else ("pass" if percentage == 0 else "info")
+        return {
+            "check_name": "Missing H2 subheadings",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 70,
+            "current_value": f"{percentage:.0f}% pages missing H2s",
+            "recommended_value": "H2 subheadings on all content pages",
+            "pros": [] if percentage > 20 else ["Good heading structure"],
+            "cons": [f"{missing_h2} pages lack H2 subheadings"] if missing_h2 > 0 else [],
+            "ranking_impact": "Proper heading structure improves rankings by 8-12%",
+            "solution": "Add descriptive H2 subheadings to break up content",
+            "enhancements": [
+                "Use H2s for main sections",
+                "Include keywords in H2s naturally",
+                "Make headings descriptive",
+                "Maintain logical hierarchy"
+            ]
+        }
+    
+    @staticmethod
+    def check_heading_formatting(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Inconsistent heading formatting",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 55,
+            "current_value": "Visual heading audit needed",
+            "recommended_value": "Consistent styling across all headings",
+            "pros": [],
+            "cons": ["Inconsistent formatting affects user experience"],
+            "ranking_impact": "Consistent headings improve engagement metrics (5-8%)",
+            "solution": "Standardize heading styles in CSS",
+            "enhancements": [
+                "Define clear heading hierarchy",
+                "Use consistent fonts/sizes",
+                "Apply consistent spacing",
+                "Maintain brand consistency"
+            ]
+        }
+    
+    @staticmethod
+    def check_alt_text_quality(pages: List[CrawledPage]) -> Dict[str, Any]:
+        total_images = sum(len(p.images) for p in pages)
+        return {
+            "check_name": "Alt text too short or generic",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 72,
+            "current_value": f"{total_images} total images detected",
+            "recommended_value": "Descriptive alt text (5-15 words) for all images",
+            "pros": [],
+            "cons": ["Alt text quality assessment needed"],
+            "ranking_impact": "Descriptive alt text improves image rankings by 20-30%",
+            "solution": "Write descriptive, specific alt text for each image",
+            "enhancements": [
+                "Describe image content specifically",
+                "Include keywords when relevant",
+                "Avoid 'image of' or 'picture of'",
+                "Keep under 125 characters"
+            ]
+        }
+    
+    @staticmethod
+    def check_alt_keyword_stuffing(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Alt text keyword stuffing",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 68,
+            "current_value": "Alt text keyword analysis required",
+            "recommended_value": "Natural, descriptive alt text",
+            "pros": [],
+            "cons": ["Keyword stuffing can trigger penalties"],
+            "ranking_impact": "Keyword stuffing can harm rankings by 10-20%",
+            "solution": "Use keywords naturally in alt text when relevant",
+            "enhancements": [
+                "Describe what's actually in image",
+                "Use keywords once naturally",
+                "Vary alt text across images",
+                "Focus on accuracy over optimization"
+            ]
+        }
+    
+    @staticmethod
+    def check_decorative_images_alt(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Decorative images with descriptive alt",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 50,
+            "current_value": "Image role assessment needed",
+            "recommended_value": "Empty alt for purely decorative images",
+            "pros": [],
+            "cons": ["Unnecessary alt text clutters screen readers"],
+            "ranking_impact": "Proper decorative image handling improves accessibility (3-5%)",
+            "solution": "Use alt='' (empty) for decorative images",
+            "enhancements": [
+                "Identify decorative vs content images",
+                "Use CSS for decorative elements when possible",
+                "Apply aria-hidden for decorations",
+                "Focus alt text on meaningful images"
+            ]
+        }
+    
+    @staticmethod
+    def check_contextual_anchor_text(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "No contextual anchor text",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 75,
+            "current_value": "Anchor text analysis required",
+            "recommended_value": "Descriptive anchor text for all internal links",
+            "pros": [],
+            "cons": ["Generic anchors ('click here', 'read more') waste SEO value"],
+            "ranking_impact": "Descriptive anchors improve internal link equity by 15-25%",
+            "solution": "Use descriptive, keyword-rich anchor text",
+            "enhancements": [
+                "Avoid 'click here' and 'read more'",
+                "Use keywords naturally",
+                "Make anchors descriptive",
+                "Vary anchor text appropriately"
+            ]
+        }
+    
+    @staticmethod
+    def check_orphan_pages(pages: List[CrawledPage]) -> Dict[str, Any]:
+        # Simplified check - would need full site crawl for accuracy
+        return {
+            "check_name": "Orphan pages (no internal links)",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 82,
+            "current_value": "Full site crawl needed",
+            "recommended_value": "All pages accessible via internal links",
+            "pros": [],
+            "cons": ["Orphan pages miss out on link equity and crawling"],
+            "ranking_impact": "Orphan pages typically don't rank well (30-50% reduced visibility)",
+            "solution": "Ensure all important pages have internal links from other pages",
+            "enhancements": [
+                "Create comprehensive internal linking",
+                "Add to navigation or sidebar",
+                "Link from related content",
+                "Include in sitemap as backup"
+            ]
+        }
+    
+    @staticmethod
+    def check_deep_pages(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Deep pages (>3 clicks from home)",
+            "category": "On-Page SEO",
+            "status": "info",
+            "impact_score": 73,
+            "current_value": "Click depth analysis required",
+            "recommended_value": "Important pages within 3 clicks of homepage",
+            "pros": [],
+            "cons": ["Deep pages receive less crawl priority and link equity"],
+            "ranking_impact": "Pages 3+ clicks deep receive 40-60% less SEO value",
+            "solution": "Flatten site architecture, link important pages closer to home",
+            "enhancements": [
+                "Add to main navigation",
+                "Feature in homepage sections",
+                "Create hub pages",
+                "Use strategic internal linking"
+            ]
+        }
+    
+    @staticmethod
+    def check_table_of_contents(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_toc = sum(1 for p in pages if 'table-of-contents' in p.html.lower() or 'toc' in p.html.lower())
+        percentage = (has_toc / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 30 else "info"
+        return {
+            "check_name": "Table of Contents (TOC) missing",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 65,
+            "current_value": f"{percentage:.0f}% pages have TOC",
+            "recommended_value": "TOC on long-form content (1500+ words)",
+            "pros": ["Improved navigation"] if percentage > 30 else [],
+            "cons": ["Missing TOC hurts UX on long content"] if percentage < 30 else [],
+            "ranking_impact": "TOC improves engagement metrics and rankings by 8-12% for long content",
+            "solution": "Add table of contents to long-form content pages",
+            "enhancements": [
+                "Make TOC sticky on scroll",
+                "Highlight current section",
+                "Use jump links",
+                "Auto-generate from headings"
+            ]
+        }
+    
+    @staticmethod
+    def check_author_info(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_author = sum(1 for p in pages if 'author' in p.html.lower() or 'byline' in p.html.lower())
+        percentage = (has_author / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 50 else ("warning" if percentage > 20 else "info")
+        return {
+            "check_name": "Author information missing",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 78,
+            "current_value": f"{percentage:.0f}% pages show author info",
+            "recommended_value": "Author byline on all content pages",
+            "pros": ["E-E-A-T signals present"] if percentage > 50 else [],
+            "cons": ["Missing E-E-A-T signals"] if percentage < 50 else [],
+            "ranking_impact": "Author attribution improves E-E-A-T and rankings by 10-20%",
+            "solution": "Add author bylines with bio and credentials",
+            "enhancements": [
+                "Link to author profiles",
+                "Show author expertise/credentials",
+                "Add author photo",
+                "Implement AuthorCreditText schema"
+            ]
+        }
+    
+    @staticmethod
+    def check_publish_date(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_date = sum(1 for p in pages if 'published' in p.html.lower() or 'date' in p.html.lower() or 'time' in p.html.lower())
+        percentage = (has_date / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 60 else ("warning" if percentage > 30 else "fail")
+        return {
+            "check_name": "Published/updated date missing",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 75,
+            "current_value": f"{percentage:.0f}% pages show dates",
+            "recommended_value": "Dates on all time-sensitive content",
+            "pros": ["Content freshness signals"] if percentage > 60 else [],
+            "cons": ["Missing freshness signals"] if percentage < 60 else [],
+            "ranking_impact": "Date information affects freshness ranking factor (12-18%)",
+            "solution": "Display published and last updated dates",
+            "enhancements": [
+                "Show both published and updated dates",
+                "Use proper schema markup",
+                "Update date when content refreshed",
+                "Make dates prominent"
+            ]
+        }
+    
+    @staticmethod
+    def check_related_content(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_related = sum(1 for p in pages if 'related' in p.html.lower() or 'similar' in p.html.lower() or 'recommended' in p.html.lower())
+        percentage = (has_related / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 50 else ("warning" if percentage > 20 else "info")
+        return {
+            "check_name": "Related articles/content section missing",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 68,
+            "current_value": f"{percentage:.0f}% pages have related content",
+            "recommended_value": "Related content on 80%+ of pages",
+            "pros": ["Good internal linking structure"] if percentage > 50 else [],
+            "cons": ["Missing internal linking opportunities"] if percentage < 50 else [],
+            "ranking_impact": "Related content improves engagement and internal linking (10-15%)",
+            "solution": "Add related/recommended content sections",
+            "enhancements": [
+                "Use intelligent content recommendations",
+                "Show 3-6 related items",
+                "Use compelling thumbnails",
+                "Track click-through rates"
+            ]
+        }
+    
+    @staticmethod
+    def check_jump_links(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_jumps = sum(1 for p in pages if 'href="#' in p.html)
+        percentage = (has_jumps / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 30 else "info"
+        return {
+            "check_name": "No jump links for long content",
+            "category": "On-Page SEO",
+            "status": status,
+            "impact_score": 60,
+            "current_value": f"{percentage:.0f}% pages use jump links",
+            "recommended_value": "Jump links on long pages (2000+ words)",
+            "pros": ["Good navigation structure"] if percentage > 30 else [],
+            "cons": ["Missing in-page navigation"] if percentage < 30 else [],
+            "ranking_impact": "Jump links improve UX metrics and rankings by 5-8%",
+            "solution": "Add jump links to section headings on long pages",
+            "enhancements": [
+                "Create clickable TOC",
+                "Use descriptive anchor IDs",
+                "Add 'back to top' links",
+                "Ensure smooth scrolling"
+            ]
+        }
 
 
 class ContentChecks:
