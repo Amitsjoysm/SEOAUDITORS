@@ -71,6 +71,7 @@ class PlanBase(BaseModel):
 
 class PlanCreate(PlanBase):
     stripe_price_id: Optional[str] = None
+    razorpay_plan_id: Optional[str] = None
 
 
 class PlanUpdate(BaseModel):
