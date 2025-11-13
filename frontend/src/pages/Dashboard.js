@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { toast } = useToast();
   const [audits, setAudits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
