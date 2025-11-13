@@ -515,27 +515,29 @@ class MJSEOTester:
         """Test PDF and DOCX report generation and download"""
         print(f"\n{Colors.BLUE}=== REPORT DOWNLOAD TESTS ==={Colors.END}")
         
-        if not self.user_token or not self.test_audit_id:
-            self.result.add_result("Report Downloads", "FAIL", "No user token or audit ID available")
+        if not self.test_audit_id:
+            self.result.add_result("Report Downloads", "FAIL", "No audit ID available")
             return
         
-        headers = {"Authorization": f"Bearer {self.user_token}"}
+        # Use superadmin token if available, otherwise user token
+        token = self.superadmin_token if self.superadmin_token else self.user_token
+        if not token:
+            self.result.add_result("Report Downloads", "FAIL", "No authentication token available")
+            return
+            
+        headers = {"Authorization": f"Bearer {token}"}
         
-        # First, wait for audit to complete or create a completed one
+        # First, check audit status
         try:
-            # Check audit status
             response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=headers)
             if response.status_code == 200:
                 audit = response.json()
                 if audit.get("status") != "completed":
-                    # Wait a bit for processing or skip if not completed
-                    time.sleep(2)
-                    response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=headers)
-                    if response.status_code == 200:
-                        audit = response.json()
-                        if audit.get("status") != "completed":
-                            self.result.add_result("Report Downloads", "WARNING", "Audit not completed yet, skipping report tests")
-                            return
+                    self.result.add_result("Report Downloads", "WARNING", f"Audit status is '{audit.get('status')}', not completed. Skipping report tests.")
+                    return
+            else:
+                self.result.add_result("Report Downloads", "FAIL", f"Cannot access audit: {response.status_code}")
+                return
         except Exception as e:
             self.result.add_result("Report Downloads", "FAIL", f"Error checking audit status: {str(e)}")
             return
