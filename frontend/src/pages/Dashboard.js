@@ -46,10 +46,20 @@ const Dashboard = () => {
       const response = await api.post('/audits/', { website_url: websiteUrl });
       setAudits([response.data, ...audits]);
       setWebsiteUrl('');
+      toast({
+        title: "Audit Created!",
+        description: "Your SEO audit has been started. It will take a few minutes to complete.",
+      });
       // Poll for updates
       setTimeout(() => fetchAudits(), 2000);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to create audit');
+      const errorMsg = err.response?.data?.detail || 'Failed to create audit';
+      setError(errorMsg);
+      toast({
+        title: "Failed to Create Audit",
+        description: errorMsg,
+        variant: "destructive",
+      });
     } finally {
       setCreating(false);
     }
