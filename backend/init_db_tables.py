@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from sqlalchemy import select
 from database import engine, Base, AsyncSessionLocal
-from models import User, Plan, Subscription, UserRole, SubscriptionStatus
+from models import User, Plan, Subscription, UserRole, SubscriptionStatus, Theme
 from auth import get_password_hash
 import uuid
 import logging
