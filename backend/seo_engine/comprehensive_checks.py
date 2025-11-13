@@ -1201,8 +1201,49 @@ class OffPageSEOChecks:
     """Off-page SEO checks - 10 total checks (requires external data)"""
     
     @staticmethod
-    def check_backlinks() -> Dict[str, Any]:
-        # Would require backlink API - placeholder
+    def check_domain_authority() -> Dict[str, Any]:
+        return {
+            "check_name": "Low Domain Authority (DA <30)",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 95,
+            "current_value": "Requires SEO tool integration",
+            "recommended_value": "DA 50+",
+            "pros": [],
+            "cons": ["Domain authority directly impacts ranking ability"],
+            "ranking_impact": "Domain authority accounts for 20-30% of ranking potential",
+            "solution": "Focus on acquiring high-quality backlinks from authoritative domains",
+            "enhancements": [
+                "Create content that attracts natural links",
+                "Build relationships with high-DA sites",
+                "Focus on relevance over quantity",
+                "Monitor DA growth monthly"
+            ]
+        }
+    
+    @staticmethod
+    def check_domain_rating() -> Dict[str, Any]:
+        return {
+            "check_name": "Low Domain Rating (DR <30)",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 92,
+            "current_value": "Requires Ahrefs integration",
+            "recommended_value": "DR 40+",
+            "pros": [],
+            "cons": ["Low DR reduces competitive ranking ability"],
+            "ranking_impact": "DR strongly correlates with organic visibility (25-35% factor)",
+            "solution": "Strategic link building campaign targeting high-DR referring domains",
+            "enhancements": [
+                "Analyze competitor backlink profiles",
+                "Replicate their successful link sources",
+                "Focus on editorial links",
+                "Create data-driven content for natural links"
+            ]
+        }
+    
+    @staticmethod
+    def check_referring_domains() -> Dict[str, Any]:
         return {
             "check_name": "Few referring domains",
             "category": "Off-Page SEO",
@@ -1211,7 +1252,7 @@ class OffPageSEOChecks:
             "current_value": "Requires backlink analysis tool",
             "recommended_value": "100+ quality referring domains",
             "pros": [],
-            "cons": [],
+            "cons": ["Limited backlink diversity hurts rankings"],
             "ranking_impact": "Backlinks are a top 3 ranking factor (30-40% weight)",
             "solution": "Build high-quality backlinks through content marketing, outreach, PR",
             "enhancements": [
@@ -1219,6 +1260,153 @@ class OffPageSEOChecks:
                 "Guest post on authority sites",
                 "Build relationships with influencers",
                 "Monitor competitor backlinks"
+            ]
+        }
+    
+    @staticmethod
+    def check_low_authority_backlinks() -> Dict[str, Any]:
+        return {
+            "check_name": "High percentage of backlinks from low-authority domains",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 80,
+            "current_value": "Requires backlink audit",
+            "recommended_value": "<30% from low-authority sites",
+            "pros": [],
+            "cons": ["Low-quality backlinks can hurt rankings"],
+            "ranking_impact": "Poor link quality can reduce rankings by 20-40%",
+            "solution": "Disavow spammy links, focus on quality link acquisition",
+            "enhancements": [
+                "Regular backlink audits",
+                "Use Google Disavow Tool for toxic links",
+                "Prioritize editorial links",
+                "Monitor link quality metrics"
+            ]
+        }
+    
+    @staticmethod
+    def check_spam_score() -> Dict[str, Any]:
+        return {
+            "check_name": "High spam score in backlink profile",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 88,
+            "current_value": "Requires Moz or similar tool",
+            "recommended_value": "Spam score <5%",
+            "pros": [],
+            "cons": ["High spam score can trigger penalties"],
+            "ranking_impact": "Toxic backlinks can cause 30-50% ranking drops",
+            "solution": "Audit and disavow toxic backlinks using Google Search Console",
+            "enhancements": [
+                "Monthly spam score monitoring",
+                "Proactive disavow file maintenance",
+                "Focus on natural link building",
+                "Avoid link schemes"
+            ]
+        }
+    
+    @staticmethod
+    def check_anchor_text() -> Dict[str, Any]:
+        return {
+            "check_name": "Unnatural anchor text distribution",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 75,
+            "current_value": "Requires backlink analysis",
+            "recommended_value": "Natural mix: 40% branded, 30% generic, 20% exact, 10% other",
+            "pros": [],
+            "cons": ["Over-optimized anchors can trigger penalties"],
+            "ranking_impact": "Unnatural anchor distribution risks 20-30% ranking penalty",
+            "solution": "Diversify anchor text naturally - avoid over-optimization",
+            "enhancements": [
+                "Monitor anchor text ratios monthly",
+                "Use branded and naked URLs",
+                "Vary anchor text naturally",
+                "Avoid exact match over-optimization"
+            ]
+        }
+    
+    @staticmethod
+    def check_nofollow_ratio() -> Dict[str, Any]:
+        return {
+            "check_name": "No-follow ratio too high",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 70,
+            "current_value": "Requires link profile analysis",
+            "recommended_value": "80-90% dofollow links",
+            "pros": [],
+            "cons": ["Too many nofollow links reduce SEO benefit"],
+            "ranking_impact": "High nofollow ratio limits ranking power by 15-25%",
+            "solution": "Focus on earning editorial, dofollow links from quality sites",
+            "enhancements": [
+                "Target editorial content placements",
+                "Guest post on relevant blogs",
+                "Create newsworthy content",
+                "Build industry relationships"
+            ]
+        }
+    
+    @staticmethod
+    def check_directory_citations() -> Dict[str, Any]:
+        return {
+            "check_name": "Missing citations from industry directories",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 60,
+            "current_value": "Manual verification required",
+            "recommended_value": "Listed in top 20 industry directories",
+            "pros": [],
+            "cons": ["Missing directory presence limits local/industry visibility"],
+            "ranking_impact": "Directory citations provide 5-10% ranking boost for industry searches",
+            "solution": "Submit to relevant industry directories and local business listings",
+            "enhancements": [
+                "Identify top industry directories",
+                "Ensure NAP consistency",
+                "Claim and optimize profiles",
+                "Monitor citation accuracy"
+            ]
+        }
+    
+    @staticmethod
+    def check_guest_posting() -> Dict[str, Any]:
+        return {
+            "check_name": "No guest posting or outreach strategy",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 72,
+            "current_value": "Strategic assessment needed",
+            "recommended_value": "Active outreach program with 2-4 quality placements/month",
+            "pros": [],
+            "cons": ["Passive approach misses link building opportunities"],
+            "ranking_impact": "Active outreach can improve rankings by 15-25% over 6 months",
+            "solution": "Develop systematic guest posting and digital PR outreach program",
+            "enhancements": [
+                "Identify target publications",
+                "Create outreach templates",
+                "Track outreach metrics",
+                "Build journalist relationships"
+            ]
+        }
+    
+    @staticmethod
+    def check_competitor_backlink_gap() -> Dict[str, Any]:
+        return {
+            "check_name": "Competitor backlink gap",
+            "category": "Off-Page SEO",
+            "status": "info",
+            "impact_score": 85,
+            "current_value": "Competitive analysis required",
+            "recommended_value": "Within 20% of top 3 competitors",
+            "pros": [],
+            "cons": ["Backlink deficit limits competitive ranking ability"],
+            "ranking_impact": "Closing backlink gap can improve rankings by 20-40%",
+            "solution": "Analyze competitor backlinks and replicate successful link sources",
+            "enhancements": [
+                "Use Ahrefs/Semrush for gap analysis",
+                "Identify link intersection opportunities",
+                "Target competitor link sources",
+                "Create superior content for same link sources"
             ]
         }
 
