@@ -292,7 +292,7 @@ const AuditDetail = () => {
 
                     <Button
                       onClick={() => navigate(`/chat/${id}`)}
-                      className="flex-1 min-w-[200px] bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300"
+                      className="flex-1 min-w-[200px] btn-3d ripple bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300"
                     >
                       <MessageCircle className="w-4 h-4 mr-2" />
                       Chat with AI SEO Expert
