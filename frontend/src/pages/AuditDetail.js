@@ -29,6 +29,8 @@ const AuditDetail = () => {
   const [audit, setAudit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [polling, setPolling] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [downloadingDocx, setDownloadingDocx] = useState(false);
 
   useEffect(() => {
     fetchAudit();
