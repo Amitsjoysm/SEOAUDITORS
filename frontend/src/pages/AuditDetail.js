@@ -17,7 +17,9 @@ import {
   Download,
   Loader2,
   Globe,
-  Clock
+  Clock,
+  MessageCircle,
+  FileText
 } from 'lucide-react';
 
 const AuditDetail = () => {
