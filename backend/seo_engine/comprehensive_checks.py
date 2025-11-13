@@ -388,6 +388,300 @@ class TechnicalSEOChecks:
                 "Test with Google Search Console"
             ]
         }
+    
+    @staticmethod
+    def check_mixed_content(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_mixed = sum(1 for p in pages if 'https://' in p.url and 'http://' in p.html)
+        percentage = (has_mixed / len(pages) * 100) if pages else 0
+        status = "fail" if has_mixed > 0 else "pass"
+        return {
+            "check_name": "Mixed content warnings",
+            "category": "Technical SEO",
+            "status": status,
+            "impact_score": 85,
+            "current_value": f"{has_mixed} pages with mixed content",
+            "recommended_value": "No mixed content (all resources HTTPS)",
+            "pros": [] if has_mixed > 0 else ["All content secure"],
+            "cons": ["Mixed content security warnings"] if has_mixed > 0 else [],
+            "ranking_impact": "Mixed content can reduce rankings by 10-15% and shows warnings",
+            "solution": "Update all HTTP resources to HTTPS",
+            "enhancements": [
+                "Audit all resource URLs",
+                "Update hardcoded HTTP URLs",
+                "Use protocol-relative URLs",
+                "Implement Content Security Policy"
+            ]
+        }
+    
+    @staticmethod
+    def check_ssl_certificate(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "SSL certificate issues",
+            "category": "Technical SEO",
+            "status": "info",
+            "impact_score": 95,
+            "current_value": "SSL verification required",
+            "recommended_value": "Valid SSL certificate with proper configuration",
+            "pros": [],
+            "cons": ["SSL issues block search engine access and hurt trust"],
+            "ranking_impact": "SSL errors can result in complete deindexing",
+            "solution": "Ensure valid SSL certificate properly configured",
+            "enhancements": [
+                "Use certificates from trusted CAs",
+                "Enable HSTS",
+                "Check certificate expiration",
+                "Implement certificate monitoring"
+            ]
+        }
+    
+    @staticmethod
+    def check_multiple_canonicals(pages: List[CrawledPage]) -> Dict[str, Any]:
+        multiple = 0
+        for page in pages:
+            soup = BeautifulSoup(page.html, 'html.parser')
+            canonicals = soup.find_all('link', rel='canonical')
+            if len(canonicals) > 1:
+                multiple += 1
+        status = "fail" if multiple > 0 else "pass"
+        return {
+            "check_name": "Multiple canonical tags",
+            "category": "Technical SEO",
+            "status": status,
+            "impact_score": 88,
+            "current_value": f"{multiple} pages with multiple canonicals",
+            "recommended_value": "One canonical tag per page",
+            "pros": [] if multiple > 0 else ["Proper canonical implementation"],
+            "cons": [f"{multiple} pages have conflicting canonical tags"] if multiple > 0 else [],
+            "ranking_impact": "Multiple canonicals confuse search engines (20-30% indexation issues)",
+            "solution": "Ensure only one canonical tag per page",
+            "enhancements": [
+                "Audit canonical implementation",
+                "Remove duplicate tags",
+                "Use server-side canonical headers if needed",
+                "Validate in Google Search Console"
+            ]
+        }
+    
+    @staticmethod
+    def check_canonical_pointing_nonindexable(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Canonical pointing to non-indexable URL",
+            "category": "Technical SEO",
+            "status": "info",
+            "impact_score": 90,
+            "current_value": "Canonical target validation needed",
+            "recommended_value": "Canonicals point to indexable, 200 status pages",
+            "pros": [],
+            "cons": ["Canonicals to 404/301/noindex pages waste crawl budget"],
+            "ranking_impact": "Broken canonicals prevent proper indexation (25-40% loss)",
+            "solution": "Verify all canonical targets are accessible and indexable",
+            "enhancements": [
+                "Crawl all canonical targets",
+                "Check for redirect chains",
+                "Verify target pages are indexable",
+                "Regular canonical audits"
+            ]
+        }
+    
+    @staticmethod
+    def check_invalid_schema(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Invalid schema markup",
+            "category": "Technical SEO",
+            "status": "info",
+            "impact_score": 75,
+            "current_value": "Schema validation required",
+            "recommended_value": "Valid, error-free schema markup",
+            "pros": [],
+            "cons": ["Invalid schema prevents rich results"],
+            "ranking_impact": "Valid schema can improve CTR by 30-40% through rich results",
+            "solution": "Validate schema with Google Rich Results Test",
+            "enhancements": [
+                "Use Google's Rich Results Test",
+                "Fix validation errors",
+                "Test in Search Console",
+                "Monitor rich result eligibility"
+            ]
+        }
+    
+    @staticmethod
+    def check_url_length(pages: List[CrawledPage]) -> Dict[str, Any]:
+        long_urls = sum(1 for p in pages if len(p.url) > 115)
+        percentage = (long_urls / len(pages) * 100) if pages else 0
+        status = "warning" if percentage > 20 else ("pass" if percentage == 0 else "info")
+        return {
+            "check_name": "URLs exceeding recommended length (>115 characters)",
+            "category": "Technical SEO",
+            "status": status,
+            "impact_score": 65,
+            "current_value": f"{long_urls} URLs over 115 chars ({percentage:.0f}%)",
+            "recommended_value": "URLs under 115 characters",
+            "pros": [] if long_urls > 0 else ["Optimal URL lengths"],
+            "cons": [f"{long_urls} URLs too long"] if long_urls > 0 else [],
+            "ranking_impact": "Long URLs may be truncated in SERPs (5-10% CTR loss)",
+            "solution": "Shorten URLs, remove unnecessary parameters and words",
+            "enhancements": [
+                "Use concise, descriptive URLs",
+                "Remove stop words",
+                "Avoid date parameters",
+                "Use URL shortening where appropriate"
+            ]
+        }
+    
+    @staticmethod
+    def check_url_case_underscores(pages: List[CrawledPage]) -> Dict[str, Any]:
+        issues = sum(1 for p in pages if '_' in p.url or any(c.isupper() for c in p.url.split('://')[1] if len(p.url.split('://')) > 1))
+        percentage = (issues / len(pages) * 100) if pages else 0
+        status = "warning" if percentage > 10 else ("pass" if percentage == 0 else "info")
+        return {
+            "check_name": "Mixed case or underscores in URLs",
+            "category": "Technical SEO",
+            "status": status,
+            "impact_score": 60,
+            "current_value": f"{issues} URLs with case/underscore issues",
+            "recommended_value": "Lowercase with hyphens only",
+            "pros": [] if issues > 0 else ["Clean URL formatting"],
+            "cons": [f"{issues} URLs violate best practices"] if issues > 0 else [],
+            "ranking_impact": "URL formatting affects usability and SEO (5-8%)",
+            "solution": "Use lowercase letters and hyphens instead of underscores",
+            "enhancements": [
+                "Implement 301 redirects from old URLs",
+                "Update internal links",
+                "Use URL rewriting rules",
+                "Standardize URL patterns"
+            ]
+        }
+    
+    @staticmethod
+    def check_404_errors(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "404 errors on important pages",
+            "category": "Technical SEO",
+            "status": "info",
+            "impact_score": 87,
+            "current_value": "404 audit required",
+            "recommended_value": "No 404 errors on important pages",
+            "pros": [],
+            "cons": ["404 errors hurt user experience and waste crawl budget"],
+            "ranking_impact": "404 errors can reduce site quality scores by 15-25%",
+            "solution": "Fix or redirect all 404 pages, especially those with backlinks",
+            "enhancements": [
+                "Monitor 404s in Search Console",
+                "Redirect important 404s with 301",
+                "Create custom 404 page with navigation",
+                "Regular broken link audits"
+            ]
+        }
+    
+    @staticmethod
+    def check_redirect_loops(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Redirect loops detected",
+            "category": "Technical SEO",
+            "status": "info",
+            "impact_score": 92,
+            "current_value": "Redirect chain analysis required",
+            "recommended_value": "No redirect loops",
+            "pros": [],
+            "cons": ["Redirect loops make pages inaccessible"],
+            "ranking_impact": "Redirect loops result in complete indexation failure",
+            "solution": "Identify and fix redirect loops immediately",
+            "enhancements": [
+                "Use redirect mapping tools",
+                "Check for circular redirects",
+                "Implement redirect monitoring",
+                "Regular redirect audits"
+            ]
+        }
+    
+    @staticmethod
+    def check_excessive_redirects(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Too many 301/302 redirects",
+            "category": "Technical SEO",
+            "status": "info",
+            "impact_score": 78,
+            "current_value": "Redirect count audit needed",
+            "recommended_value": "Minimize redirects, max 1 hop to final URL",
+            "pros": [],
+            "cons": ["Redirect chains slow page load and dilute link equity"],
+            "ranking_impact": "Each redirect hop loses 10-15% link equity",
+            "solution": "Update links to point directly to final URLs",
+            "enhancements": [
+                "Map all redirect chains",
+                "Update to direct URLs",
+                "Remove unnecessary redirects",
+                "Consolidate redirect paths"
+            ]
+        }
+    
+    @staticmethod
+    def check_microdata_issues(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_microdata = sum(1 for p in pages if 'itemscope' in p.html or 'itemprop' in p.html)
+        status = "info" if has_microdata > 0 else "pass"
+        return {
+            "check_name": "Microdata markup issues",
+            "category": "Technical SEO",
+            "status": status,
+            "impact_score": 58,
+            "current_value": f"{has_microdata} pages using microdata",
+            "recommended_value": "Prefer JSON-LD over microdata",
+            "pros": ["Structured data implemented"] if has_microdata > 0 else [],
+            "cons": ["Microdata is harder to maintain than JSON-LD"] if has_microdata > 0 else [],
+            "ranking_impact": "JSON-LD is Google's preferred format (5% better processing)",
+            "solution": "Migrate microdata to JSON-LD format",
+            "enhancements": [
+                "Convert to JSON-LD",
+                "Validate with Google tools",
+                "Remove legacy microdata",
+                "Use schema.org vocabulary"
+            ]
+        }
+    
+    @staticmethod
+    def check_html_size(pages: List[CrawledPage]) -> Dict[str, Any]:
+        large_html = sum(1 for p in pages if len(p.html.encode('utf-8')) > 100000)
+        percentage = (large_html / len(pages) * 100) if pages else 0
+        status = "warning" if percentage > 20 else ("pass" if percentage == 0 else "info")
+        return {
+            "check_name": "HTML file size too large (>100KB)",
+            "category": "Technical SEO",
+            "status": status,
+            "impact_score": 70,
+            "current_value": f"{large_html} pages over 100KB ({percentage:.0f}%)",
+            "recommended_value": "HTML under 100KB",
+            "pros": [] if large_html > 0 else ["Optimized HTML size"],
+            "cons": [f"{large_html} pages have large HTML"] if large_html > 0 else [],
+            "ranking_impact": "Large HTML delays rendering and hurts Core Web Vitals (8-12%)",
+            "solution": "Optimize HTML, remove unnecessary code and whitespace",
+            "enhancements": [
+                "Minify HTML",
+                "Remove comments",
+                "Defer non-critical content",
+                "Use compression"
+            ]
+        }
+    
+    @staticmethod
+    def check_cdn_implementation(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "No CDN implementation",
+            "category": "Technical SEO",
+            "status": "info",
+            "impact_score": 80,
+            "current_value": "CDN detection required",
+            "recommended_value": "CDN for global content delivery",
+            "pros": [],
+            "cons": ["Missing CDN increases load times globally"],
+            "ranking_impact": "CDN can improve Core Web Vitals by 20-40%",
+            "solution": "Implement CDN (Cloudflare, AWS CloudFront, etc.)",
+            "enhancements": [
+                "Enable CDN for static assets",
+                "Configure edge caching",
+                "Optimize cache policies",
+                "Use geo-distributed servers"
+            ]
+        }
 
 
 class PerformanceChecks:
