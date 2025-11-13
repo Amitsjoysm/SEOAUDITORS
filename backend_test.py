@@ -582,11 +582,17 @@ class MJSEOTester:
         """Test chat interface with AI SEO consultant"""
         print(f"\n{Colors.BLUE}=== CHAT INTERFACE TESTS ==={Colors.END}")
         
-        if not self.user_token or not self.test_audit_id:
-            self.result.add_result("Chat Interface", "FAIL", "No user token or audit ID available")
+        if not self.test_audit_id:
+            self.result.add_result("Chat Interface", "FAIL", "No audit ID available")
             return
         
-        headers = {"Authorization": f"Bearer {self.user_token}"}
+        # Use superadmin token if available, otherwise user token
+        token = self.superadmin_token if self.superadmin_token else self.user_token
+        if not token:
+            self.result.add_result("Chat Interface", "FAIL", "No authentication token available")
+            return
+            
+        headers = {"Authorization": f"Bearer {token}"}
         
         # Test sending a chat message
         try:
