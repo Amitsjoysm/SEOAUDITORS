@@ -217,20 +217,71 @@ const AuditDetail = () => {
             </div>
 
             {audit.overall_score !== null && (
-              <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/10">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-400">{audit.checks_passed}</div>
-                  <div className="text-slate-400 text-sm">Passed</div>
+              <>
+                <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/10">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-400">{audit.checks_passed}</div>
+                    <div className="text-slate-400 text-sm">Passed</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-red-400">{audit.checks_failed}</div>
+                    <div className="text-slate-400 text-sm">Failed</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-yellow-400">{audit.checks_warning}</div>
+                    <div className="text-slate-400 text-sm">Warnings</div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-400">{audit.checks_failed}</div>
-                  <div className="text-slate-400 text-sm">Failed</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-yellow-400">{audit.checks_warning}</div>
-                  <div className="text-slate-400 text-sm">Warnings</div>
-                </div>
-              </div>
+
+                {/* Action Buttons */}
+                {audit.status === 'completed' && (
+                  <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-white/10">
+                    <Button
+                      onClick={handleDownloadPdf}
+                      disabled={downloadingPdf}
+                      className="flex-1 min-w-[200px] bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300"
+                    >
+                      {downloadingPdf ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Generating PDF...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4 mr-2" />
+                          Download PDF Report
+                        </>
+                      )}
+                    </Button>
+
+                    <Button
+                      onClick={handleDownloadDocx}
+                      disabled={downloadingDocx}
+                      className="flex-1 min-w-[200px] bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300"
+                    >
+                      {downloadingDocx ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Generating DOCX...
+                        </>
+                      ) : (
+                        <>
+                          <FileText className="w-4 h-4 mr-2" />
+                          Download DOCX Report
+                        </>
+                      )}
+                    </Button>
+
+                    <Button
+                      onClick={() => navigate(`/chat/${id}`)}
+                      className="flex-1 min-w-[200px] bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      Chat with AI SEO Expert
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
