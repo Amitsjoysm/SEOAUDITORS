@@ -91,6 +91,24 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-slate-300">Hello, {user?.full_name || user?.email}</span>
+            {user?.role === 'superadmin' && (
+              <Button variant="ghost" className="text-white" onClick={() => navigate('/admin')}>
+                <Shield className="w-4 h-4 mr-2" />
+                Admin
+              </Button>
+            )}
+            <Button variant="ghost" className="text-white" onClick={() => navigate('/plans')}>
+              <CreditCard className="w-4 h-4 mr-2" />
+              Plans
+            </Button>
+            <Button variant="ghost" className="text-white" onClick={() => navigate('/api-tokens')}>
+              <Key className="w-4 h-4 mr-2" />
+              API
+            </Button>
+            <Button variant="ghost" className="text-white" onClick={() => navigate('/settings')}>
+              <Settings className="w-4 h-4 mr-2" />
+              Settings
+            </Button>
             <Button variant="ghost" className="text-white" onClick={logout}>
               <LogOut className="w-4 h-4 mr-2" />
               Logout
