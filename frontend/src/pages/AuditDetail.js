@@ -95,6 +95,50 @@ const AuditDetail = () => {
     }, {});
   };
 
+  const handleDownloadPdf = async () => {
+    setDownloadingPdf(true);
+    try {
+      const response = await api.get(`/reports/${id}/pdf`, {
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `seo-audit-${audit.website_url.replace(/[^a-z0-9]/gi, '-')}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Failed to download PDF report. Please try again.');
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
+
+  const handleDownloadDocx = async () => {
+    setDownloadingDocx(true);
+    try {
+      const response = await api.get(`/reports/${id}/docx`, {
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `seo-audit-${audit.website_url.replace(/[^a-z0-9]/gi, '-')}.docx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading DOCX:', error);
+      alert('Failed to download DOCX report. Please try again.');
+    } finally {
+      setDownloadingDocx(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
