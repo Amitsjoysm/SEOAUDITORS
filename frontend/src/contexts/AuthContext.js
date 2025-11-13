@@ -18,10 +18,16 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  const fetchCurrentUser = async () => {
+  const fetchCurrentUser = async (authToken = null) => {
+    const tokenToUse = authToken || token;
+    if (!tokenToUse) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       const response = await axios.get(`${API_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${tokenToUse}` }
       });
       setUser(response.data);
     } catch (error) {
@@ -37,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     const { access_token } = response.data;
     localStorage.setItem('token', access_token);
     setToken(access_token);
-    await fetchCurrentUser();
+    await fetchCurrentUser(access_token);
     return response.data;
   };
 
@@ -50,7 +56,7 @@ export const AuthProvider = ({ children }) => {
     const { access_token } = response.data;
     localStorage.setItem('token', access_token);
     setToken(access_token);
-    await fetchCurrentUser();
+    await fetchCurrentUser(access_token);
     return response.data;
   };
 
