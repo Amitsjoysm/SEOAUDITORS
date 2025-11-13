@@ -1045,6 +1045,150 @@ class PerformanceChecks:
                 "Lazy render off-screen content"
             ]
         }
+    
+    @staticmethod
+    def check_interaction_to_next_paint(pages: List[CrawledPage]) -> Dict[str, Any]:
+        # INP - newer Core Web Vital replacing FID
+        return {
+            "check_name": "High Interaction to Next Paint (INP >200ms)",
+            "category": "Performance",
+            "status": "info",
+            "impact_score": 88,
+            "current_value": "INP measurement required (PageSpeed Insights)",
+            "recommended_value": "INP < 200ms",
+            "pros": [],
+            "cons": ["INP is replacing FID as Core Web Vital in 2024"],
+            "ranking_impact": "Poor INP will be a ranking factor (15-25% impact)",
+            "solution": "Optimize JavaScript execution, reduce main thread blocking",
+            "enhancements": [
+                "Minimize long tasks",
+                "Optimize event handlers",
+                "Use web workers",
+                "Defer non-critical JS"
+            ]
+        }
+    
+    @staticmethod
+    def check_desktop_performance(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Poor desktop performance score (<90)",
+            "category": "Performance",
+            "status": "info",
+            "impact_score": 80,
+            "current_value": "Desktop PageSpeed score needed",
+            "recommended_value": "Score > 90",
+            "pros": [],
+            "cons": ["Desktop performance affects rankings and conversions"],
+            "ranking_impact": "Desktop performance impacts rankings by 10-20%",
+            "solution": "Optimize for desktop Core Web Vitals",
+            "enhancements": [
+                "Run PageSpeed Insights",
+                "Optimize largest images",
+                "Minimize JavaScript",
+                "Use efficient caching"
+            ]
+        }
+    
+    @staticmethod
+    def check_mobile_performance(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Poor mobile performance score (<70)",
+            "category": "Performance",
+            "status": "info",
+            "impact_score": 92,
+            "current_value": "Mobile PageSpeed score needed",
+            "recommended_value": "Score > 70 (ideally > 90)",
+            "pros": [],
+            "cons": ["Mobile performance is critical for mobile-first indexing"],
+            "ranking_impact": "Mobile performance heavily affects rankings (20-30%)",
+            "solution": "Prioritize mobile Core Web Vitals optimization",
+            "enhancements": [
+                "Optimize for mobile-first",
+                "Reduce mobile-specific scripts",
+                "Optimize touch interactions",
+                "Test on real devices"
+            ]
+        }
+    
+    @staticmethod
+    def check_third_party_scripts(pages: List[CrawledPage]) -> Dict[str, Any]:
+        # Count external script sources
+        third_party = 0
+        for page in pages:
+            soup = BeautifulSoup(page.html, 'html.parser')
+            scripts = soup.find_all('script', src=True)
+            domain = urlparse(page.url).netloc
+            for script in scripts:
+                script_domain = urlparse(script.get('src', '')).netloc
+                if script_domain and script_domain != domain and not script.get('src', '').startswith('/'):
+                    third_party += 1
+                    break
+        
+        percentage = (third_party / len(pages) * 100) if pages else 0
+        status = "warning" if percentage > 50 else "info"
+        return {
+            "check_name": "Third-party scripts slowing site",
+            "category": "Performance",
+            "status": status,
+            "impact_score": 77,
+            "current_value": f"{percentage:.0f}% pages with 3rd party scripts",
+            "recommended_value": "Minimize third-party scripts",
+            "pros": [],
+            "cons": ["Third-party scripts slow performance"] if percentage > 50 else [],
+            "ranking_impact": "Third-party scripts can increase load time by 50-100%",
+            "solution": "Audit and minimize third-party scripts, lazy load when possible",
+            "enhancements": [
+                "Defer non-critical scripts",
+                "Use async loading",
+                "Implement resource hints",
+                "Consider self-hosting critical scripts"
+            ]
+        }
+    
+    @staticmethod
+    def check_resource_preloading(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_preload = sum(1 for p in pages if 'rel="preload"' in p.html or 'rel="prefetch"' in p.html)
+        percentage = (has_preload / len(pages) * 100) if pages else 0
+        status = "pass" if percentage > 50 else "warning"
+        return {
+            "check_name": "No resource preloading",
+            "category": "Performance",
+            "status": status,
+            "impact_score": 68,
+            "current_value": f"{percentage:.0f}% pages use preloading",
+            "recommended_value": "Preload critical resources",
+            "pros": ["Resource optimization implemented"] if percentage > 50 else [],
+            "cons": ["Missing resource optimization"] if percentage < 50 else [],
+            "ranking_impact": "Resource hints can improve LCP by 10-20%",
+            "solution": "Implement preload for critical fonts, images, and CSS",
+            "enhancements": [
+                "Preload critical fonts",
+                "Preload hero images",
+                "Prefetch next page resources",
+                "Use dns-prefetch for external domains"
+            ]
+        }
+    
+    @staticmethod
+    def check_compressed_resources(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Resources not using modern compression (Brotli)",
+            "category": "Performance",
+            "status": "info",
+            "impact_score": 72,
+            "current_value": "Compression check required (server headers)",
+            "recommended_value": "Brotli or Gzip compression enabled",
+            "pros": [],
+            "cons": ["Uncompressed resources waste bandwidth"],
+            "ranking_impact": "Compression reduces transfer size by 60-80%, improving load times",
+            "solution": "Enable Brotli compression on server, fallback to Gzip",
+            "enhancements": [
+                "Enable Brotli for modern browsers",
+                "Use Gzip as fallback",
+                "Compress all text resources",
+                "Monitor compression ratios"
+            ]
+        }
 
 
 class OnPageSEOChecks:
