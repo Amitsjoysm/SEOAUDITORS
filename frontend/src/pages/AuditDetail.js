@@ -197,7 +197,7 @@ const AuditDetail = () => {
 
       <div className="container mx-auto px-4 py-8" data-testid="audit-detail">
         {/* Header Card */}
-        <Card className="bg-slate-900/80 border-white/10 backdrop-blur-sm mb-8">
+        <Card className="glass-card card-hover depth-shadow mb-8">
           <CardContent className="p-8">
             <div className="flex items-start justify-between">
               <div className="flex-1">
