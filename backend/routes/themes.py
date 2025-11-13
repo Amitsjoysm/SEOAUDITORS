@@ -26,17 +26,17 @@ class ThemeCreate(BaseModel):
 
 
 class ThemeUpdate(BaseModel):
-    name: str = None
-    primary_color: str = None
-    secondary_color: str = None
-    accent_color: str = None
-    background_color: str = None
-    surface_color: str = None
-    text_primary: str = None
-    text_secondary: str = None
-    border_radius: str = None
-    font_family: str = None
-    custom_css: str = None
+    name: Optional[str] = None
+    primary_color: Optional[str] = None
+    secondary_color: Optional[str] = None
+    accent_color: Optional[str] = None
+    background_color: Optional[str] = None
+    surface_color: Optional[str] = None
+    text_primary: Optional[str] = None
+    text_secondary: Optional[str] = None
+    border_radius: Optional[str] = None
+    font_family: Optional[str] = None
+    custom_css: Optional[str] = None
 
 
 class ThemeResponse(BaseModel):
