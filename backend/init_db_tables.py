@@ -162,10 +162,76 @@ async def init_database():
         
         await db.commit()
         logger.info("Created test user: test@example.com / test123")
+        
+        # Create default themes
+        themes_data = [
+            {
+                "name": "Lavender Dream",
+                "primary_color": "#a78bfa",  # Soft purple
+                "secondary_color": "#fbbf24",  # Soft amber
+                "accent_color": "#34d399",  # Soft emerald
+                "background_color": "#0f172a",
+                "surface_color": "#1e293b",
+                "text_primary": "#f8fafc",
+                "text_secondary": "#cbd5e1",
+                "is_active": True  # Default active theme
+            },
+            {
+                "name": "Ocean Breeze",
+                "primary_color": "#60a5fa",  # Soft blue
+                "secondary_color": "#a78bfa",  # Soft purple
+                "accent_color": "#34d399",  # Soft emerald
+                "background_color": "#0c4a6e",
+                "surface_color": "#075985",
+                "text_primary": "#f0f9ff",
+                "text_secondary": "#bae6fd"
+            },
+            {
+                "name": "Sunset Glow",
+                "primary_color": "#fb923c",  # Soft orange
+                "secondary_color": "#f472b6",  # Soft pink
+                "accent_color": "#fbbf24",  # Soft amber
+                "background_color": "#431407",
+                "surface_color": "#7c2d12",
+                "text_primary": "#fff7ed",
+                "text_secondary": "#fed7aa"
+            },
+            {
+                "name": "Mint Fresh",
+                "primary_color": "#34d399",  # Soft emerald
+                "secondary_color": "#60a5fa",  # Soft blue
+                "accent_color": "#a78bfa",  # Soft purple
+                "background_color": "#022c22",
+                "surface_color": "#064e3b",
+                "text_primary": "#ecfdf5",
+                "text_secondary": "#a7f3d0"
+            },
+            {
+                "name": "Rose Garden",
+                "primary_color": "#f472b6",  # Soft pink
+                "secondary_color": "#a78bfa",  # Soft purple
+                "accent_color": "#fb923c",  # Soft orange
+                "background_color": "#4c0519",
+                "surface_color": "#831843",
+                "text_primary": "#fdf2f8",
+                "text_secondary": "#fbcfe8"
+            }
+        ]
+        
+        for theme_data in themes_data:
+            theme = Theme(
+                id=str(uuid.uuid4()),
+                **theme_data
+            )
+            db.add(theme)
+        
+        await db.commit()
+        logger.info(f"Created {len(themes_data)} default themes")
     
     logger.info("\n=== Database initialization complete ===")
     logger.info("Superadmin: superadmin@test.com / test123")
     logger.info("Test User: test@example.com / test123")
+    logger.info("Default theme: Lavender Dream (active)")
 
 
 if __name__ == "__main__":
