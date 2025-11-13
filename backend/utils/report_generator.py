@@ -149,24 +149,19 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
                 
                 # Current vs Recommended
                 if result.current_value:
-                    safe_current = str(result.current_value).replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
-                    story.append(Paragraph(f"<b>Current:</b> {safe_current}", styles['BodyText']))
+                    story.append(Paragraph(f"<b>Current:</b> {escape_html(result.current_value)}", styles['BodyText']))
                 if result.recommended_value:
-                    safe_recommended = str(result.recommended_value).replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
-                    story.append(Paragraph(f"<b>Recommended:</b> {safe_recommended}", styles['BodyText']))
+                    story.append(Paragraph(f"<b>Recommended:</b> {escape_html(result.recommended_value)}", styles['BodyText']))
                 
                 # Cons (issues)
                 if result.cons:
                     story.append(Paragraph("<b>Issues:</b>", styles['BodyText']))
                     for con in result.cons[:3]:
-                        safe_con = str(con).replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
-                        story.append(Paragraph(f"  - {safe_con}", styles['BodyText']))
+                        story.append(Paragraph(f"  - {escape_html(con)}", styles['BodyText']))
                 
                 # Solution
                 if result.solution:
-                    # Escape HTML special characters in solution text
-                    safe_solution = result.solution[:300].replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
-                    story.append(Paragraph(f"<b>Solution:</b> {safe_solution}...", styles['BodyText']))
+                    story.append(Paragraph(f"<b>Solution:</b> {escape_html(result.solution[:300])}...", styles['BodyText']))
                 
                 story.append(Spacer(1, 0.15*inch))
             
