@@ -289,6 +289,21 @@
         - working: true
           agent: "main"
           comment: "Database initialization script with 4 default plans and superadmin creation"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTED: Database properly initialized. Found 4 plans, superadmin account accessible, theme system with pastel colors working."
+  
+  - task: "Theme management system"
+    implemented: true
+    working: true
+    file: "/app/backend/routes/themes.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTED: Theme system fully functional. Public active theme endpoint working, admin theme management working, proper access control, pastel color schemes confirmed. Fixed Pydantic validation issue with Optional[str] types."
 
 ## frontend:
   - task: "Landing page"
