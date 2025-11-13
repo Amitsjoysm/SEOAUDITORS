@@ -43,7 +43,7 @@ async def process_audit(audit_id: str, website_url: str, max_pages: int):
             
             # Run SEO checks
             logger.info(f"Running SEO checks for audit {audit_id}")
-            check_results = run_all_checks(pages)
+            check_results = run_all_comprehensive_checks(pages)
             
             # Save results
             passed = 0
