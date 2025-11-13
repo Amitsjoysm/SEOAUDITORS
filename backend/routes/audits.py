@@ -98,7 +98,7 @@ async def process_audit(audit_id: str, website_url: str, max_pages: int):
             audit.checks_warning = warning
             audit.overall_score = round(overall_score, 1)
             audit.completed_at = datetime.now(timezone.utc)
-            audit.metadata = {
+            audit.audit_metadata = {
                 'crawl_time': sum(p.load_time for p in pages),
                 'avg_load_time': sum(p.load_time for p in pages) / len(pages) if pages else 0
             }
