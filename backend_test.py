@@ -489,6 +489,199 @@ class MJSEOTester:
             except Exception as e:
                 self.result.add_result("Admin Access Control", "FAIL", str(e))
     
+    def test_report_downloads(self):
+        """Test PDF and DOCX report generation and download"""
+        print(f"\n{Colors.BLUE}=== REPORT DOWNLOAD TESTS ==={Colors.END}")
+        
+        if not self.user_token or not self.test_audit_id:
+            self.result.add_result("Report Downloads", "FAIL", "No user token or audit ID available")
+            return
+        
+        headers = {"Authorization": f"Bearer {self.user_token}"}
+        
+        # First, wait for audit to complete or create a completed one
+        try:
+            # Check audit status
+            response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=headers)
+            if response.status_code == 200:
+                audit = response.json()
+                if audit.get("status") != "completed":
+                    # Wait a bit for processing or skip if not completed
+                    time.sleep(2)
+                    response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=headers)
+                    if response.status_code == 200:
+                        audit = response.json()
+                        if audit.get("status") != "completed":
+                            self.result.add_result("Report Downloads", "WARNING", "Audit not completed yet, skipping report tests")
+                            return
+        except Exception as e:
+            self.result.add_result("Report Downloads", "FAIL", f"Error checking audit status: {str(e)}")
+            return
+        
+        # Test PDF report download
+        try:
+            response = self.session.get(f"{BASE_URL}/reports/{self.test_audit_id}/pdf", headers=headers)
+            
+            if response.status_code == 200:
+                # Check if response is actually a PDF
+                content_type = response.headers.get('content-type', '')
+                if 'application/pdf' in content_type:
+                    self.result.add_result("PDF Report Download", "PASS", f"PDF generated successfully ({len(response.content)} bytes)")
+                else:
+                    self.result.add_result("PDF Report Download", "FAIL", f"Invalid content type: {content_type}")
+            elif response.status_code == 400:
+                self.result.add_result("PDF Report Download", "WARNING", "Audit not completed yet")
+            else:
+                self.result.add_result("PDF Report Download", "FAIL", f"Status: {response.status_code}, Response: {response.text}")
+        except Exception as e:
+            self.result.add_result("PDF Report Download", "FAIL", str(e))
+        
+        # Test DOCX report download
+        try:
+            response = self.session.get(f"{BASE_URL}/reports/{self.test_audit_id}/docx", headers=headers)
+            
+            if response.status_code == 200:
+                # Check if response is actually a DOCX
+                content_type = response.headers.get('content-type', '')
+                if 'wordprocessingml' in content_type or 'application/vnd.openxmlformats' in content_type:
+                    self.result.add_result("DOCX Report Download", "PASS", f"DOCX generated successfully ({len(response.content)} bytes)")
+                else:
+                    self.result.add_result("DOCX Report Download", "FAIL", f"Invalid content type: {content_type}")
+            elif response.status_code == 400:
+                self.result.add_result("DOCX Report Download", "WARNING", "Audit not completed yet")
+            else:
+                self.result.add_result("DOCX Report Download", "FAIL", f"Status: {response.status_code}, Response: {response.text}")
+        except Exception as e:
+            self.result.add_result("DOCX Report Download", "FAIL", str(e))
+    
+    def test_chat_interface(self):
+        """Test chat interface with AI SEO consultant"""
+        print(f"\n{Colors.BLUE}=== CHAT INTERFACE TESTS ==={Colors.END}")
+        
+        if not self.user_token or not self.test_audit_id:
+            self.result.add_result("Chat Interface", "FAIL", "No user token or audit ID available")
+            return
+        
+        headers = {"Authorization": f"Bearer {self.user_token}"}
+        
+        # Test sending a chat message
+        try:
+            chat_data = {
+                "audit_id": self.test_audit_id,
+                "content": "What are the main SEO issues found in this audit?"
+            }
+            
+            response = self.session.post(f"{BASE_URL}/chat/", json=chat_data, headers=headers)
+            
+            if response.status_code == 201:
+                message = response.json()
+                if "content" in message and "role" in message and message["role"] == "assistant":
+                    self.result.add_result("Send Chat Message", "PASS", f"AI response received: {message['content'][:100]}...")
+                    
+                    # Test retrieving chat history
+                    try:
+                        response = self.session.get(f"{BASE_URL}/chat/{self.test_audit_id}", headers=headers)
+                        
+                        if response.status_code == 200:
+                            messages = response.json()
+                            if isinstance(messages, list) and len(messages) >= 2:  # User message + AI response
+                                self.result.add_result("Get Chat History", "PASS", f"Found {len(messages)} messages")
+                            else:
+                                self.result.add_result("Get Chat History", "FAIL", f"Expected at least 2 messages, got {len(messages) if isinstance(messages, list) else 'invalid format'}")
+                        else:
+                            self.result.add_result("Get Chat History", "FAIL", f"Status: {response.status_code}")
+                    except Exception as e:
+                        self.result.add_result("Get Chat History", "FAIL", str(e))
+                        
+                else:
+                    self.result.add_result("Send Chat Message", "FAIL", "Invalid message response format")
+            else:
+                self.result.add_result("Send Chat Message", "FAIL", f"Status: {response.status_code}, Response: {response.text}")
+        except Exception as e:
+            self.result.add_result("Send Chat Message", "FAIL", str(e))
+    
+    def test_comprehensive_audit_processing(self):
+        """Test comprehensive audit processing with all 132+ SEO checks"""
+        print(f"\n{Colors.BLUE}=== COMPREHENSIVE AUDIT PROCESSING TESTS ==={Colors.END}")
+        
+        if not self.user_token:
+            self.result.add_result("Comprehensive Audit Processing", "FAIL", "No user token available")
+            return
+        
+        headers = {"Authorization": f"Bearer {self.user_token}"}
+        
+        # Create a new audit for comprehensive testing
+        try:
+            audit_data = {
+                "website_url": "https://example.com"
+            }
+            
+            response = self.session.post(f"{BASE_URL}/audits/", json=audit_data, headers=headers)
+            
+            if response.status_code == 201:
+                audit = response.json()
+                audit_id = audit["id"]
+                
+                # Wait for audit processing (up to 30 seconds)
+                max_wait = 30
+                wait_time = 0
+                
+                while wait_time < max_wait:
+                    time.sleep(2)
+                    wait_time += 2
+                    
+                    response = self.session.get(f"{BASE_URL}/audits/{audit_id}", headers=headers)
+                    if response.status_code == 200:
+                        audit_status = response.json()
+                        status = audit_status.get("status")
+                        
+                        if status == "completed":
+                            # Verify comprehensive results
+                            checks_passed = audit_status.get("checks_passed", 0)
+                            checks_failed = audit_status.get("checks_failed", 0)
+                            total_checks = checks_passed + checks_failed
+                            overall_score = audit_status.get("overall_score", 0)
+                            
+                            if total_checks >= 130:  # Should have 132+ checks
+                                self.result.add_result("SEO Checks Execution", "PASS", f"Executed {total_checks} checks (passed: {checks_passed}, failed: {checks_failed})")
+                            else:
+                                self.result.add_result("SEO Checks Execution", "FAIL", f"Only {total_checks} checks executed, expected 132+")
+                            
+                            if isinstance(overall_score, (int, float)) and 0 <= overall_score <= 100:
+                                self.result.add_result("Overall Score Calculation", "PASS", f"Score: {overall_score}")
+                            else:
+                                self.result.add_result("Overall Score Calculation", "FAIL", f"Invalid score: {overall_score}")
+                            
+                            # Test audit detail endpoint with results
+                            try:
+                                response = self.session.get(f"{BASE_URL}/audits/{audit_id}/results", headers=headers)
+                                if response.status_code == 200:
+                                    results = response.json()
+                                    if isinstance(results, list) and len(results) > 0:
+                                        self.result.add_result("Audit Results Detail", "PASS", f"Found {len(results)} detailed results")
+                                    else:
+                                        self.result.add_result("Audit Results Detail", "WARNING", "No detailed results found")
+                                else:
+                                    self.result.add_result("Audit Results Detail", "FAIL", f"Status: {response.status_code}")
+                            except Exception as e:
+                                self.result.add_result("Audit Results Detail", "FAIL", str(e))
+                            
+                            break
+                        elif status == "failed":
+                            self.result.add_result("Audit Processing", "FAIL", "Audit processing failed")
+                            break
+                        else:
+                            # Still processing
+                            continue
+                
+                if wait_time >= max_wait:
+                    self.result.add_result("Audit Processing", "WARNING", f"Audit still processing after {max_wait}s, status: {status}")
+                    
+            else:
+                self.result.add_result("Comprehensive Audit Creation", "FAIL", f"Status: {response.status_code}")
+        except Exception as e:
+            self.result.add_result("Comprehensive Audit Processing", "FAIL", str(e))
+    
     def test_cors_configuration(self):
         """Test CORS configuration"""
         print(f"\n{Colors.BLUE}=== CORS CONFIGURATION TESTS ==={Colors.END}")
