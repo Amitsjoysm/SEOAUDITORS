@@ -174,3 +174,28 @@ class APIToken(Base):
 
     # Relationships
     user = relationship("User", back_populates="api_tokens")
+
+
+class Theme(Base):
+    __tablename__ = "themes"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False, unique=True)
+    is_active = Column(Boolean, default=False)  # Only one theme can be active
+    
+    # Color palette
+    primary_color = Column(String, default="#a78bfa")  # Soft purple
+    secondary_color = Column(String, default="#fbbf24")  # Soft amber
+    accent_color = Column(String, default="#34d399")  # Soft emerald
+    background_color = Column(String, default="#0f172a")  # Dark slate
+    surface_color = Column(String, default="#1e293b")  # Lighter slate
+    text_primary = Column(String, default="#f8fafc")  # Light text
+    text_secondary = Column(String, default="#cbd5e1")  # Muted text
+    
+    # Additional theme settings
+    border_radius = Column(String, default="0.75rem")  # Border radius
+    font_family = Column(String, default="Inter, system-ui, sans-serif")
+    custom_css = Column(Text)  # Custom CSS for advanced customization
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
