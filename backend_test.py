@@ -11,7 +11,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://seogenius-17.preview.emergentagent.com/api"
+BASE_URL = "https://seoauditor-2.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 TEST_USER_EMAIL = "testuser@mjseo.com"
@@ -496,7 +496,7 @@ class MJSEOTester:
         try:
             # Test preflight request
             headers = {
-                'Origin': 'https://seogenius-17.preview.emergentagent.com',
+                'Origin': 'https://seoauditor-2.preview.emergentagent.com',
                 'Access-Control-Request-Method': 'POST',
                 'Access-Control-Request-Headers': 'Content-Type, Authorization'
             }
