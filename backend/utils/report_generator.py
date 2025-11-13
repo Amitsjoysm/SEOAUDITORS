@@ -12,6 +12,14 @@ from typing import List
 from pathlib import Path
 import asyncio
 from datetime import datetime
+import html
+
+
+def escape_html(text: str) -> str:
+    """Escape HTML special characters for safe use in reports"""
+    if not text:
+        return ""
+    return html.escape(str(text))
 
 
 async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
