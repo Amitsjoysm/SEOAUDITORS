@@ -257,7 +257,7 @@ const AuditDetail = () => {
                     <Button
                       onClick={handleDownloadPdf}
                       disabled={downloadingPdf}
-                      className="flex-1 min-w-[200px] bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300"
+                      className="flex-1 min-w-[200px] btn-3d bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300"
                     >
                       {downloadingPdf ? (
                         <>
