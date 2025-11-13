@@ -3454,7 +3454,7 @@ def run_all_comprehensive_checks(pages: List[CrawledPage], website_data: Dict[st
     results.append(geo_aeo.check_google_business_profile(pages))
     results.append(geo_aeo.check_nap_consistency(pages))
     
-    # Advanced Technical & Security Checks (11 checks)
+    # Advanced Technical & Security Checks (18 checks - increased from 11)
     advanced = AdvancedChecks()
     results.append(advanced.check_robots_txt_valid(pages))
     results.append(advanced.check_sitemap_xml(pages))
@@ -3467,6 +3467,14 @@ def run_all_comprehensive_checks(pages: List[CrawledPage], website_data: Dict[st
     results.append(advanced.check_wcag_accessibility(pages))
     results.append(advanced.check_color_contrast(pages))
     results.append(advanced.check_keyboard_navigation(pages))
+    # Additional 7 checks to reach 132 total
+    results.append(advanced.check_http2_enabled(pages))
+    results.append(advanced.check_resource_hints(pages))
+    results.append(advanced.check_dom_size(pages))
+    results.append(advanced.check_third_party_scripts(pages))
+    results.append(advanced.check_ecommerce_tracking(pages))
+    results.append(advanced.check_core_web_vitals_tracking(pages))
+    results.append(advanced.check_international_seo_setup(pages))
     
     logger.info(f"Completed {len(results)} comprehensive SEO checks")
     return results
