@@ -151,7 +151,8 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
                 if result.cons:
                     story.append(Paragraph("<b>Issues:</b>", styles['BodyText']))
                     for con in result.cons[:3]:
-                        story.append(Paragraph(f"  - {con}", styles['BodyText']))
+                        safe_con = str(con).replace('<', '&lt;').replace('>', '&gt;').replace('&', '&amp;')
+                        story.append(Paragraph(f"  - {safe_con}", styles['BodyText']))
                 
                 # Solution
                 if result.solution:
