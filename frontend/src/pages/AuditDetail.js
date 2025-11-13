@@ -222,7 +222,7 @@ const AuditDetail = () => {
               {audit.overall_score !== null && (
                 <div className="text-center">
                   <div className="text-sm text-slate-400 mb-2">Overall SEO Score</div>
-                  <div className={`text-6xl font-bold ${getScoreColor(audit.overall_score)}`}>
+                  <div className={`text-6xl font-bold neon-glow score-animation ${getScoreColor(audit.overall_score)}`}>
                     {audit.overall_score}
                   </div>
                   <div className="text-slate-500 mt-1">/ 100</div>
