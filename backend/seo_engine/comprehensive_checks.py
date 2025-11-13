@@ -3093,6 +3093,213 @@ class AdvancedChecks:
                 "Keyboard shortcuts documentation"
             ]
         }
+    
+    @staticmethod
+    def check_http2_enabled(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "HTTP/2 not enabled",
+            "category": "Advanced Performance",
+            "status": "info",
+            "impact_score": 65,
+            "current_value": "Requires server header analysis",
+            "recommended_value": "HTTP/2 or HTTP/3 enabled",
+            "pros": [],
+            "cons": ["HTTP/1.1 is slower than HTTP/2"],
+            "ranking_impact": "HTTP/2 improves load times by 15-30%, indirectly boosting rankings",
+            "solution": "Enable HTTP/2 on your web server (Nginx, Apache, CDN)",
+            "enhancements": [
+                "Upgrade to HTTP/3 for even better performance",
+                "Enable server push for critical resources",
+                "Implement QUIC protocol support",
+                "Use CDN with HTTP/2 support",
+                "Test with WebPageTest HTTP/2 validator"
+            ]
+        }
+    
+    @staticmethod
+    def check_resource_hints(pages: List[CrawledPage]) -> Dict[str, Any]:
+        missing_count = 0
+        for page in pages:
+            soup = BeautifulSoup(page.html, 'html.parser')
+            preload = soup.find_all('link', rel='preload')
+            preconnect = soup.find_all('link', rel='preconnect')
+            dns_prefetch = soup.find_all('link', rel='dns-prefetch')
+            if not (preload or preconnect or dns_prefetch):
+                missing_count += 1
+        
+        status = "fail" if missing_count > len(pages) * 0.7 else ("warning" if missing_count > 0 else "pass")
+        return {
+            "check_name": "No resource preloading/hints",
+            "category": "Advanced Performance",
+            "status": status,
+            "impact_score": 70,
+            "current_value": f"{missing_count}/{len(pages)} pages missing resource hints",
+            "recommended_value": "Use preload, preconnect, dns-prefetch strategically",
+            "pros": [f"{len(pages) - missing_count} pages using resource hints"] if missing_count < len(pages) else [],
+            "cons": [f"{missing_count} pages missing resource optimization hints"] if missing_count > 0 else [],
+            "ranking_impact": "Resource hints can improve perceived load time by 10-20%, affecting Core Web Vitals",
+            "solution": "Add <link rel='preload'> for critical CSS/fonts, <link rel='preconnect'> for third-party origins",
+            "enhancements": [
+                "Preload critical CSS and fonts",
+                "Preconnect to analytics and CDN domains",
+                "Use dns-prefetch for less critical third-parties",
+                "Implement modulepreload for JavaScript modules",
+                "Monitor with Chrome DevTools Network waterfall"
+            ]
+        }
+    
+    @staticmethod
+    def check_dom_size(pages: List[CrawledPage]) -> Dict[str, Any]:
+        large_dom_count = 0
+        for page in pages:
+            soup = BeautifulSoup(page.html, 'html.parser')
+            dom_elements = len(soup.find_all())
+            if dom_elements > 1500:
+                large_dom_count += 1
+        
+        status = "fail" if large_dom_count > len(pages) * 0.5 else ("warning" if large_dom_count > 0 else "pass")
+        return {
+            "check_name": "Excessive DOM size (>1500 nodes)",
+            "category": "Advanced Performance",
+            "status": status,
+            "impact_score": 75,
+            "current_value": f"{large_dom_count}/{len(pages)} pages with large DOM",
+            "recommended_value": "Keep DOM size under 1500 nodes",
+            "pros": [f"{len(pages) - large_dom_count} pages with optimized DOM"] if large_dom_count < len(pages) else [],
+            "cons": [f"{large_dom_count} pages with excessive DOM size"] if large_dom_count > 0 else [],
+            "ranking_impact": "Large DOM increases memory usage and rendering time, can hurt INP by 15-25%",
+            "solution": "Optimize HTML structure, use code splitting, lazy load components",
+            "enhancements": [
+                "Implement virtualization for long lists",
+                "Use code splitting to reduce initial DOM",
+                "Lazy load off-screen content",
+                "Simplify nested div structures",
+                "Use CSS instead of HTML for visual effects",
+                "Profile with Chrome DevTools Memory"
+            ]
+        }
+    
+    @staticmethod
+    def check_third_party_scripts(pages: List[CrawledPage]) -> Dict[str, Any]:
+        heavy_third_party = 0
+        for page in pages:
+            soup = BeautifulSoup(page.html, 'html.parser')
+            scripts = soup.find_all('script', src=True)
+            third_party_scripts = [s for s in scripts if s.get('src') and not any(domain in s.get('src', '') for domain in ['self', page.url])]
+            if len(third_party_scripts) > 10:
+                heavy_third_party += 1
+        
+        status = "fail" if heavy_third_party > len(pages) * 0.5 else ("warning" if heavy_third_party > 0 else "pass")
+        return {
+            "check_name": "Third-party scripts slowing site",
+            "category": "Advanced Performance",
+            "status": status,
+            "impact_score": 80,
+            "current_value": f"{heavy_third_party}/{len(pages)} pages with many third-party scripts",
+            "recommended_value": "Minimize third-party scripts, use async/defer",
+            "pros": [f"{len(pages) - heavy_third_party} pages with optimized third-party loading"] if heavy_third_party < len(pages) else [],
+            "cons": [f"{heavy_third_party} pages heavily reliant on third-party scripts"] if heavy_third_party > 0 else [],
+            "ranking_impact": "Third-party scripts can increase Total Blocking Time by 30-50%, hurting rankings by 10-15%",
+            "solution": "Audit third-party scripts, remove unnecessary ones, use async/defer attributes",
+            "enhancements": [
+                "Self-host critical third-party resources",
+                "Use facade patterns for heavy embeds (YouTube, maps)",
+                "Implement consent-based loading for analytics",
+                "Use Partytown for web worker execution",
+                "Monitor with WebPageTest or SpeedCurve",
+                "Set up CSP to control third-party loading"
+            ]
+        }
+    
+    @staticmethod
+    def check_ecommerce_tracking(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_ecommerce = False
+        for page in pages:
+            soup = BeautifulSoup(page.html, 'html.parser')
+            # Check for common e-commerce indicators
+            if any(keyword in page.html.lower() for keyword in ['add to cart', 'buy now', 'checkout', 'product', 'price']):
+                has_ecommerce = True
+                break
+        
+        status = "info" if has_ecommerce else "pass"
+        return {
+            "check_name": "E-commerce tracking not set up",
+            "category": "Advanced Analytics",
+            "status": status,
+            "impact_score": 60,
+            "current_value": "E-commerce site detected" if has_ecommerce else "Not an e-commerce site",
+            "recommended_value": "Enhanced e-commerce tracking enabled",
+            "pros": [],
+            "cons": ["Missing transaction and product performance data"] if has_ecommerce else [],
+            "ranking_impact": "E-commerce tracking doesn't directly affect rankings but helps optimize conversion rates",
+            "solution": "Implement Google Analytics 4 e-commerce events and Meta Pixel",
+            "enhancements": [
+                "Track product impressions and clicks",
+                "Implement purchase events with transaction details",
+                "Set up funnel analysis for checkout process",
+                "Track product search and filters",
+                "Implement enhanced measurement in GA4",
+                "Set up server-side tracking for accuracy"
+            ]
+        }
+    
+    @staticmethod
+    def check_core_web_vitals_tracking(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Core Web Vitals tracking not configured",
+            "category": "Advanced Analytics",
+            "status": "info",
+            "impact_score": 85,
+            "current_value": "CWV tracking setup required",
+            "recommended_value": "Real user monitoring (RUM) for CWV",
+            "pros": [],
+            "cons": ["Unable to monitor real-world Core Web Vitals performance"],
+            "ranking_impact": "CWV directly affects rankings (15-20% factor), tracking helps optimize",
+            "solution": "Implement web-vitals library and send metrics to analytics",
+            "enhancements": [
+                "Use web-vitals JavaScript library",
+                "Send CWV metrics to Google Analytics 4",
+                "Set up Google Search Console monitoring",
+                "Implement Sentry or similar for performance tracking",
+                "Create CWV dashboards in Google Data Studio",
+                "Set up alerts for CWV threshold violations",
+                "Track by device type and connection speed"
+            ]
+        }
+    
+    @staticmethod
+    def check_international_seo_setup(pages: List[CrawledPage]) -> Dict[str, Any]:
+        has_hreflang = False
+        for page in pages:
+            soup = BeautifulSoup(page.html, 'html.parser')
+            hreflang = soup.find_all('link', rel='alternate', hreflang=True)
+            if hreflang:
+                has_hreflang = True
+                break
+        
+        status = "pass" if has_hreflang else "info"
+        return {
+            "check_name": "International SEO not configured",
+            "category": "Advanced Technical",
+            "status": status,
+            "impact_score": 70,
+            "current_value": "Hreflang tags found" if has_hreflang else "No international targeting detected",
+            "recommended_value": "Proper international SEO setup if targeting multiple regions",
+            "pros": ["International targeting configured"] if has_hreflang else [],
+            "cons": ["Missing international SEO configuration"] if not has_hreflang else [],
+            "ranking_impact": "Proper international SEO can improve regional rankings by 20-40%",
+            "solution": "Implement hreflang tags, country-specific content, and regional targeting",
+            "enhancements": [
+                "Implement hreflang tags for all language/region variants",
+                "Use appropriate URL structure (ccTLD, subdomain, subdirectory)",
+                "Configure regional targeting in Google Search Console",
+                "Create region-specific content and cultural adaptations",
+                "Set up geotargeting and regional hosting",
+                "Implement currency and language switchers",
+                "Build regional backlinks and citations"
+            ]
+        }
+
 
 
 def run_all_comprehensive_checks(pages: List[CrawledPage], website_data: Dict[str, Any] = None) -> List[Dict[str, Any]]:
