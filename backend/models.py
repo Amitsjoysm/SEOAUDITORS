@@ -112,7 +112,7 @@ class Audit(Base):
     report_pdf_path = Column(String)
     report_docx_path = Column(String)
     error_message = Column(Text)
-    metadata = Column(JSON)  # Store crawled data, timings, etc.
+    audit_metadata = Column(JSON)  # Store crawled data, timings, etc.
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     completed_at = Column(DateTime(timezone=True))
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
