@@ -72,6 +72,7 @@ api_router.include_router(admin.router)
 api_router.include_router(chat.router)
 api_router.include_router(api_tokens.router)
 api_router.include_router(reports.router)
+api_router.include_router(payments.router)
 
 # Include API router in main app
 app.include_router(api_router)
