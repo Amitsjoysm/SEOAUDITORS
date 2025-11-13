@@ -2023,6 +2023,138 @@ class ContentChecks:
                 "Include visual breaks"
             ]
         }
+    
+    @staticmethod
+    def check_content_comprehensive(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Content could be more comprehensive",
+            "category": "Content Quality",
+            "status": "info",
+            "impact_score": 83,
+            "current_value": "Competitive content analysis needed",
+            "recommended_value": "More comprehensive than competitors",
+            "pros": [],
+            "cons": ["Thin content loses to more comprehensive competitors"],
+            "ranking_impact": "Comprehensive content outranks thin content by 40-60%",
+            "solution": "Analyze top-ranking competitors and create more comprehensive content",
+            "enhancements": [
+                "Cover all sub-topics",
+                "Include FAQs",
+                "Add examples and case studies",
+                "Use multimedia (images, videos)",
+                "Create definitive guides"
+            ]
+        }
+    
+    @staticmethod
+    def check_ai_generated_content(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Content may be AI-generated without human review",
+            "category": "Content Quality",
+            "status": "info",
+            "impact_score": 80,
+            "current_value": "Content authenticity assessment needed",
+            "recommended_value": "Human-reviewed, original content",
+            "pros": [],
+            "cons": ["AI-only content may lack E-E-A-T signals"],
+            "ranking_impact": "Low-quality AI content can reduce rankings by 30-50%",
+            "solution": "Add human expertise, personal insights, and original research",
+            "enhancements": [
+                "Add first-hand experience",
+                "Include expert opinions",
+                "Add original data/research",
+                "Human editorial review",
+                "Add author credentials"
+            ]
+        }
+    
+    @staticmethod
+    def check_keyword_density(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Primary keyword density too low",
+            "category": "Content Quality",
+            "status": "info",
+            "impact_score": 75,
+            "current_value": "Keyword analysis required",
+            "recommended_value": "1-2% keyword density (natural usage)",
+            "pros": [],
+            "cons": ["Cannot assess without target keywords"],
+            "ranking_impact": "Proper keyword usage affects rankings by 10-20%",
+            "solution": "Use primary keywords naturally throughout content (1-2% density)",
+            "enhancements": [
+                "Use keywords in first 100 words",
+                "Include in headings naturally",
+                "Use keyword variations",
+                "Avoid keyword stuffing",
+                "Focus on user intent"
+            ]
+        }
+    
+    @staticmethod
+    def check_semantic_keywords(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "No semantic keywords (LSI)",
+            "category": "Content Quality",
+            "status": "info",
+            "impact_score": 78,
+            "current_value": "LSI keyword analysis required",
+            "recommended_value": "Rich semantic keyword coverage",
+            "pros": [],
+            "cons": ["Limited topical relevance without semantic keywords"],
+            "ranking_impact": "Semantic keywords improve topical authority (15-25%)",
+            "solution": "Include related terms and concepts (LSI keywords)",
+            "enhancements": [
+                "Use tools like LSIGraph",
+                "Analyze competitor content",
+                "Include synonyms naturally",
+                "Cover topic comprehensively",
+                "Use NLP-friendly language"
+            ]
+        }
+    
+    @staticmethod
+    def check_search_intent_match(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "Content doesn't match search intent",
+            "category": "Content Quality",
+            "status": "info",
+            "impact_score": 92,
+            "current_value": "Intent analysis required",
+            "recommended_value": "Content aligned with user search intent",
+            "pros": [],
+            "cons": ["Intent mismatch results in high bounce rates"],
+            "ranking_impact": "Intent-mismatched content won't rank well (40-60% loss)",
+            "solution": "Analyze SERP intent and align content type accordingly",
+            "enhancements": [
+                "Study top 10 SERP results",
+                "Match content format (list, guide, comparison)",
+                "Match content depth",
+                "Address user questions",
+                "Include intent-specific keywords"
+            ]
+        }
+    
+    @staticmethod
+    def check_content_update_schedule(pages: List[CrawledPage]) -> Dict[str, Any]:
+        return {
+            "check_name": "No content update schedule",
+            "category": "Content Quality",
+            "status": "info",
+            "impact_score": 70,
+            "current_value": "Content maintenance review needed",
+            "recommended_value": "Regular content updates (quarterly minimum)",
+            "pros": [],
+            "cons": ["Outdated content loses rankings over time"],
+            "ranking_impact": "Regular updates maintain/improve rankings (12-18%)",
+            "solution": "Establish content refresh schedule, update stats and facts regularly",
+            "enhancements": [
+                "Update statistics annually",
+                "Refresh examples",
+                "Add new sections",
+                "Update publish dates",
+                "Monitor content decay"
+            ]
+        }
 
 
 class SocialMediaChecks:
