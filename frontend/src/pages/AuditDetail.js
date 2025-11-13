@@ -27,6 +27,7 @@ const AuditDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { toast } = useToast();
   const [audit, setAudit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [polling, setPolling] = useState(false);
