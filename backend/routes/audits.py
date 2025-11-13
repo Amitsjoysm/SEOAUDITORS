@@ -270,7 +270,7 @@ async def get_audit_detail(
         "created_at": audit.created_at,
         "completed_at": audit.completed_at,
         "results": results,
-        "metadata": audit.metadata or {}
+        "metadata": audit.audit_metadata or {}
     }
     
     return audit_dict
