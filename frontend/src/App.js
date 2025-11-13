@@ -7,6 +7,11 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 import AuditDetail from '@/pages/AuditDetail';
+import Plans from '@/pages/Plans';
+import AdminDashboard from '@/pages/AdminDashboard';
+import Chat from '@/pages/Chat';
+import APITokens from '@/pages/APITokens';
+import Settings from '@/pages/Settings';
 import '@/App.css';
 
 const PrivateRoute = ({ children }) => {
