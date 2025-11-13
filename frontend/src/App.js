@@ -14,6 +14,7 @@ import Chat from '@/pages/Chat';
 import APITokens from '@/pages/APITokens';
 import Settings from '@/pages/Settings';
 import '@/App.css';
+import '@/styles/enhanced-ui.css';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
