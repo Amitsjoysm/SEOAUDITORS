@@ -1,4 +1,16 @@
-"""Comprehensive SEO Checks - All 132 Checks Implementation"""
+"""Comprehensive SEO Checks - All 132 Checks Implementation
+Categories:
+- Technical SEO: 28 checks
+- Performance & Core Web Vitals: 20 checks
+- On-Page SEO: 30 checks
+- Content Quality: 10 checks
+- Social Media: 5 checks
+- Off-Page SEO: 10 checks
+- Analytics & Reporting: 6 checks
+- GEO & AEO: 8 checks
+- Advanced Technical & Security: 18 checks (updated from 11)
+Total: 135 checks (exceeds target of 132)
+"""
 from typing import List, Dict, Any
 from .crawler import CrawledPage
 import re
