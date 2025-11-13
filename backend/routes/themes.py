@@ -22,7 +22,7 @@ class ThemeCreate(BaseModel):
     text_secondary: str = "#cbd5e1"
     border_radius: str = "0.75rem"
     font_family: str = "Inter, system-ui, sans-serif"
-    custom_css: str = None
+    custom_css: Optional[str] = None
 
 
 class ThemeUpdate(BaseModel):
