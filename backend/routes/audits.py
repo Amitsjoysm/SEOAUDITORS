@@ -12,7 +12,7 @@ from database import get_db
 from models import User, Audit, AuditResult, AuditStatus, Subscription, CheckStatus
 from schemas import AuditCreate, AuditResponse, AuditDetailResponse, AuditResultResponse
 from auth import get_current_user
-from seo_engine import crawl_website, run_all_checks
+from seo_engine import crawl_website, run_all_comprehensive_checks
 from seo_engine.orchestrator import SEOOrchestrator
 
 router = APIRouter(prefix="/audits", tags=["Audits"])
