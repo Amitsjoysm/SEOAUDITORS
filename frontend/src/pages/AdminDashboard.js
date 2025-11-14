@@ -644,6 +644,106 @@ const AdminDashboard = () => {
           </div>
         )}
 
+        {/* LLM Settings Tab */}
+        {activeTab === 'llm-settings' && (
+          <div>
+            <div className="mb-6">
+              <button
+                onClick={() => { setEditingLlm(null); setShowLlmModal(true); }}
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                Add LLM Configuration
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {llmSettings.map((llm) => (
+                <div key={llm.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800 relative">
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    {llm.is_active ? (
+                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                        <Zap className="w-3 h-3" />
+                        Active
+                      </div>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => { setEditingLlm(llm); setShowLlmModal(true); }}
+                          className="text-gray-400 hover:text-white transition-colors"
+                          title="Edit LLM Setting"
+                        >
+                          <Edit className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteLlm(llm.id)}
+                          className="text-red-400 hover:text-red-300 transition-colors"
+                          title="Delete LLM Setting"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  
+                  <div className="mb-4">
+                    <h3 className="text-xl font-bold text-white mb-2 capitalize">{llm.provider}</h3>
+                    <p className="text-sm text-gray-400">{llm.description || 'No description'}</p>
+                  </div>
+                  
+                  <div className="space-y-3 mb-4">
+                    <div>
+                      <div className="text-xs text-gray-500 mb-1">Model</div>
+                      <div className="text-sm text-white font-mono bg-slate-800 px-2 py-1 rounded">
+                        {llm.model_name}
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <div className="text-xs text-gray-500 mb-1">Temperature</div>
+                        <div className="text-sm text-gray-300">{llm.temperature}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-gray-500 mb-1">Max Tokens</div>
+                        <div className="text-sm text-gray-300">{llm.max_tokens}</div>
+                      </div>
+                    </div>
+                    
+                    {llm.api_key_ref && (
+                      <div>
+                        <div className="text-xs text-gray-500 mb-1">API Key Reference</div>
+                        <div className="text-xs text-purple-400 font-mono">{llm.api_key_ref}</div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {!llm.is_active && (
+                    <button
+                      onClick={() => handleActivateLlm(llm.id)}
+                      className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+                    >
+                      Activate LLM
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* LLM Modal */}
+            {showLlmModal && (
+              <LlmModal
+                llm={editingLlm}
+                onClose={() => { setShowLlmModal(false); setEditingLlm(null); }}
+                onCreate={handleCreateLlm}
+                onUpdate={handleUpdateLlm}
+                onProviderChange={fetchModelsForProvider}
+                availableModels={availableModels}
+              />
+            )}
+          </div>
+        )}
+
         {/* Environment Keys Tab */}
         {activeTab === 'env-keys' && (
           <div>
