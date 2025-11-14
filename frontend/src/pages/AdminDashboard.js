@@ -534,7 +534,20 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800">
-                    {envKeys.map((key) => (
+                    {envKeys.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" className="px-6 py-12 text-center">
+                          <p className="text-gray-400 mb-4">No environment keys found</p>
+                          <button
+                            onClick={handleInitializeDefaults}
+                            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                          >
+                            Initialize from .env
+                          </button>
+                        </td>
+                      </tr>
+                    ) : (
+                      envKeys.map((key) => (
                       <tr key={key.id} className="hover:bg-slate-800/30 transition-colors">
                         <td className="px-6 py-4 text-sm font-mono text-white">{key.key_name}</td>
                         <td className="px-6 py-4 text-sm">
