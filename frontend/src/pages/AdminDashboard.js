@@ -874,6 +874,10 @@ const AdminDashboard = () => {
             )}
           </div>
         )}
+
+        {/* SEO Settings Tab */}
+        {activeTab === 'seo-settings' && <AdminSEOSettings />}
+
       </div>
     </div>
   );
