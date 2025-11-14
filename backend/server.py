@@ -78,6 +78,7 @@ api_router.include_router(admin_payments.router)   # Admin payment management
 api_router.include_router(themes.router)
 api_router.include_router(env_keys.router)  # Environment keys management
 api_router.include_router(llm_settings.router)  # LLM settings management
+api_router.include_router(seo_settings.router)  # SEO settings management
 
 # Include API router in main app
 app.include_router(api_router)
