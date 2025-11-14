@@ -1257,4 +1257,375 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
   );
 };
 
+// ThemeModal Component
+const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
+  const [formData, setFormData] = React.useState({
+    name: theme?.name || '',
+    primary_color: theme?.primary_color || '#a78bfa',
+    secondary_color: theme?.secondary_color || '#fbbf24',
+    accent_color: theme?.accent_color || '#34d399',
+    background_color: theme?.background_color || '#0f172a',
+    surface_color: theme?.surface_color || '#1e293b',
+    text_primary: theme?.text_primary || '#f8fafc',
+    text_secondary: theme?.text_secondary || '#cbd5e1',
+    border_radius: theme?.border_radius || '0.75rem',
+    font_family: theme?.font_family || 'Inter, system-ui, sans-serif',
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (theme) {
+      onUpdate(theme.id, formData);
+    } else {
+      onCreate(formData);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold text-white mb-6">
+          {theme ? 'Edit Theme' : 'Create New Theme'}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Theme Name</label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="My Awesome Theme"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Primary Color</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={formData.primary_color}
+                  onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
+                  className="w-16 h-10 rounded cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.primary_color}
+                  onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  placeholder="#a78bfa"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Secondary Color</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={formData.secondary_color}
+                  onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
+                  className="w-16 h-10 rounded cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.secondary_color}
+                  onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  placeholder="#fbbf24"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Accent Color</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={formData.accent_color}
+                  onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
+                  className="w-16 h-10 rounded cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.accent_color}
+                  onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  placeholder="#34d399"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Background Color</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={formData.background_color}
+                  onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
+                  className="w-16 h-10 rounded cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.background_color}
+                  onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  placeholder="#0f172a"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Surface Color</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={formData.surface_color}
+                  onChange={(e) => setFormData({ ...formData, surface_color: e.target.value })}
+                  className="w-16 h-10 rounded cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.surface_color}
+                  onChange={(e) => setFormData({ ...formData, surface_color: e.target.value })}
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  placeholder="#1e293b"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Text Primary</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={formData.text_primary}
+                  onChange={(e) => setFormData({ ...formData, text_primary: e.target.value })}
+                  className="w-16 h-10 rounded cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.text_primary}
+                  onChange={(e) => setFormData({ ...formData, text_primary: e.target.value })}
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  placeholder="#f8fafc"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Text Secondary</label>
+              <div className="flex gap-2">
+                <input
+                  type="color"
+                  value={formData.text_secondary}
+                  onChange={(e) => setFormData({ ...formData, text_secondary: e.target.value })}
+                  className="w-16 h-10 rounded cursor-pointer"
+                />
+                <input
+                  type="text"
+                  value={formData.text_secondary}
+                  onChange={(e) => setFormData({ ...formData, text_secondary: e.target.value })}
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  placeholder="#cbd5e1"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-4 pt-4">
+            <button
+              type="submit"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              {theme ? 'Update Theme' : 'Create Theme'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// LlmModal Component
+const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availableModels }) => {
+  const [formData, setFormData] = React.useState({
+    provider: llm?.provider || 'groq',
+    model_name: llm?.model_name || '',
+    api_key_ref: llm?.api_key_ref || '',
+    base_url: llm?.base_url || '',
+    temperature: llm?.temperature || 0.7,
+    max_tokens: llm?.max_tokens || 4096,
+    top_p: llm?.top_p || 1.0,
+    description: llm?.description || ''
+  });
+
+  React.useEffect(() => {
+    if (formData.provider) {
+      onProviderChange(formData.provider);
+    }
+  }, [formData.provider]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (llm) {
+      onUpdate(llm.id, formData);
+    } else {
+      onCreate(formData);
+    }
+  };
+
+  const providerOptions = [
+    { value: 'groq', label: 'Groq' },
+    { value: 'openai', label: 'OpenAI' },
+    { value: 'anthropic', label: 'Anthropic (Claude)' },
+    { value: 'gemini', label: 'Google Gemini' },
+    { value: 'ollama', label: 'Ollama (Local)' }
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold text-white mb-6">
+          {llm ? 'Edit LLM Configuration' : 'Add New LLM Configuration'}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Provider</label>
+            <select
+              value={formData.provider}
+              onChange={(e) => setFormData({ ...formData, provider: e.target.value, model_name: '' })}
+              disabled={!!llm}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+              required
+            >
+              {providerOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Model</label>
+            <select
+              value={formData.model_name}
+              onChange={(e) => setFormData({ ...formData, model_name: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              required
+            >
+              <option value="">Select a model...</option>
+              {availableModels.map(model => (
+                <option key={model.id} value={model.id}>
+                  {model.name} ({model.context} context)
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">API Key Reference</label>
+            <input
+              type="text"
+              value={formData.api_key_ref}
+              onChange={(e) => setFormData({ ...formData, api_key_ref: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              placeholder="GROQ_API_KEY or OPENAI_API_KEY"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Reference to an environment key or .env variable name
+            </p>
+          </div>
+
+          {formData.provider === 'ollama' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Base URL</label>
+              <input
+                type="text"
+                value={formData.base_url}
+                onChange={(e) => setFormData({ ...formData, base_url: e.target.value })}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                placeholder="http://localhost:11434/v1"
+              />
+            </div>
+          )}
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Temperature</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="2"
+                value={formData.temperature}
+                onChange={(e) => setFormData({ ...formData, temperature: parseFloat(e.target.value) })}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Max Tokens</label>
+              <input
+                type="number"
+                min="100"
+                max="200000"
+                value={formData.max_tokens}
+                onChange={(e) => setFormData({ ...formData, max_tokens: parseInt(e.target.value) })}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Top P</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="1"
+                value={formData.top_p}
+                onChange={(e) => setFormData({ ...formData, top_p: parseFloat(e.target.value) })}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              rows="3"
+              placeholder="Describe this LLM configuration..."
+            />
+          </div>
+
+          <div className="flex gap-4 pt-4">
+            <button
+              type="submit"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              {llm ? 'Update Configuration' : 'Create Configuration'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default AdminDashboard;
