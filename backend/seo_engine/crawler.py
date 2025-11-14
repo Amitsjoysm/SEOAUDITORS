@@ -248,14 +248,27 @@ class WebsiteCrawler:
                     canonical=canonical,
                     h1_tags=h1_tags,
                     h2_tags=h2_tags,
+                    h3_tags=h3_tags,
                     images=images,
                     links=links,
+                    internal_links=internal_links,
+                    external_links=external_links,
                     scripts=scripts,
                     stylesheets=stylesheets,
                     load_time=load_time,
                     has_viewport=has_viewport,
                     has_https=has_https,
-                    word_count=word_count
+                    word_count=word_count,
+                    og_tags=og_tags,
+                    twitter_tags=twitter_tags,
+                    schema_markup=schema_markup,
+                    meta_charset=meta_charset,
+                    meta_lang=meta_lang,
+                    paragraphs=paragraphs,
+                    headings_structure=headings_structure,
+                    alt_missing_images=alt_missing_images,
+                    response_headers=response_headers,
+                    content_type=content_type
                 )
                 
                 logger.info(f"Successfully crawled: {url} (Status: {response.status}, Load time: {load_time:.2f}s)")
