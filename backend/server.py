@@ -73,7 +73,8 @@ api_router.include_router(admin.router)
 api_router.include_router(chat.router)
 api_router.include_router(api_tokens.router)
 api_router.include_router(reports.router)
-api_router.include_router(payments.router)
+api_router.include_router(payments_stripe.router)  # New Stripe-only payment system
+api_router.include_router(admin_payments.router)   # Admin payment management
 api_router.include_router(themes.router)
 
 # Include API router in main app
