@@ -86,6 +86,14 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/payment/success"
+        element={
+          <PrivateRoute>
+            <PaymentSuccess />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }
