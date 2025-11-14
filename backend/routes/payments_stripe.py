@@ -698,9 +698,9 @@ async def handle_dispute_created(dispute: dict, db: AsyncSession):
         
         if payment:
             payment.status = PaymentStatus.DISPUTED
-            payment.metadata = payment.metadata or {}
-            payment.metadata['dispute_reason'] = dispute.get('reason')
-            payment.metadata['dispute_status'] = dispute.get('status')
+            payment.payment_metadata = payment.payment_metadata or {}
+            payment.payment_metadata['dispute_reason'] = dispute.get('reason')
+            payment.payment_metadata['dispute_status'] = dispute.get('status')
             await db.commit()
             logger.warning(f"Dispute created for payment {payment.id}: {dispute.get('reason')}")
         
