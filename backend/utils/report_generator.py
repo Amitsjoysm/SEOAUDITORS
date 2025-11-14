@@ -55,25 +55,36 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
             spaceBefore=12
         )
         
-        # Title
-        story.append(Paragraph("MJ SEO - Comprehensive SEO Audit Report", title_style))
+        # Title with website name
+        website_name = audit.website_url.split('//')[1].split('/')[0] if '//' in audit.website_url else audit.website_url
+        story.append(Paragraph(f"SEO Audit Report for {website_name}", title_style))
+        story.append(Paragraph("by MJ SEO", ParagraphStyle('subtitle', parent=styles['Normal'], fontSize=12, textColor=colors.HexColor('#6b7280'), alignment=TA_CENTER)))
+        story.append(Spacer(1, 0.3*inch))
+        
+        # Personal introduction
+        intro_text = f"""Welcome to your comprehensive SEO audit report! We've analyzed {audit.pages_crawled} pages from your website 
+        and performed {audit.total_checks_run} detailed checks across 9 critical SEO categories. This report will show you exactly 
+        what's working well, what needs attention, and most importantly - how to fix each issue with specific, actionable steps."""
+        
+        intro_style = ParagraphStyle('intro', parent=styles['BodyText'], fontSize=11, leading=16, spaceAfter=20)
+        story.append(Paragraph(intro_text, intro_style))
         story.append(Spacer(1, 0.2*inch))
         
         # Executive Summary
-        story.append(Paragraph("Executive Summary", heading_style))
+        story.append(Paragraph("📊 Your SEO Score Overview", heading_style))
         
         summary_data = [
             ["Website", audit.website_url],
-            ["Audit Date", audit.created_at.strftime("%Y-%m-%d %H:%M")],
-            ["Overall Score", f"{audit.overall_score:.1f}/100"],
-            ["Pages Crawled", str(audit.pages_crawled)],
-            ["Total Checks", str(audit.total_checks_run)],
-            ["Passed", str(audit.checks_passed)],
-            ["Failed", str(audit.checks_failed)],
-            ["Warnings", str(audit.checks_warning)],
+            ["Audit Date", audit.created_at.strftime("%B %d, %Y at %H:%M")],
+            ["Overall SEO Score", f"{audit.overall_score:.1f}/100"],
+            ["Pages Analyzed", str(audit.pages_crawled)],
+            ["Total Checks Performed", str(audit.total_checks_run)],
+            ["✅ Checks Passed", str(audit.checks_passed)],
+            ["❌ Issues Found", str(audit.checks_failed)],
+            ["⚠️ Warnings", str(audit.checks_warning)],
         ]
         
-        summary_table = Table(summary_data, colWidths=[2*inch, 4*inch])
+        summary_table = Table(summary_data, colWidths=[2.2*inch, 3.8*inch])
         summary_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#e0e7ff')),
             ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
@@ -81,24 +92,39 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
             ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
+            ('TOPPADDING', (0, 0), (-1, -1), 12),
+            ('GRID', (0, 0), (-1, -1), 1, colors.HexColor('#cbd5e1')),
+            ('ROWBACKGROUNDS', (0, 0), (-1, -1), [colors.white, colors.HexColor('#f8fafc')])
         ]))
         story.append(summary_table)
         story.append(Spacer(1, 0.3*inch))
         
-        # Score Interpretation
-        story.append(Paragraph("Score Interpretation", heading_style))
+        # Human-like Score Interpretation
+        story.append(Paragraph("What Your Score Means", heading_style))
         score = audit.overall_score or 0
         if score >= 80:
-            interpretation = "Excellent! Your site is well-optimized."
+            interpretation = f"""Great news! With a score of {score:.1f}/100, your website is performing well in terms of SEO. 
+            You've got {audit.checks_passed} checks passing, which shows you're following SEO best practices. The items flagged 
+            in this report are opportunities to make your already-good site even better. Focus on the high-impact issues first 
+            for maximum results."""
         elif score >= 60:
-            interpretation = "Good, but there's room for improvement."
+            interpretation = f"""Your site scores {score:.1f}/100 - you're on the right track! You have {audit.checks_passed} 
+            checks passing, which is a solid foundation. However, there are {audit.checks_failed} issues that could be holding 
+            your rankings back. The good news? Most of these are fixable with the step-by-step solutions we've provided in this 
+            report. Tackle the critical issues first, and you could see improvements within weeks."""
         elif score >= 40:
-            interpretation = "Needs attention. Address critical issues first."
+            interpretation = f"""With a score of {score:.1f}/100, your website needs some SEO attention. We found {audit.checks_failed} 
+            issues across your {audit.pages_crawled} analyzed pages. Don't worry - this is actually common, and every issue in this 
+            report comes with clear instructions on how to fix it. Start with the "Critical" and "High Impact" items first. These will 
+            give you the biggest boost in search visibility."""
         else:
-            interpretation = "Critical. Immediate action required."
+            interpretation = f"""Your current score of {score:.1f}/100 indicates significant SEO challenges that need immediate attention. 
+            We've identified {audit.checks_failed} critical issues affecting your search performance. But here's the thing - this report 
+            gives you a complete roadmap to fix everything. Follow the priority order we've laid out, starting with technical SEO fundamentals, 
+            and you'll see steady improvement. Many sites have gone from similar scores to 70+ within 2-3 months by systematically addressing 
+            these issues."""
         
-        story.append(Paragraph(interpretation, styles['BodyText']))
+        story.append(Paragraph(interpretation, intro_style))
         story.append(Spacer(1, 0.3*inch))
         
         # Group results by category
