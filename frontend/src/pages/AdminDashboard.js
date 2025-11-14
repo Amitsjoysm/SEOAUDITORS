@@ -45,13 +45,14 @@ const AdminDashboard = () => {
     setLoading(true);
     setError(null);
     try {
-      const [statsRes, usersRes, plansRes, themesRes, auditsRes, envKeysRes] = await Promise.all([
+      const [statsRes, usersRes, plansRes, themesRes, auditsRes, envKeysRes, llmRes] = await Promise.all([
         axios.get('/admin/stats'),
         axios.get('/admin/users'),
         axios.get('/plans/'),
         axios.get('/themes/'),
         axios.get('/admin/audits'),
-        axios.get('/admin/env-keys')
+        axios.get('/admin/env-keys'),
+        axios.get('/admin/llm-settings/')
       ]);
       setStats(statsRes.data);
       setUsers(usersRes.data);
@@ -59,6 +60,7 @@ const AdminDashboard = () => {
       setThemes(themesRes.data);
       setAudits(auditsRes.data);
       setEnvKeys(envKeysRes.data);
+      setLlmSettings(llmRes.data);
       console.log('Admin data loaded successfully:', {
         stats: statsRes.data,
         usersCount: usersRes.data.length,
