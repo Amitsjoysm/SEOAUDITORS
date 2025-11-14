@@ -17,6 +17,7 @@ import Settings from '@/pages/Settings';
 import PaymentSuccess from '@/pages/PaymentSuccess';
 import '@/App.css';
 import '@/styles/enhanced-ui.css';
+import '@/styles/theme.css';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
