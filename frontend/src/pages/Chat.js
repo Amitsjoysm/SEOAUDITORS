@@ -30,7 +30,7 @@ const Chat = () => {
     try {
       const [auditRes, messagesRes] = await Promise.all([
         axios.get(`/audits/${auditId}`),
-        axios.get(`/chat/${auditId}/messages`)
+        axios.get(`/chat/${auditId}`)
       ]);
       setAudit(auditRes.data);
       setMessages(messagesRes.data);
