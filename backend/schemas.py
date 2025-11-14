@@ -81,6 +81,8 @@ class PlanUpdate(BaseModel):
     max_audits_per_month: Optional[int] = None
     max_pages_per_audit: Optional[int] = None
     features: Optional[List[str]] = None
+    stripe_price_id: Optional[str] = None
+    razorpay_plan_id: Optional[str] = None
     is_active: Optional[bool] = None
 
 
