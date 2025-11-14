@@ -18,9 +18,13 @@ const AdminDashboard = () => {
   const [plans, setPlans] = useState([]);
   const [themes, setThemes] = useState([]);
   const [audits, setAudits] = useState([]);
+  const [envKeys, setEnvKeys] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [editingTheme, setEditingTheme] = useState(null);
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [editingKey, setEditingKey] = useState(null);
+  const [showKeyValue, setShowKeyValue] = useState({});
 
   useEffect(() => {
     if (user?.role !== 'superadmin') {
