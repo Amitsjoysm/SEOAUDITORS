@@ -90,6 +90,103 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleCreateTheme = async (themeData) => {
+    try {
+      await axios.post('/themes/', themeData);
+      fetchData();
+      setShowThemeModal(false);
+      alert('Theme created successfully!');
+    } catch (error) {
+      console.error('Failed to create theme:', error);
+      alert(error.response?.data?.detail || 'Failed to create theme');
+    }
+  };
+
+  const handleUpdateTheme = async (themeId, themeData) => {
+    try {
+      await axios.put(`/themes/${themeId}`, themeData);
+      fetchData();
+      setEditingTheme(null);
+      setShowThemeModal(false);
+      alert('Theme updated successfully!');
+    } catch (error) {
+      console.error('Failed to update theme:', error);
+      alert(error.response?.data?.detail || 'Failed to update theme');
+    }
+  };
+
+  const handleDeleteTheme = async (themeId) => {
+    if (!window.confirm('Are you sure you want to delete this theme?')) return;
+    
+    try {
+      await axios.delete(`/themes/${themeId}`);
+      fetchData();
+      alert('Theme deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete theme:', error);
+      alert(error.response?.data?.detail || 'Failed to delete theme');
+    }
+  };
+
+  const handleActivateLlm = async (llmId) => {
+    try {
+      await axios.post(`/admin/llm-settings/${llmId}/activate`);
+      fetchData();
+      alert('LLM setting activated successfully!');
+    } catch (error) {
+      console.error('Failed to activate LLM:', error);
+      alert('Failed to activate LLM setting');
+    }
+  };
+
+  const handleCreateLlm = async (llmData) => {
+    try {
+      await axios.post('/admin/llm-settings/', llmData);
+      fetchData();
+      setShowLlmModal(false);
+      alert('LLM setting created successfully!');
+    } catch (error) {
+      console.error('Failed to create LLM setting:', error);
+      alert(error.response?.data?.detail || 'Failed to create LLM setting');
+    }
+  };
+
+  const handleUpdateLlm = async (llmId, llmData) => {
+    try {
+      await axios.put(`/admin/llm-settings/${llmId}`, llmData);
+      fetchData();
+      setEditingLlm(null);
+      setShowLlmModal(false);
+      alert('LLM setting updated successfully!');
+    } catch (error) {
+      console.error('Failed to update LLM setting:', error);
+      alert(error.response?.data?.detail || 'Failed to update LLM setting');
+    }
+  };
+
+  const handleDeleteLlm = async (llmId) => {
+    if (!window.confirm('Are you sure you want to delete this LLM setting?')) return;
+    
+    try {
+      await axios.delete(`/admin/llm-settings/${llmId}`);
+      fetchData();
+      alert('LLM setting deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete LLM setting:', error);
+      alert(error.response?.data?.detail || 'Failed to delete LLM setting');
+    }
+  };
+
+  const fetchModelsForProvider = async (provider) => {
+    try {
+      const response = await axios.get(`/admin/llm-settings/models/${provider}`);
+      setAvailableModels(response.data.models || []);
+    } catch (error) {
+      console.error('Failed to fetch models:', error);
+      setAvailableModels([]);
+    }
+  };
+
   const handleDeleteUser = async (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     
