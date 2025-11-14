@@ -76,6 +76,7 @@ api_router.include_router(reports.router)
 api_router.include_router(payments_stripe.router)  # New Stripe-only payment system
 api_router.include_router(admin_payments.router)   # Admin payment management
 api_router.include_router(themes.router)
+api_router.include_router(env_keys.router)  # Environment keys management
 
 # Include API router in main app
 app.include_router(api_router)
