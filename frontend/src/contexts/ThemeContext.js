@@ -59,6 +59,19 @@ export const ThemeProvider = ({ children }) => {
     root.style.setProperty('--border-radius', themeData.border_radius);
     root.style.setProperty('--font-family', themeData.font_family);
 
+    // Detect if it's a light theme based on background color
+    const isLight = themeData.background_color && 
+      (themeData.background_color.toLowerCase() === '#ffffff' || 
+       themeData.background_color.toLowerCase() === '#fff' ||
+       themeData.background_color.toLowerCase().startsWith('#f'));
+    
+    // Add data attribute for CSS to detect theme type
+    root.setAttribute('data-theme', isLight ? 'light' : 'dark');
+    
+    // Update body background for smoother transition
+    document.body.style.backgroundColor = themeData.background_color;
+    document.body.style.color = themeData.text_primary;
+
     // Apply custom CSS if present
     if (themeData.custom_css) {
       let styleEl = document.getElementById('custom-theme-css');
