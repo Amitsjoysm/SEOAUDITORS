@@ -90,8 +90,8 @@ export const ThemeProvider = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <div className="text-white text-xl">Loading theme...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--color-background, #0f172a)' }}>
+        <div style={{ color: 'var(--color-text-primary, #f8fafc)' }} className="text-xl">Loading theme...</div>
       </div>
     );
   }
