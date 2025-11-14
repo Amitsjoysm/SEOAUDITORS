@@ -18,4 +18,4 @@ Allow: /*.webp$
 Allow: /*.svg$
 
 # Sitemap location
-Sitemap: https://theme-fix-admin.preview.emergentagent.com/sitemap.xml
+Sitemap: https://frontend-syntax-fix-1.preview.emergentagent.com/sitemap.xml

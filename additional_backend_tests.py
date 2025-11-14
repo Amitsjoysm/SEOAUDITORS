@@ -8,7 +8,7 @@ import json
 import sys
 
 # Configuration
-BASE_URL = "https://theme-seo-control.preview.emergentagent.com/api"
+BASE_URL = "https://frontend-syntax-fix-1.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 
