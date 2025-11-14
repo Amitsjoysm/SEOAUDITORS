@@ -670,13 +670,15 @@ class MJSEOTester:
                             # Test 1: Verify 132+ SEO checks execution
                             checks_passed = audit_status.get("checks_passed", 0)
                             checks_failed = audit_status.get("checks_failed", 0)
-                            total_checks = checks_passed + checks_failed
+                            checks_warning = audit_status.get("checks_warning", 0)
+                            total_checks_run = audit_status.get("total_checks_run", 0)
                             overall_score = audit_status.get("overall_score", 0)
                             
-                            if total_checks >= 130:  # Should have 132+ checks
-                                self.result.add_result("Enhanced SEO Checks (132+)", "PASS", f"Executed {total_checks} checks (passed: {checks_passed}, failed: {checks_failed})")
+                            # Use total_checks_run field which is the actual count
+                            if total_checks_run >= 130:  # Should have 132+ checks
+                                self.result.add_result("Enhanced SEO Checks (132+)", "PASS", f"Executed {total_checks_run} checks (passed: {checks_passed}, failed: {checks_failed}, warning: {checks_warning})")
                             else:
-                                self.result.add_result("Enhanced SEO Checks (132+)", "FAIL", f"Only {total_checks} checks executed, expected 132+")
+                                self.result.add_result("Enhanced SEO Checks (132+)", "FAIL", f"Only {total_checks_run} checks executed, expected 132+")
                             
                             # Test 2: Verify enhanced crawler data extraction (40+ data points)
                             crawl_data = audit_status.get("crawl_data", {})
