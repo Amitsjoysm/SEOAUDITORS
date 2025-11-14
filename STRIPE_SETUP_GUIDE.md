@@ -62,7 +62,7 @@ After saving, **COPY the Price ID**
 1. Go to: https://dashboard.stripe.com/test/webhooks
 2. Click "**Add endpoint**"
 3. **Endpoint URL:** `https://your-domain.com/api/payments/stripe-webhook`
-   - For development: `https://deploy-stripe-admin.preview.emergentagent.com/api/payments/stripe-webhook`
+   - For development: `https://codebase-sync-43.preview.emergentagent.com/api/payments/stripe-webhook`
 4. **Description:** "MJ SEO Payment Webhooks"
 5. **Select events to listen to:** Click "Select events" and choose:
    - `checkout.session.completed`
@@ -95,7 +95,7 @@ STRIPE_PRICE_BASIC="price_YOUR_BASIC_PRICE_ID_HERE"
 STRIPE_PRICE_PRO="price_YOUR_PRO_PRICE_ID_HERE"
 STRIPE_PRICE_ENTERPRISE="price_YOUR_ENTERPRISE_PRICE_ID_HERE"
 
-FRONTEND_URL="https://deploy-stripe-admin.preview.emergentagent.com"
+FRONTEND_URL="https://codebase-sync-43.preview.emergentagent.com"
 ```
 
 Add to `/app/frontend/.env` (ALREADY SET):
