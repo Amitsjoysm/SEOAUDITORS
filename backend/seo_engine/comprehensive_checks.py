@@ -1508,26 +1508,144 @@ class OnPageSEOChecks:
     @staticmethod
     def check_image_alt_text(pages: List[CrawledPage]) -> Dict[str, Any]:
         total_images = sum(len(p.images) for p in pages)
-        missing_alt = sum(1 for p in pages for img in p.images if not img.get('alt'))
+        images_with_alt = []
+        images_without_alt = []
         
+        for page in pages:
+            page_name = page.url.split('/')[-1] or 'homepage'
+            for img in page.images:
+                if not img.get('alt') or img.get('alt').strip() == '':
+                    images_without_alt.append({
+                        'page': page_name,
+                        'url': page.url,
+                        'src': img.get('src', ''),
+                        'img_url': img.get('src', '')[:80] if img.get('src') else 'unknown'
+                    })
+                else:
+                    images_with_alt.append({
+                        'page': page_name,
+                        'alt': img.get('alt'),
+                        'src': img.get('src', '')
+                    })
+        
+        missing_alt = len(images_without_alt)
         percentage = ((total_images - missing_alt) / total_images * 100) if total_images > 0 else 100
         status = "fail" if percentage < 70 else ("warning" if percentage < 90 else "pass")
+        
+        # Build detailed cons with actual image references
+        cons = []
+        if missing_alt > 0:
+            cons.append(f"Found {missing_alt} out of {total_images} images without alt text ({percentage:.0f}% coverage)")
+            cons.append(f"This affects accessibility and image SEO rankings")
+            
+            # Show specific examples
+            for img in images_without_alt[:5]:
+                img_filename = img['src'].split('/')[-1] if img['src'] else 'image'
+                cons.append(f"  Missing on {img['page']}: {img_filename}")
+            
+            if missing_alt > 5:
+                cons.append(f"  ...and {missing_alt - 5} more images")
+        
+        # Build detailed solution with examples
+        solution = f"""Let's fix your image alt text to improve both accessibility and SEO:
+
+**CURRENT SITUATION:**
+- Total images analyzed: {total_images}
+- Images WITH alt text: {len(images_with_alt)} ({percentage:.0f}%)
+- Images MISSING alt text: {missing_alt}
+
+**SPECIFIC IMAGES TO FIX:**"""
+
+        for img in images_without_alt[:10]:
+            img_filename = img['src'].split('/')[-1] if img['src'] else 'image'
+            solution += f"\n• On {img['page']}: {img_filename}"
+            solution += f"\n  Suggested: <img src='{img_filename}' alt='[Describe what's in the image]'>"
+
+        if missing_alt > 10:
+            solution += f"\n• ...and {missing_alt - 10} more images need alt text"
+
+        solution += """
+
+**HOW TO WRITE GOOD ALT TEXT:**
+
+❌ Bad Examples:
+- alt="image" (too generic)
+- alt="img001.jpg" (filename, not description)
+- alt="" (empty on content images)
+- alt="best affordable SEO services near me cheap prices" (keyword stuffing)
+
+✅ Good Examples:
+- alt="Team meeting discussing marketing strategy"
+- alt="Red leather office chair with adjustable height"
+- alt="Graph showing 50% increase in organic traffic over 6 months"
+
+**IMPLEMENTATION GUIDE:**
+
+1. **For WordPress:**
+   - Click on image in editor
+   - In right panel, add description in "Alt Text" field
+   - Save/update the page
+
+2. **For HTML sites:**
+   ```html
+   <img src="product-image.jpg" alt="Blue wireless headphones with noise cancellation">
+   ```
+
+3. **For React:**
+   ```jsx
+   <img src={imageUrl} alt="Descriptive text here" />
+   ```
+
+4. **For Shopify:**
+   - Go to Products > Select product
+   - Click on image
+   - Edit "Alt text" field
+
+**FORMULA FOR ALT TEXT:**
+[What it is] + [Key details/context] + [Action if relevant]
+
+Example: "Woman using laptop for video conference call in home office"
+
+**KEY RULES:**
+✓ Be specific and descriptive
+✓ Keep it under 125 characters
+✓ Include relevant keywords naturally
+✓ Don't start with "image of" or "picture of"
+✓ Use empty alt="" ONLY for purely decorative images
+✓ For complex images (charts, diagrams), consider adding a longer description nearby"""
+
+        pros = []
+        if images_with_alt:
+            pros.append(f"{len(images_with_alt)} images already have alt text")
+            if percentage >= 90:
+                pros.append(f"Excellent! You have {percentage:.0f}% alt text coverage")
+            # Show example of good alt text
+            good_example = next((img for img in images_with_alt if len(img.get('alt', '')) > 10), None)
+            if good_example:
+                pros.append(f"Good example found: '{good_example['alt'][:80]}'")
+        
         return {
-            "check_name": "Images missing alt attributes",
+            "check_name": "Image Alt Text Optimization",
             "category": "On-Page SEO",
             "status": status,
             "impact_score": 75,
-            "current_value": f"{missing_alt}/{total_images} images missing alt ({percentage:.0f}% coverage)",
-            "recommended_value": "All images should have descriptive alt text",
-            "pros": [] if percentage < 90 else ["Good alt text coverage"],
-            "cons": [f"{missing_alt} images missing alt text"] if missing_alt > 0 else [],
-            "ranking_impact": "Missing alt text loses 10-15% image search traffic",
-            "solution": "Add descriptive alt text to all images with keywords naturally",
+            "current_value": f"{len(images_with_alt)}/{total_images} images have alt text ({percentage:.0f}% coverage)",
+            "recommended_value": "100% of content images should have descriptive, relevant alt text",
+            "pros": pros,
+            "cons": cons,
+            "ranking_impact": "Missing alt text prevents images from ranking in Google Images, which can account for 10-15% of total organic traffic. It also hurts accessibility (screen readers can't describe images) and may negatively impact overall page rankings as Google considers accessibility a ranking factor.",
+            "solution": solution,
             "enhancements": [
-                "Be descriptive and specific",
-                "Avoid keyword stuffing",
-                "Keep alt text under 125 characters",
-                "Use empty alt='' for decorative images"
+                "Add structured data (ImageObject schema) to important images",
+                "Use descriptive filenames before uploading (red-leather-chair.jpg, not IMG_001.jpg)",
+                "For product images, include brand, model, and key features in alt text",
+                "Add captions below images for additional context and keyword opportunities",
+                "Use longdesc attribute or aria-describedby for complex images that need detailed descriptions",
+                "Optimize image file sizes while maintaining quality (under 100KB each)",
+                "Consider adding image sitemaps for better image discovery",
+                "Test alt text with screen readers to ensure it makes sense",
+                "For logos, use alt text like '[Brand Name] logo'",
+                "Update alt text when you update images - don't leave outdated descriptions"
             ]
         }
     
