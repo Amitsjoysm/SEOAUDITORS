@@ -92,6 +92,75 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleCreateKey = async (keyData) => {
+    try {
+      await axios.post('/admin/env-keys', keyData);
+      fetchData();
+      setShowKeyModal(false);
+      alert('Environment key created successfully');
+    } catch (error) {
+      console.error('Failed to create key:', error);
+      alert(error.response?.data?.detail || 'Failed to create key');
+    }
+  };
+
+  const handleUpdateKey = async (keyId, keyData) => {
+    try {
+      await axios.put(`/admin/env-keys/${keyId}`, keyData);
+      fetchData();
+      setEditingKey(null);
+      setShowKeyModal(false);
+      alert('Environment key updated successfully');
+    } catch (error) {
+      console.error('Failed to update key:', error);
+      alert(error.response?.data?.detail || 'Failed to update key');
+    }
+  };
+
+  const handleDeleteKey = async (keyId) => {
+    if (!window.confirm('Are you sure you want to delete this environment key?')) return;
+    
+    try {
+      await axios.delete(`/admin/env-keys/${keyId}`);
+      fetchData();
+      alert('Environment key deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete key:', error);
+      alert('Failed to delete key');
+    }
+  };
+
+  const handleToggleKeyVisibility = async (keyId) => {
+    if (showKeyValue[keyId]) {
+      setShowKeyValue({ ...showKeyValue, [keyId]: null });
+      return;
+    }
+
+    try {
+      const response = await axios.get(`/admin/env-keys/${keyId}`);
+      setShowKeyValue({ ...showKeyValue, [keyId]: response.data.key_value });
+    } catch (error) {
+      console.error('Failed to fetch key value:', error);
+      alert('Failed to fetch key value');
+    }
+  };
+
+  const handleCopyKey = (value) => {
+    navigator.clipboard.writeText(value);
+    alert('Key copied to clipboard!');
+  };
+
+  const handleInitializeDefaults = async () => {
+    try {
+      const response = await axios.post('/admin/env-keys/initialize-defaults');
+      fetchData();
+      alert(response.data.message);
+    } catch (error) {
+      console.error('Failed to initialize defaults:', error);
+      alert('Failed to initialize default keys');
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
