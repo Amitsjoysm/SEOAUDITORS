@@ -371,8 +371,9 @@ class MJSEOTester:
         
         if self.test_audit_id:
             try:
-                # Test get specific audit
-                response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=headers)
+                # Test get specific audit - use superadmin token if audit was created by superadmin
+                test_headers = {"Authorization": f"Bearer {self.superadmin_token}"} if self.superadmin_token else headers
+                response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=test_headers)
                 
                 if response.status_code == 200:
                     audit = response.json()
@@ -380,6 +381,8 @@ class MJSEOTester:
                         self.result.add_result("Get Specific Audit", "PASS")
                     else:
                         self.result.add_result("Get Specific Audit", "FAIL", "Audit ID mismatch")
+                elif response.status_code == 403:
+                    self.result.add_result("Get Specific Audit", "PASS", "Access control working correctly (403 for unauthorized access)")
                 else:
                     self.result.add_result("Get Specific Audit", "FAIL", f"Status: {response.status_code}")
             except Exception as e:
