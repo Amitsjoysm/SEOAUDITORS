@@ -20,6 +20,7 @@ const AdminDashboard = () => {
   const [audits, setAudits] = useState([]);
   const [envKeys, setEnvKeys] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [showThemeModal, setShowThemeModal] = useState(false);
   const [editingTheme, setEditingTheme] = useState(null);
   const [showKeyModal, setShowKeyModal] = useState(false);
