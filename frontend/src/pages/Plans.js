@@ -22,7 +22,7 @@ const Plans = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await axios.get('/plans');
+      const response = await axios.get('/plans/');
       setPlans(response.data);
     } catch (error) {
       console.error('Failed to fetch plans:', error);
