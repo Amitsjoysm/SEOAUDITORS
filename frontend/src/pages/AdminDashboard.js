@@ -509,58 +509,96 @@ const AdminDashboard = () => {
 
         {/* Themes Tab */}
         {activeTab === 'themes' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {themes.map((t) => (
-              <div key={t.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800 relative">
-                {t.is_active && (
-                  <div className="absolute top-4 right-4">
-                    <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
-                      <Check className="w-3 h-3" />
-                      Active
+          <div>
+            <div className="mb-6">
+              <button
+                onClick={() => { setEditingTheme(null); setShowThemeModal(true); }}
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                Create New Theme
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {themes.map((t) => (
+                <div key={t.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800 relative">
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    {t.is_active ? (
+                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                        <Check className="w-3 h-3" />
+                        Active
+                      </div>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => { setEditingTheme(t); setShowThemeModal(true); }}
+                          className="text-gray-400 hover:text-white transition-colors"
+                          title="Edit Theme"
+                        >
+                          <Edit className="w-5 h-5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteTheme(t.id)}
+                          className="text-red-400 hover:text-red-300 transition-colors"
+                          title="Delete Theme"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-4">{t.name}</h3>
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div>
+                      <div className="text-xs text-gray-400 mb-1">Primary</div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.primary_color }}></div>
+                        <span className="text-xs text-gray-300">{t.primary_color}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-400 mb-1">Secondary</div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.secondary_color }}></div>
+                        <span className="text-xs text-gray-300">{t.secondary_color}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-400 mb-1">Accent</div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.accent_color }}></div>
+                        <span className="text-xs text-gray-300">{t.accent_color}</span>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-400 mb-1">Background</div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.background_color }}></div>
+                        <span className="text-xs text-gray-300">{t.background_color}</span>
+                      </div>
                     </div>
                   </div>
-                )}
-                <h3 className="text-xl font-bold text-white mb-4">{t.name}</h3>
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div>
-                    <div className="text-xs text-gray-400 mb-1">Primary</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.primary_color }}></div>
-                      <span className="text-xs text-gray-300">{t.primary_color}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-400 mb-1">Secondary</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.secondary_color }}></div>
-                      <span className="text-xs text-gray-300">{t.secondary_color}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-400 mb-1">Accent</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.accent_color }}></div>
-                      <span className="text-xs text-gray-300">{t.accent_color}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-400 mb-1">Background</div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.background_color }}></div>
-                      <span className="text-xs text-gray-300">{t.background_color}</span>
-                    </div>
-                  </div>
+                  {!t.is_active && (
+                    <button
+                      onClick={() => handleActivateTheme(t.id)}
+                      className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+                    >
+                      Activate Theme
+                    </button>
+                  )}
                 </div>
-                {!t.is_active && (
-                  <button
-                    onClick={() => handleActivateTheme(t.id)}
-                    className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
-                  >
-                    Activate Theme
-                  </button>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Theme Modal */}
+            {showThemeModal && (
+              <ThemeModal
+                theme={editingTheme}
+                onClose={() => { setShowThemeModal(false); setEditingTheme(null); }}
+                onCreate={handleCreateTheme}
+                onUpdate={handleUpdateTheme}
+              />
+            )}
           </div>
         )}
 
