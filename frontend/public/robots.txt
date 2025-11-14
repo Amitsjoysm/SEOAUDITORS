@@ -1,0 +1,21 @@
+# robots.txt for MJ SEO Application
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /admin
+Disallow: /api/
+Disallow: /dashboard/
+
+# Allow specific assets
+Allow: /static/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.webp$
+Allow: /*.svg$
+
+# Sitemap location
+Sitemap: https://theme-fix-admin.preview.emergentagent.com/sitemap.xml
