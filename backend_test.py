@@ -11,7 +11,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://stripe-payment-sync.preview.emergentagent.com/api"
+BASE_URL = "https://deploy-stripe-admin.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 TEST_USER_EMAIL = "testuser@mjseo.com"
@@ -919,7 +919,7 @@ class MJSEOTester:
         try:
             # Test preflight request
             headers = {
-                'Origin': 'https://stripe-payment-sync.preview.emergentagent.com',
+                'Origin': 'https://deploy-stripe-admin.preview.emergentagent.com',
                 'Access-Control-Request-Method': 'POST',
                 'Access-Control-Request-Headers': 'Content-Type, Authorization'
             }
