@@ -1187,7 +1187,12 @@ class MJSEOTester:
         self.test_api_tokens()
         self.test_admin_endpoints()
         
-        # NEW ENHANCED TESTS FOR REVIEW REQUEST
+        # NEW ENVIRONMENT KEY MANAGEMENT TESTS (Review Request Focus)
+        self.test_environment_key_management()
+        self.test_admin_stats_endpoint()
+        self.test_plans_stripe_price_ids()
+        
+        # ENHANCED TESTS FOR PREVIOUS REVIEW REQUESTS
         self.test_enhanced_crawler_and_audit_processing()
         self.test_research_agent_integration()
         self.test_production_features()
