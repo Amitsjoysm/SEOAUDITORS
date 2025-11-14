@@ -912,6 +912,232 @@ class MJSEOTester:
         except Exception as e:
             self.result.add_result("Service Health", "FAIL", str(e))
     
+    def test_environment_key_management(self):
+        """Test the newly implemented environment key management system"""
+        print(f"\n{Colors.BLUE}=== ENVIRONMENT KEY MANAGEMENT TESTS ==={Colors.END}")
+        
+        if not self.superadmin_token:
+            self.result.add_result("Environment Key Management", "FAIL", "No superadmin token available")
+            return
+        
+        admin_headers = {"Authorization": f"Bearer {self.superadmin_token}"}
+        test_key_id = None
+        
+        # Test 1: Initialize Default Keys
+        try:
+            response = self.session.post(f"{BASE_URL}/admin/env-keys/initialize-defaults", headers=admin_headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data and "keys" in data:
+                    created_keys = data.get("keys", [])
+                    self.result.add_result("Initialize Default Keys", "PASS", f"Initialized {len(created_keys)} keys: {created_keys}")
+                else:
+                    self.result.add_result("Initialize Default Keys", "FAIL", "Invalid response format")
+            else:
+                self.result.add_result("Initialize Default Keys", "FAIL", f"Status: {response.status_code}, Response: {response.text}")
+        except Exception as e:
+            self.result.add_result("Initialize Default Keys", "FAIL", str(e))
+        
+        # Test 2: List Environment Keys (without values)
+        try:
+            response = self.session.get(f"{BASE_URL}/admin/env-keys", headers=admin_headers)
+            
+            if response.status_code == 200:
+                keys = response.json()
+                if isinstance(keys, list):
+                    self.result.add_result("List Environment Keys", "PASS", f"Found {len(keys)} keys")
+                    
+                    # Verify response structure and that values are NOT included
+                    if keys:
+                        first_key = keys[0]
+                        required_fields = ["id", "key_name", "category", "description", "is_active"]
+                        missing_fields = [field for field in required_fields if field not in first_key]
+                        
+                        if not missing_fields:
+                            if "key_value" not in first_key:
+                                self.result.add_result("Key List Security", "PASS", "Values correctly hidden in list endpoint")
+                                test_key_id = first_key["id"]  # Store for later tests
+                            else:
+                                self.result.add_result("Key List Security", "FAIL", "Values exposed in list endpoint - security issue!")
+                        else:
+                            self.result.add_result("Key List Structure", "FAIL", f"Missing fields: {missing_fields}")
+                else:
+                    self.result.add_result("List Environment Keys", "FAIL", "Invalid response format")
+            else:
+                self.result.add_result("List Environment Keys", "FAIL", f"Status: {response.status_code}")
+        except Exception as e:
+            self.result.add_result("List Environment Keys", "FAIL", str(e))
+        
+        # Test 3: Get Specific Key with Value
+        if test_key_id:
+            try:
+                response = self.session.get(f"{BASE_URL}/admin/env-keys/{test_key_id}", headers=admin_headers)
+                
+                if response.status_code == 200:
+                    key_data = response.json()
+                    if "key_value" in key_data and key_data["key_value"]:
+                        self.result.add_result("Get Key with Value", "PASS", f"Decrypted value retrieved for key: {key_data.get('key_name')}")
+                    else:
+                        self.result.add_result("Get Key with Value", "FAIL", "No decrypted value in response")
+                else:
+                    self.result.add_result("Get Key with Value", "FAIL", f"Status: {response.status_code}")
+            except Exception as e:
+                self.result.add_result("Get Key with Value", "FAIL", str(e))
+        
+        # Test 4: Create New Key
+        try:
+            new_key_data = {
+                "key_name": "TEST_API_KEY",
+                "key_value": "test_secret_123",
+                "description": "Test API key for environment management testing",
+                "category": "other"
+            }
+            
+            response = self.session.post(f"{BASE_URL}/admin/env-keys", json=new_key_data, headers=admin_headers)
+            
+            if response.status_code == 201:
+                created_key = response.json()
+                if "id" in created_key and created_key.get("key_name") == "TEST_API_KEY":
+                    test_key_id = created_key["id"]
+                    self.result.add_result("Create New Key", "PASS", f"Created key: {created_key['key_name']}")
+                else:
+                    self.result.add_result("Create New Key", "FAIL", "Invalid created key response")
+            elif response.status_code == 409:
+                self.result.add_result("Create New Key", "WARNING", "Key already exists, will use existing for tests")
+                # Try to find the existing key
+                response = self.session.get(f"{BASE_URL}/admin/env-keys", headers=admin_headers)
+                if response.status_code == 200:
+                    keys = response.json()
+                    for key in keys:
+                        if key.get("key_name") == "TEST_API_KEY":
+                            test_key_id = key["id"]
+                            break
+            else:
+                self.result.add_result("Create New Key", "FAIL", f"Status: {response.status_code}, Response: {response.text}")
+        except Exception as e:
+            self.result.add_result("Create New Key", "FAIL", str(e))
+        
+        # Test 5: Update Existing Key
+        if test_key_id:
+            try:
+                update_data = {
+                    "key_value": "updated_secret_456",
+                    "description": "Updated test API key"
+                }
+                
+                response = self.session.put(f"{BASE_URL}/admin/env-keys/{test_key_id}", json=update_data, headers=admin_headers)
+                
+                if response.status_code == 200:
+                    updated_key = response.json()
+                    if updated_key.get("description") == "Updated test API key":
+                        self.result.add_result("Update Key", "PASS", "Key updated successfully")
+                    else:
+                        self.result.add_result("Update Key", "FAIL", "Key update not reflected")
+                else:
+                    self.result.add_result("Update Key", "FAIL", f"Status: {response.status_code}")
+            except Exception as e:
+                self.result.add_result("Update Key", "FAIL", str(e))
+        
+        # Test 6: Toggle Key Status
+        if test_key_id:
+            try:
+                response = self.session.post(f"{BASE_URL}/admin/env-keys/{test_key_id}/toggle", headers=admin_headers)
+                
+                if response.status_code == 200:
+                    toggle_result = response.json()
+                    if "is_active" in toggle_result:
+                        self.result.add_result("Toggle Key Status", "PASS", f"Key status toggled to: {toggle_result['is_active']}")
+                    else:
+                        self.result.add_result("Toggle Key Status", "FAIL", "Invalid toggle response")
+                else:
+                    self.result.add_result("Toggle Key Status", "FAIL", f"Status: {response.status_code}")
+            except Exception as e:
+                self.result.add_result("Toggle Key Status", "FAIL", str(e))
+        
+        # Test 7: Delete Key
+        if test_key_id:
+            try:
+                response = self.session.delete(f"{BASE_URL}/admin/env-keys/{test_key_id}", headers=admin_headers)
+                
+                if response.status_code == 200:
+                    delete_result = response.json()
+                    if "message" in delete_result:
+                        self.result.add_result("Delete Key", "PASS", "Key deleted successfully")
+                    else:
+                        self.result.add_result("Delete Key", "FAIL", "Invalid delete response")
+                else:
+                    self.result.add_result("Delete Key", "FAIL", f"Status: {response.status_code}")
+            except Exception as e:
+                self.result.add_result("Delete Key", "FAIL", str(e))
+        
+        # Test 8: Test unauthorized access (regular user should be denied)
+        if self.user_token:
+            try:
+                user_headers = {"Authorization": f"Bearer {self.user_token}"}
+                response = self.session.get(f"{BASE_URL}/admin/env-keys", headers=user_headers)
+                
+                if response.status_code == 403:
+                    self.result.add_result("Env Keys Access Control", "PASS", "Regular user correctly denied access")
+                else:
+                    self.result.add_result("Env Keys Access Control", "FAIL", f"Regular user should be denied, got: {response.status_code}")
+            except Exception as e:
+                self.result.add_result("Env Keys Access Control", "FAIL", str(e))
+    
+    def test_admin_stats_endpoint(self):
+        """Test the updated admin stats endpoint"""
+        print(f"\n{Colors.BLUE}=== ADMIN STATS ENDPOINT TESTS ==={Colors.END}")
+        
+        if not self.superadmin_token:
+            self.result.add_result("Admin Stats Endpoint", "FAIL", "No superadmin token available")
+            return
+        
+        admin_headers = {"Authorization": f"Bearer {self.superadmin_token}"}
+        
+        # Test the new /admin/stats endpoint
+        try:
+            response = self.session.get(f"{BASE_URL}/admin/stats", headers=admin_headers)
+            
+            if response.status_code == 200:
+                stats = response.json()
+                required_fields = ["total_users", "active_users", "total_audits", "audits_this_month"]
+                missing_fields = [field for field in required_fields if field not in stats]
+                
+                if not missing_fields:
+                    self.result.add_result("Admin Stats Endpoint", "PASS", f"Stats endpoint working: {stats}")
+                else:
+                    self.result.add_result("Admin Stats Endpoint", "FAIL", f"Missing fields: {missing_fields}")
+            else:
+                self.result.add_result("Admin Stats Endpoint", "FAIL", f"Status: {response.status_code}")
+        except Exception as e:
+            self.result.add_result("Admin Stats Endpoint", "FAIL", str(e))
+    
+    def test_plans_stripe_price_ids(self):
+        """Test that plans include stripe_price_id fields"""
+        print(f"\n{Colors.BLUE}=== PLANS STRIPE PRICE ID TESTS ==={Colors.END}")
+        
+        try:
+            response = self.session.get(f"{BASE_URL}/plans/")
+            
+            if response.status_code == 200:
+                plans = response.json()
+                if isinstance(plans, list) and len(plans) >= 4:
+                    plans_with_stripe_id = 0
+                    for plan in plans:
+                        if "stripe_price_id" in plan:
+                            plans_with_stripe_id += 1
+                    
+                    if plans_with_stripe_id == len(plans):
+                        self.result.add_result("Plans Stripe Price IDs", "PASS", f"All {len(plans)} plans have stripe_price_id field")
+                    else:
+                        self.result.add_result("Plans Stripe Price IDs", "WARNING", f"Only {plans_with_stripe_id}/{len(plans)} plans have stripe_price_id field")
+                else:
+                    self.result.add_result("Plans Stripe Price IDs", "FAIL", f"Expected at least 4 plans, got {len(plans) if isinstance(plans, list) else 'invalid format'}")
+            else:
+                self.result.add_result("Plans Stripe Price IDs", "FAIL", f"Status: {response.status_code}")
+        except Exception as e:
+            self.result.add_result("Plans Stripe Price IDs", "FAIL", str(e))
+
     def test_cors_configuration(self):
         """Test CORS configuration"""
         print(f"\n{Colors.BLUE}=== CORS CONFIGURATION TESTS ==={Colors.END}")
