@@ -216,3 +216,39 @@ class UserAuditStats(BaseModel):
 class ReportDownloadRequest(BaseModel):
     audit_id: str
     format: str = Field(..., pattern="^(pdf|docx)$")
+
+
+
+# ============ Environment Key Schemas ============
+class EnvironmentKeyCreate(BaseModel):
+    key_name: str = Field(..., min_length=1, max_length=100)
+    key_value: str = Field(..., min_length=1)
+    description: Optional[str] = None
+    category: Optional[str] = Field(default="other", pattern="^(payment|ai|email|database|other)$")
+
+
+class EnvironmentKeyUpdate(BaseModel):
+    key_value: Optional[str] = None
+    description: Optional[str] = None
+    category: Optional[str] = Field(default=None, pattern="^(payment|ai|email|database|other)$")
+    is_active: Optional[bool] = None
+
+
+class EnvironmentKeyResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: str
+    key_name: str
+    description: Optional[str] = None
+    category: Optional[str] = None
+    is_active: bool
+    last_updated_by: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    # Note: key_value is NOT included in response for security
+
+
+class EnvironmentKeyWithValue(EnvironmentKeyResponse):
+    """Extended response that includes the decrypted value - use carefully"""
+    key_value: str  # Decrypted value
+
