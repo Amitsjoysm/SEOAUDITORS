@@ -974,8 +974,10 @@ class MJSEOTester:
         self.test_api_tokens()
         self.test_admin_endpoints()
         
-        # NEW COMPREHENSIVE TESTS FOR REVIEW REQUEST
-        self.test_comprehensive_audit_processing()
+        # NEW ENHANCED TESTS FOR REVIEW REQUEST
+        self.test_enhanced_crawler_and_audit_processing()
+        self.test_research_agent_integration()
+        self.test_production_features()
         self.test_report_downloads()
         self.test_chat_interface()
         
