@@ -1,0 +1,242 @@
+/* Theme-aware styles using CSS variables */
+:root {
+  /* Default dark theme colors - will be overridden by ThemeProvider */
+  --color-primary: #a78bfa;
+  --color-secondary: #fbbf24;
+  --color-accent: #34d399;
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --border-radius: 0.75rem;
+  --font-family: Inter, system-ui, sans-serif;
+  
+  /* Derived colors for better contrast */
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-hover: rgba(255, 255, 255, 0.05);
+  --color-surface-elevated: #334155;
+}
+
+/* Auto-detect light theme and adjust derived colors */
+:root:has([data-theme="light"]) {
+  --color-border: rgba(0, 0, 0, 0.1);
+  --color-hover: rgba(0, 0, 0, 0.03);
+  --color-surface-elevated: #e5e7eb;
+}
+
+/* Apply theme colors to body and main container */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+}
+
+/* Theme-aware utility classes */
+.bg-theme-background {
+  background-color: var(--color-background) !important;
+}
+
+.bg-theme-surface {
+  background-color: var(--color-surface) !important;
+}
+
+.bg-theme-surface-elevated {
+  background-color: var(--color-surface-elevated) !important;
+}
+
+.text-theme-primary {
+  color: var(--color-text-primary) !important;
+}
+
+.text-theme-secondary {
+  color: var(--color-text-secondary) !important;
+}
+
+.border-theme {
+  border-color: var(--color-border) !important;
+}
+
+/* Override dark mode hardcoded classes for light theme support */
+.bg-slate-950,
+.bg-slate-900,
+.bg-slate-800 {
+  background-color: var(--color-surface) !important;
+}
+
+.bg-slate-950\/50,
+.bg-slate-900\/50,
+.bg-slate-800\/50 {
+  background-color: color-mix(in srgb, var(--color-surface) 50%, transparent) !important;
+}
+
+.bg-slate-800\/30 {
+  background-color: color-mix(in srgb, var(--color-surface) 30%, transparent) !important;
+}
+
+.text-white {
+  color: var(--color-text-primary) !important;
+}
+
+.text-slate-300,
+.text-slate-400 {
+  color: var(--color-text-secondary) !important;
+}
+
+.text-slate-200 {
+  color: var(--color-text-primary) !important;
+  opacity: 0.9;
+}
+
+.text-slate-500 {
+  color: var(--color-text-secondary) !important;
+  opacity: 0.8;
+}
+
+/* Border colors */
+.border-white\/10,
+.border-slate-700,
+.border-slate-600 {
+  border-color: var(--color-border) !important;
+}
+
+/* Hover states */
+.hover\:bg-white\/10:hover,
+.hover\:bg-slate-800:hover,
+.hover\:bg-slate-700:hover {
+  background-color: var(--color-hover) !important;
+}
+
+/* Glass morphism effects for both themes */
+.backdrop-blur-sm,
+.backdrop-blur-md,
+.backdrop-blur-lg {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Cards and surfaces */
+[class*="bg-slate"] {
+  background-color: var(--color-surface);
+}
+
+/* Ensure proper contrast for buttons and interactive elements */
+.btn-primary,
+.bg-purple-600,
+.bg-purple-500,
+.bg-blue-600,
+.bg-blue-500,
+.bg-green-600,
+.bg-green-500 {
+  /* Keep gradient buttons with high contrast */
+  color: #ffffff !important;
+}
+
+/* Form inputs */
+input,
+textarea,
+select {
+  background-color: color-mix(in srgb, var(--color-surface) 80%, var(--color-background) 20%) !important;
+  color: var(--color-text-primary) !important;
+  border-color: var(--color-border) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-secondary) !important;
+  opacity: 0.6;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Cards with borders */
+.card,
+.rounded-lg,
+.rounded-xl {
+  border-color: var(--color-border);
+}
+
+/* Shadows for light theme */
+:root:has([data-theme="light"]) .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+:root:has([data-theme="light"]) .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Special handling for navigation */
+nav {
+  background-color: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+}
+
+/* Ensure badges and small text elements have proper contrast */
+.badge {
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+}
+
+/* Loading states */
+.loading-bg {
+  background-color: var(--color-surface);
+}
+
+/* Status colors should remain vibrant in both themes */
+.text-green-400,
+.text-green-500,
+.text-red-400,
+.text-red-500,
+.text-yellow-400,
+.text-yellow-500,
+.text-blue-400,
+.text-blue-500 {
+  /* Keep original colors for status indicators */
+  color: inherit;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+}
+
+a:hover {
+  color: var(--color-secondary);
+}
+
+/* Scrollbar styling for both themes */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-elevated);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Ensure proper contrast for all text on colored backgrounds */
+.bg-purple-600 *,
+.bg-blue-600 *,
+.bg-green-600 *,
+.bg-red-600 *,
+.bg-yellow-600 * {
+  color: #ffffff !important;
+}
