@@ -199,3 +199,77 @@ class Theme(Base):
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+
+class PaymentStatus(str, enum.Enum):
+    PENDING = "pending"
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+    REFUNDED = "refunded"
+    DISPUTED = "disputed"
+    CANCELLED = "cancelled"
+
+
+class PaymentHistory(Base):
+    __tablename__ = "payment_history"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    subscription_id = Column(String, ForeignKey("subscriptions.id", ondelete="SET NULL"), nullable=True)
+    stripe_payment_intent_id = Column(String, unique=True)
+    stripe_charge_id = Column(String)
+    stripe_invoice_id = Column(String)
+    amount = Column(Float, nullable=False)  # Amount in USD
+    currency = Column(String, default="usd")
+    status = Column(SQLEnum(PaymentStatus), nullable=False)
+    payment_method_type = Column(String)  # card, bank_transfer, etc.
+    payment_method_last4 = Column(String)  # Last 4 digits of card
+    payment_method_brand = Column(String)  # visa, mastercard, etc.
+    failure_code = Column(String)
+    failure_message = Column(Text)
+    refund_amount = Column(Float)
+    refund_reason = Column(String)
+    metadata = Column(JSON)  # Additional payment metadata
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Relationships
+    user = relationship("User", backref="payment_history")
+    subscription = relationship("Subscription", backref="payment_history")
+
+
+class WebhookEvent(Base):
+    __tablename__ = "webhook_events"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    stripe_event_id = Column(String, unique=True, nullable=False, index=True)
+    event_type = Column(String, nullable=False)
+    processed = Column(Boolean, default=False)
+    processing_attempts = Column(Integer, default=0)
+    last_attempt_at = Column(DateTime(timezone=True))
+    error_message = Column(Text)
+    payload = Column(JSON)  # Store full event payload
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    processed_at = Column(DateTime(timezone=True))
+
+
+class PaymentMethod(Base):
+    __tablename__ = "payment_methods"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    stripe_payment_method_id = Column(String, unique=True, nullable=False)
+    stripe_customer_id = Column(String, nullable=False)
+    type = Column(String, nullable=False)  # card, bank_account, etc.
+    card_brand = Column(String)  # visa, mastercard, etc.
+    card_last4 = Column(String)
+    card_exp_month = Column(Integer)
+    card_exp_year = Column(Integer)
+    is_default = Column(Boolean, default=False)
+    billing_details = Column(JSON)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Relationships
+    user = relationship("User", backref="payment_methods")
