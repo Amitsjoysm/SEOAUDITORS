@@ -195,6 +195,23 @@ const AdminDashboard = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
+        <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-8 max-w-md">
+          <h2 className="text-red-400 text-xl font-bold mb-4">Error Loading Dashboard</h2>
+          <p className="text-gray-300 mb-4">{error}</p>
+          <button
+            onClick={() => fetchData()}
+            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
       {/* Header */}
