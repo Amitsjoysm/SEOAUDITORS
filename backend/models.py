@@ -274,3 +274,19 @@ class PaymentMethod(Base):
 
     # Relationships
     user = relationship("User", backref="payment_methods")
+
+
+
+class EnvironmentKey(Base):
+    """Model for storing encrypted environment keys/secrets"""
+    __tablename__ = "environment_keys"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    key_name = Column(String, nullable=False, unique=True, index=True)  # e.g., "STRIPE_SECRET_KEY"
+    key_value = Column(Text, nullable=False)  # Encrypted value
+    description = Column(Text)  # Description of what this key is for
+    category = Column(String)  # e.g., "payment", "ai", "email", "other"
+    is_active = Column(Boolean, default=True)
+    last_updated_by = Column(String)  # User ID who last updated
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
