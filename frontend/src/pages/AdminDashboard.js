@@ -348,6 +348,7 @@ const AdminDashboard = () => {
             { id: 'plans', label: 'Plans', icon: CreditCard },
             { id: 'themes', label: 'Themes', icon: Palette },
             { id: 'llm-settings', label: 'LLM Settings', icon: Brain },
+            { id: 'seo-settings', label: 'SEO Settings', icon: Globe },
             { id: 'audits', label: 'Audits', icon: FileText },
             { id: 'env-keys', label: 'Environment Keys', icon: Key }
           ].map((tab) => (
