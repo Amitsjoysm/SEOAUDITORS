@@ -317,3 +317,66 @@ class LLMSetting(Base):
     description = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+
+class SEOSettings(Base):
+    """Model for storing SEO configuration for the application"""
+    __tablename__ = "seo_settings"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    
+    # Meta Tags
+    site_title = Column(String, default="MJ SEO - AI-Powered SEO Audit Platform")
+    site_description = Column(Text, default="Production-ready SEO audit platform with 132+ comprehensive checks, AI-powered insights, and detailed reports")
+    site_keywords = Column(Text)  # Comma-separated keywords
+    author = Column(String, default="MJ SEO")
+    
+    # Open Graph Tags
+    og_title = Column(String)
+    og_description = Column(Text)
+    og_image = Column(String)  # URL to OG image
+    og_url = Column(String)
+    og_type = Column(String, default="website")
+    og_site_name = Column(String, default="MJ SEO")
+    
+    # Twitter Card Tags
+    twitter_card = Column(String, default="summary_large_image")
+    twitter_site = Column(String)  # @username
+    twitter_creator = Column(String)  # @username
+    twitter_title = Column(String)
+    twitter_description = Column(Text)
+    twitter_image = Column(String)
+    
+    # Schema.org structured data
+    organization_name = Column(String, default="MJ SEO")
+    organization_logo = Column(String)
+    organization_description = Column(Text)
+    organization_url = Column(String)
+    organization_email = Column(String)
+    organization_phone = Column(String)
+    organization_social_profiles = Column(JSON)  # List of social media URLs
+    
+    # Analytics & Tracking
+    google_analytics_id = Column(String)  # GA4 Measurement ID
+    google_tag_manager_id = Column(String)
+    google_site_verification = Column(String)  # Meta tag content
+    facebook_domain_verification = Column(String)
+    
+    # Additional SEO Settings
+    robots_txt_content = Column(Text)
+    sitemap_enabled = Column(Boolean, default=True)
+    canonical_url = Column(String)
+    language_code = Column(String, default="en")
+    
+    # Performance & Optimization
+    enable_lazy_loading = Column(Boolean, default=True)
+    enable_image_optimization = Column(Boolean, default=True)
+    enable_minification = Column(Boolean, default=True)
+    enable_compression = Column(Boolean, default=True)
+    
+    # Metadata
+    is_active = Column(Boolean, default=True)  # Only one can be active
+    last_updated_by = Column(String)  # User ID
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
