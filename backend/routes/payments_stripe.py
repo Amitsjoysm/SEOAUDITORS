@@ -629,7 +629,7 @@ async def handle_payment_failed(invoice: dict, db: AsyncSession):
             status=PaymentStatus.FAILED,
             failure_code=failure_code,
             failure_message=failure_message,
-            metadata={
+            payment_metadata={
                 'invoice_number': invoice.get('number'),
                 'attempt_count': invoice.get('attempt_count', 0)
             }
