@@ -1305,38 +1305,97 @@ class OnPageSEOChecks:
     @staticmethod
     def check_title_tags(pages: List[CrawledPage]) -> Dict[str, Any]:
         issues = []
-        missing = 0
-        too_short = 0
-        too_long = 0
+        missing_pages = []
+        too_short_pages = []
+        too_long_pages = []
+        good_titles = []
         
         for p in pages:
+            page_name = p.url.split('/')[-1] or 'homepage'
             if not p.title:
-                missing += 1
-                issues.append(f"{p.url}: Missing title")
+                missing_pages.append({'url': p.url, 'page': page_name})
+                issues.append(f"{page_name}: No title tag found")
             elif len(p.title) < 30:
-                too_short += 1
-                issues.append(f"{p.url}: Title too short ({len(p.title)} chars)")
+                too_short_pages.append({'url': p.url, 'page': page_name, 'title': p.title, 'length': len(p.title)})
+                issues.append(f"{page_name}: '{p.title}' is only {len(p.title)} characters (needs 30+)")
             elif len(p.title) > 60:
-                too_long += 1
-                issues.append(f"{p.url}: Title too long ({len(p.title)} chars)")
+                too_long_pages.append({'url': p.url, 'page': page_name, 'title': p.title, 'length': len(p.title)})
+                issues.append(f"{page_name}: '{p.title[:50]}...' is {len(p.title)} characters (max 60)")
+            else:
+                good_titles.append({'url': p.url, 'title': p.title})
         
-        status = "fail" if missing > 0 else ("warning" if len(issues) > 0 else "pass")
+        status = "fail" if missing_pages else ("warning" if issues else "pass")
+        
+        # Build detailed solution
+        solution = f"""Let's fix your title tags to improve click-through rates from search results:
+
+**CURRENT SITUATION:**
+- {len(missing_pages)} pages missing titles
+- {len(too_short_pages)} pages with titles too short (under 30 characters)
+- {len(too_long_pages)} pages with titles too long (over 60 characters)
+- {len(good_titles)} pages with properly sized titles ✓
+
+**SPECIFIC FIXES NEEDED:**"""
+
+        if missing_pages:
+            solution += f"\n\n1. ADD TITLES TO THESE PAGES:\n"
+            for p in missing_pages[:3]:
+                solution += f"   • {p['page']} ({p['url']})\n     Suggested: '[Main Keyword] | Your Brand Name'\n"
+        
+        if too_short_pages:
+            solution += f"\n\n2. EXPAND THESE SHORT TITLES:\n"
+            for p in too_short_pages[:3]:
+                solution += f"   • Current: '{p['title']}' ({p['length']} chars)\n     Improve to: '[Current Title] - [More Descriptive Keywords]'\n"
+        
+        if too_long_pages:
+            solution += f"\n\n3. SHORTEN THESE LONG TITLES:\n"
+            for p in too_long_pages[:3]:
+                solution += f"   • Current: '{p['title'][:60]}...' ({p['length']} chars)\n     Shorten to: Focus on your main keyword + brand\n"
+        
+        solution += """
+
+**TITLE TAG FORMULA THAT WORKS:**
+[Primary Keyword] - [Secondary Keyword] | [Brand Name]
+
+**EXAMPLES:**
+❌ Bad: "Home"
+✅ Good: "Affordable Web Design Services | YourBrand"
+
+❌ Bad: "This is our amazing product page where we sell the best widgets"
+✅ Good: "Best Widgets for Sale - Free Shipping | YourBrand"
+
+**HOW TO IMPLEMENT:**
+1. For WordPress: Edit each page/post and update the SEO title (Yoast/RankMath)
+2. For HTML sites: Update the <title> tag in each page's <head> section
+3. For React/Next.js: Use react-helmet or Next.js Head component"""
+
+        pros = []
+        if good_titles:
+            pros.append(f"{len(good_titles)} pages already have well-sized titles")
+            pros.append(f"Example of good title: '{good_titles[0]['title']}'")
+        
         return {
-            "check_name": "Meta title issues",
+            "check_name": "Title Tag Optimization",
             "category": "On-Page SEO",
             "status": status,
             "impact_score": 100,
-            "current_value": f"{len(issues)} issues ({missing} missing, {too_short} too short, {too_long} too long)",
-            "recommended_value": "30-60 characters, unique per page",
-            "pros": [] if issues else ["All titles optimized"],
-            "cons": issues[:5] if issues else [],
-            "ranking_impact": "Poor titles reduce CTR by 50-70% and rankings by 25-35%",
-            "solution": "Optimize each title to 30-60 chars with primary keyword near start",
+            "current_value": f"Found {len(pages)} pages: {len(good_titles)} optimized, {len(missing_pages)} missing, {len(too_short_pages)} too short, {len(too_long_pages)} too long",
+            "recommended_value": "Every page needs a unique title between 30-60 characters with primary keyword near the beginning",
+            "pros": pros,
+            "cons": issues[:8],
+            "ranking_impact": "Title tags are THE most important on-page SEO factor. Poor titles can reduce your click-through rate from Google by 50-70%, which signals to Google that your content isn't relevant, dropping your rankings by 25-35%. Good titles directly increase both rankings AND traffic.",
+            "solution": solution,
             "enhancements": [
-                "Include power words",
-                "Add numbers where relevant",
-                "Make titles compelling",
-                "A/B test title performance"
+                "Put your most important keyword in the first 30 characters",
+                "Include your brand name at the end for brand recognition",
+                "Use power words like 'Best', 'Guide', 'Free', '2024' to increase CTR",
+                "Add numbers when relevant: '7 Ways to...', '10 Best...'",
+                "Make each title unique - duplicate titles confuse search engines",
+                "Test different variations in Google Search Console to see what gets more clicks",
+                "For e-commerce: Include key product attributes (price, brand, model)",
+                "For local business: Include your location in the title",
+                "Avoid ALL CAPS or excessive punctuation (!!!) - looks spammy",
+                "Keep your most important pages' titles under 55 chars to avoid truncation on mobile"
             ]
         }
     
