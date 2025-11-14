@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class CrawledPage:
-    """Data structure for a crawled page"""
+    """Data structure for a crawled page with detailed website-specific data"""
     url: str
     html: str
     status_code: int
@@ -23,28 +23,78 @@ class CrawledPage:
     canonical: Optional[str] = None
     h1_tags: List[str] = None
     h2_tags: List[str] = None
+    h3_tags: List[str] = None
     images: List[Dict[str, str]] = None
     links: List[str] = None
+    internal_links: List[str] = None
+    external_links: List[str] = None
+    broken_links: List[str] = None
     scripts: List[str] = None
     stylesheets: List[str] = None
     load_time: float = 0.0
     has_viewport: bool = False
     has_https: bool = False
     word_count: int = 0
+    # Enhanced metadata
+    og_tags: Dict[str, str] = None
+    twitter_tags: Dict[str, str] = None
+    schema_markup: List[str] = None
+    meta_charset: Optional[str] = None
+    meta_lang: Optional[str] = None
+    # Content analysis
+    paragraphs: List[str] = None
+    headings_structure: Dict[str, List[str]] = None
+    alt_missing_images: List[str] = None
+    large_images: List[Dict[str, any]] = None
+    # Technical details
+    redirects: List[str] = None
+    response_headers: Dict[str, str] = None
+    content_type: Optional[str] = None
+    # SEO specific
+    keyword_density: Dict[str, float] = None
+    readability_score: float = 0.0
     
     def __post_init__(self):
         if self.h1_tags is None:
             self.h1_tags = []
         if self.h2_tags is None:
             self.h2_tags = []
+        if self.h3_tags is None:
+            self.h3_tags = []
         if self.images is None:
             self.images = []
         if self.links is None:
             self.links = []
+        if self.internal_links is None:
+            self.internal_links = []
+        if self.external_links is None:
+            self.external_links = []
+        if self.broken_links is None:
+            self.broken_links = []
         if self.scripts is None:
             self.scripts = []
         if self.stylesheets is None:
             self.stylesheets = []
+        if self.og_tags is None:
+            self.og_tags = {}
+        if self.twitter_tags is None:
+            self.twitter_tags = {}
+        if self.schema_markup is None:
+            self.schema_markup = []
+        if self.paragraphs is None:
+            self.paragraphs = []
+        if self.headings_structure is None:
+            self.headings_structure = {}
+        if self.alt_missing_images is None:
+            self.alt_missing_images = []
+        if self.large_images is None:
+            self.large_images = []
+        if self.redirects is None:
+            self.redirects = []
+        if self.response_headers is None:
+            self.response_headers = {}
+        if self.keyword_density is None:
+            self.keyword_density = {}
 
 
 class WebsiteCrawler:
