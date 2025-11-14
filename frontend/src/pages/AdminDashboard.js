@@ -328,28 +328,50 @@ const AdminDashboard = () => {
         {activeTab === 'plans' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {plans.map((plan) => (
-              <div key={plan.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800">
+              <div key={plan.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800 relative">
+                <button
+                  onClick={() => { setEditingPlan(plan); setShowPlanModal(true); }}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                  title="Edit Plan"
+                >
+                  <Edit className="w-5 h-5" />
+                </button>
                 <h3 className="text-2xl font-bold text-white mb-2">{plan.display_name}</h3>
                 <p className="text-gray-400 text-sm mb-4">{plan.description}</p>
                 <div className="text-3xl font-bold text-white mb-4">${plan.price}/mo</div>
-                <div className="space-y-2">
+                <div className="space-y-2 mb-4">
                   <div className="text-sm text-gray-300">
                     <strong>Max Audits:</strong> {plan.max_audits_per_month === 999999 ? 'Unlimited' : plan.max_audits_per_month}
                   </div>
                   <div className="text-sm text-gray-300">
                     <strong>Pages per Audit:</strong> {plan.max_pages_per_audit}
                   </div>
-                  <div className="text-sm">
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      plan.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                    }`}>
-                      {plan.is_active ? 'Active' : 'Inactive'}
-                    </span>
+                  <div className="text-sm text-gray-300">
+                    <strong>Stripe Price ID:</strong>
+                    <div className="mt-1 font-mono text-xs bg-slate-800 px-2 py-1 rounded text-purple-400 break-all">
+                      {plan.stripe_price_id || 'Not set'}
+                    </div>
                   </div>
+                </div>
+                <div className="text-sm">
+                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                    plan.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                  }`}>
+                    {plan.is_active ? 'Active' : 'Inactive'}
+                  </span>
                 </div>
               </div>
             ))}
           </div>
+        )}
+
+        {/* Plan Edit Modal */}
+        {showPlanModal && editingPlan && (
+          <PlanModal
+            plan={editingPlan}
+            onClose={() => { setShowPlanModal(false); setEditingPlan(null); }}
+            onUpdate={handleUpdatePlan}
+          />
         )}
 
         {/* Themes Tab */}
