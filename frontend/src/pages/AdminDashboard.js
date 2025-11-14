@@ -37,18 +37,20 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [statsRes, usersRes, plansRes, themesRes, auditsRes] = await Promise.all([
+      const [statsRes, usersRes, plansRes, themesRes, auditsRes, envKeysRes] = await Promise.all([
         axios.get('/admin/stats'),
         axios.get('/admin/users'),
         axios.get('/plans'),
         axios.get('/themes'),
-        axios.get('/admin/audits')
+        axios.get('/admin/audits'),
+        axios.get('/admin/env-keys')
       ]);
       setStats(statsRes.data);
       setUsers(usersRes.data);
       setPlans(plansRes.data);
       setThemes(themesRes.data);
       setAudits(auditsRes.data);
+      setEnvKeys(envKeysRes.data);
     } catch (error) {
       console.error('Failed to fetch admin data:', error);
     } finally {
