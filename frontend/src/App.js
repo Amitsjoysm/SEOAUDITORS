@@ -13,6 +13,7 @@ import AdminDashboard from '@/pages/AdminDashboard';
 import Chat from '@/pages/Chat';
 import APITokens from '@/pages/APITokens';
 import Settings from '@/pages/Settings';
+import PaymentSuccess from '@/pages/PaymentSuccess';
 import '@/App.css';
 import '@/styles/enhanced-ui.css';
 
