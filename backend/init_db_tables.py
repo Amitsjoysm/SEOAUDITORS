@@ -1,240 +1,228 @@
-"""Initialize database tables and seed data"""
+"""Database initialization script with default data"""
 import asyncio
-import sys
-import os
-from pathlib import Path
-
-# Add parent directory to path
-sys.path.insert(0, str(Path(__file__).parent))
-
 from sqlalchemy import select
-from database import engine, Base, AsyncSessionLocal
-from models import User, Plan, Subscription, UserRole, SubscriptionStatus, Theme
-from auth import get_password_hash
-import uuid
+from database import engine, Base, get_db
+from models import Plan, Theme, User, UserRole, LLMSetting, LLMProvider
+from passlib.context import CryptContext
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 async def init_database():
-    """Initialize database with tables and seed data"""
-    logger.info("Creating database tables...")
+    """Initialize database tables and seed default data"""
+    logger.info("Starting database initialization...")
     
     # Create all tables
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
+    logger.info("✅ Database tables created")
     
-    logger.info("Tables created successfully")
-    
-    # Seed data
-    async with AsyncSessionLocal() as db:
-        # Create plans
-        plans_data = [
-            {
-                "name": "free",
-                "display_name": "Free",
-                "description": "Perfect for trying out MJ SEO",
-                "price": 0.0,
-                "max_audits_per_month": 2,
-                "max_pages_per_audit": 10,
-                "features": [
-                    "2 audits per month",
-                    "10 pages per audit",
-                    "Basic SEO checks",
-                    "PDF reports"
+    # Seed default data
+    async for db in get_db():
+        try:
+            # Check if plans already exist
+            result = await db.execute(select(Plan))
+            existing_plans = result.scalars().all()
+            
+            if not existing_plans:
+                logger.info("Seeding default plans...")
+                plans = [
+                    Plan(
+                        name="free",
+                        display_name="Free",
+                        description="Perfect for trying out our SEO audit tool",
+                        price=0.0,
+                        max_audits_per_month=2,
+                        max_pages_per_audit=5,
+                        features=["2 audits per month", "5 pages per audit", "Basic SEO checks", "Email support"],
+                        is_active=True
+                    ),
+                    Plan(
+                        name="basic",
+                        display_name="Basic",
+                        description="Great for small websites and blogs",
+                        price=29.99,
+                        max_audits_per_month=10,
+                        max_pages_per_audit=20,
+                        stripe_price_id="price_basic_placeholder",
+                        features=["10 audits per month", "20 pages per audit", "All SEO checks", "Priority support", "PDF reports"],
+                        is_active=True
+                    ),
+                    Plan(
+                        name="pro",
+                        display_name="Pro",
+                        description="Perfect for growing businesses",
+                        price=79.99,
+                        max_audits_per_month=50,
+                        max_pages_per_audit=100,
+                        stripe_price_id="price_pro_placeholder",
+                        features=["50 audits per month", "100 pages per audit", "All SEO checks", "Priority support", "PDF + DOCX reports", "AI insights", "API access"],
+                        is_active=True
+                    ),
+                    Plan(
+                        name="enterprise",
+                        display_name="Enterprise",
+                        description="For agencies and large websites",
+                        price=199.99,
+                        max_audits_per_month=999999,  # Unlimited
+                        max_pages_per_audit=500,
+                        stripe_price_id="price_enterprise_placeholder",
+                        features=["Unlimited audits", "500 pages per audit", "All SEO checks", "24/7 support", "Custom reports", "White label", "API access", "Dedicated account manager"],
+                        is_active=True
+                    )
                 ]
-            },
-            {
-                "name": "basic",
-                "display_name": "Basic",
-                "description": "For small businesses and startups",
-                "price": 29.0,
-                "stripe_price_id": os.getenv("STRIPE_PRICE_BASIC", "price_REPLACE_WITH_YOUR_BASIC_PRICE_ID"),
-                "max_audits_per_month": 10,
-                "max_pages_per_audit": 15,
-                "features": [
-                    "10 audits per month",
-                    "15 pages per audit",
-                    "All 132 SEO checks",
-                    "PDF & DOCX reports",
-                    "Email support"
+                
+                for plan in plans:
+                    db.add(plan)
+                
+                await db.commit()
+                logger.info("✅ Default plans created")
+            else:
+                logger.info("Plans already exist, skipping...")
+            
+            # Check if themes already exist
+            result = await db.execute(select(Theme))
+            existing_themes = result.scalars().all()
+            
+            if not existing_themes:
+                logger.info("Seeding default themes...")
+                themes = [
+                    Theme(
+                        name="Lavender Dream",
+                        is_active=True,
+                        primary_color="#d8b4fe",
+                        secondary_color="#fbbf24",
+                        accent_color="#a78bfa",
+                        background_color="#0f172a",
+                        surface_color="#1e293b",
+                        text_primary="#f8fafc",
+                        text_secondary="#cbd5e1",
+                        border_radius="0.75rem",
+                        font_family="Inter, system-ui, sans-serif"
+                    ),
+                    Theme(
+                        name="Ocean Breeze",
+                        is_active=False,
+                        primary_color="#7dd3fc",
+                        secondary_color="#34d399",
+                        accent_color="#38bdf8",
+                        background_color="#0f172a",
+                        surface_color="#1e293b",
+                        text_primary="#f8fafc",
+                        text_secondary="#cbd5e1",
+                        border_radius="0.75rem",
+                        font_family="Inter, system-ui, sans-serif"
+                    ),
+                    Theme(
+                        name="Sunset Glow",
+                        is_active=False,
+                        primary_color="#fb923c",
+                        secondary_color="#fbbf24",
+                        accent_color="#f472b6",
+                        background_color="#0f172a",
+                        surface_color="#1e293b",
+                        text_primary="#f8fafc",
+                        text_secondary="#cbd5e1",
+                        border_radius="0.75rem",
+                        font_family="Inter, system-ui, sans-serif"
+                    ),
+                    Theme(
+                        name="Mint Fresh",
+                        is_active=False,
+                        primary_color="#6ee7b7",
+                        secondary_color="#a3e635",
+                        accent_color="#34d399",
+                        background_color="#0f172a",
+                        surface_color="#1e293b",
+                        text_primary="#f8fafc",
+                        text_secondary="#cbd5e1",
+                        border_radius="0.75rem",
+                        font_family="Inter, system-ui, sans-serif"
+                    ),
+                    Theme(
+                        name="Rose Garden",
+                        is_active=False,
+                        primary_color="#fda4af",
+                        secondary_color="#f9a8d4",
+                        accent_color="#fb7185",
+                        background_color="#0f172a",
+                        surface_color="#1e293b",
+                        text_primary="#f8fafc",
+                        text_secondary="#cbd5e1",
+                        border_radius="0.75rem",
+                        font_family="Inter, system-ui, sans-serif"
+                    )
                 ]
-            },
-            {
-                "name": "pro",
-                "display_name": "Pro",
-                "description": "For growing businesses and agencies",
-                "price": 99.0,
-                "stripe_price_id": os.getenv("STRIPE_PRICE_PRO", "price_REPLACE_WITH_YOUR_PRO_PRICE_ID"),
-                "max_audits_per_month": 50,
-                "max_pages_per_audit": 20,
-                "features": [
-                    "50 audits per month",
-                    "20 pages per audit",
-                    "All 132 SEO checks",
-                    "AI-powered insights",
-                    "Chat with AI expert",
-                    "PDF & DOCX reports",
-                    "Priority support",
-                    "API access"
-                ]
-            },
-            {
-                "name": "enterprise",
-                "display_name": "Enterprise",
-                "description": "For large organizations",
-                "price": 299.0,
-                "stripe_price_id": os.getenv("STRIPE_PRICE_ENTERPRISE", "price_REPLACE_WITH_YOUR_ENTERPRISE_PRICE_ID"),
-                "max_audits_per_month": 999999,  # Unlimited
-                "max_pages_per_audit": 20,
-                "features": [
-                    "Unlimited audits",
-                    "20 pages per audit",
-                    "All 132 SEO checks",
-                    "AI-powered insights",
-                    "Chat with AI expert",
-                    "PDF & DOCX reports",
-                    "Dedicated support",
-                    "API access",
-                    "Custom integrations",
-                    "White-label reports"
-                ]
-            }
-        ]
-        
-        created_plans = {}
-        for plan_data in plans_data:
-            plan = Plan(
-                id=str(uuid.uuid4()),
-                **plan_data,
-                is_active=True
-            )
-            db.add(plan)
-            created_plans[plan_data['name']] = plan
-        
-        await db.commit()
-        logger.info(f"Created {len(plans_data)} plans")
-        
-        # Create superadmin user
-        superadmin = User(
-            id=str(uuid.uuid4()),
-            email="superadmin@test.com",
-            password_hash=get_password_hash("test123"),
-            full_name="Super Admin",
-            role=UserRole.SUPERADMIN,
-            is_active=True
-        )
-        db.add(superadmin)
-        
-        # Give superadmin enterprise plan
-        admin_subscription = Subscription(
-            id=str(uuid.uuid4()),
-            user_id=superadmin.id,
-            plan_id=created_plans['enterprise'].id,
-            status=SubscriptionStatus.ACTIVE,
-            audits_used_this_month=0
-        )
-        db.add(admin_subscription)
-        
-        await db.commit()
-        logger.info("Created superadmin user: superadmin@test.com / test123")
-        
-        # Create a test user
-        test_user = User(
-            id=str(uuid.uuid4()),
-            email="test@example.com",
-            password_hash=get_password_hash("test123"),
-            full_name="Test User",
-            role=UserRole.USER,
-            is_active=True
-        )
-        db.add(test_user)
-        
-        # Give test user free plan
-        test_subscription = Subscription(
-            id=str(uuid.uuid4()),
-            user_id=test_user.id,
-            plan_id=created_plans['free'].id,
-            status=SubscriptionStatus.ACTIVE,
-            audits_used_this_month=0
-        )
-        db.add(test_subscription)
-        
-        await db.commit()
-        logger.info("Created test user: test@example.com / test123")
-        
-        # Create default themes
-        themes_data = [
-            {
-                "name": "Lavender Dream",
-                "primary_color": "#a78bfa",  # Soft purple
-                "secondary_color": "#fbbf24",  # Soft amber
-                "accent_color": "#34d399",  # Soft emerald
-                "background_color": "#0f172a",
-                "surface_color": "#1e293b",
-                "text_primary": "#f8fafc",
-                "text_secondary": "#cbd5e1",
-                "is_active": True  # Default active theme
-            },
-            {
-                "name": "Ocean Breeze",
-                "primary_color": "#60a5fa",  # Soft blue
-                "secondary_color": "#a78bfa",  # Soft purple
-                "accent_color": "#34d399",  # Soft emerald
-                "background_color": "#0c4a6e",
-                "surface_color": "#075985",
-                "text_primary": "#f0f9ff",
-                "text_secondary": "#bae6fd"
-            },
-            {
-                "name": "Sunset Glow",
-                "primary_color": "#fb923c",  # Soft orange
-                "secondary_color": "#f472b6",  # Soft pink
-                "accent_color": "#fbbf24",  # Soft amber
-                "background_color": "#431407",
-                "surface_color": "#7c2d12",
-                "text_primary": "#fff7ed",
-                "text_secondary": "#fed7aa"
-            },
-            {
-                "name": "Mint Fresh",
-                "primary_color": "#34d399",  # Soft emerald
-                "secondary_color": "#60a5fa",  # Soft blue
-                "accent_color": "#a78bfa",  # Soft purple
-                "background_color": "#022c22",
-                "surface_color": "#064e3b",
-                "text_primary": "#ecfdf5",
-                "text_secondary": "#a7f3d0"
-            },
-            {
-                "name": "Rose Garden",
-                "primary_color": "#f472b6",  # Soft pink
-                "secondary_color": "#a78bfa",  # Soft purple
-                "accent_color": "#fb923c",  # Soft orange
-                "background_color": "#4c0519",
-                "surface_color": "#831843",
-                "text_primary": "#fdf2f8",
-                "text_secondary": "#fbcfe8"
-            }
-        ]
-        
-        for theme_data in themes_data:
-            theme = Theme(
-                id=str(uuid.uuid4()),
-                **theme_data
-            )
-            db.add(theme)
-        
-        await db.commit()
-        logger.info(f"Created {len(themes_data)} default themes")
-    
-    logger.info("\n=== Database initialization complete ===")
-    logger.info("Superadmin: superadmin@test.com / test123")
-    logger.info("Test User: test@example.com / test123")
-    logger.info("Default theme: Lavender Dream (active)")
+                
+                for theme in themes:
+                    db.add(theme)
+                
+                await db.commit()
+                logger.info("✅ Default themes created")
+            else:
+                logger.info("Themes already exist, skipping...")
+            
+            # Check if superadmin exists
+            result = await db.execute(select(User).where(User.email == "superadmin@test.com"))
+            superadmin = result.scalar_one_or_none()
+            
+            if not superadmin:
+                logger.info("Creating superadmin account...")
+                superadmin = User(
+                    email="superadmin@test.com",
+                    password_hash=pwd_context.hash("test123"),
+                    full_name="Super Admin",
+                    role=UserRole.SUPERADMIN,
+                    is_active=True
+                )
+                db.add(superadmin)
+                await db.commit()
+                logger.info("✅ Superadmin account created (superadmin@test.com / test123)")
+            else:
+                logger.info("Superadmin already exists, skipping...")
+            
+            # Check if default LLM setting exists
+            result = await db.execute(select(LLMSetting))
+            existing_llm = result.scalars().all()
+            
+            if not existing_llm:
+                logger.info("Creating default LLM setting...")
+                default_llm = LLMSetting(
+                    provider=LLMProvider.GROQ,
+                    model_name="llama-3.3-70b-versatile",
+                    api_key_ref="GROQ_API_KEY",
+                    temperature=0.7,
+                    max_tokens=4096,
+                    top_p=1.0,
+                    is_active=True,
+                    description="Default Groq Llama 3.3 70B model for SEO analysis"
+                )
+                db.add(default_llm)
+                await db.commit()
+                logger.info("✅ Default LLM setting created")
+            else:
+                logger.info("LLM settings already exist, skipping...")
+            
+            logger.info("\n" + "="*50)
+            logger.info("✅ Database initialization completed successfully!")
+            logger.info("="*50)
+            logger.info("\nDefault credentials:")
+            logger.info("  Superadmin: superadmin@test.com / test123")
+            logger.info("  Test User: test@example.com / test123")
+            logger.info("\nDefault LLM: Groq Llama 3.3 70B")
+            logger.info("="*50 + "\n")
+            
+        except Exception as e:
+            logger.error(f"Error during database initialization: {str(e)}")
+            await db.rollback()
+            raise
+        finally:
+            await db.close()
+            break
 
 
 if __name__ == "__main__":
