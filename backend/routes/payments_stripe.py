@@ -565,7 +565,7 @@ async def handle_payment_succeeded(invoice: dict, db: AsyncSession):
             payment_method_type=payment_method_type,
             payment_method_last4=payment_method_last4,
             payment_method_brand=payment_method_brand,
-            metadata={
+            payment_metadata={
                 'invoice_number': invoice.get('number'),
                 'period_start': invoice.get('period_start'),
                 'period_end': invoice.get('period_end')
