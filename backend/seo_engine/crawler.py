@@ -146,26 +146,78 @@ class WebsiteCrawler:
                 canonical_tag = soup.find('link', attrs={'rel': 'canonical'})
                 canonical = canonical_tag.get('href', '') if canonical_tag else None
                 
-                # Extract headings
+                # Extract headings with structure
                 h1_tags = [h1.get_text(strip=True) for h1 in soup.find_all('h1')]
                 h2_tags = [h2.get_text(strip=True) for h2 in soup.find_all('h2')]
+                h3_tags = [h3.get_text(strip=True) for h3 in soup.find_all('h3')]
                 
-                # Extract images
+                headings_structure = {
+                    'h1': h1_tags,
+                    'h2': h2_tags,
+                    'h3': h3_tags,
+                    'h4': [h.get_text(strip=True) for h in soup.find_all('h4')],
+                    'h5': [h.get_text(strip=True) for h in soup.find_all('h5')],
+                    'h6': [h.get_text(strip=True) for h in soup.find_all('h6')]
+                }
+                
+                # Extract images with detailed info
                 images = []
+                alt_missing_images = []
                 for img in soup.find_all('img'):
+                    src = img.get('src', '')
+                    alt = img.get('alt', '')
                     images.append({
-                        'src': img.get('src', ''),
-                        'alt': img.get('alt', ''),
-                        'title': img.get('title', '')
+                        'src': src,
+                        'alt': alt,
+                        'title': img.get('title', ''),
+                        'width': img.get('width', ''),
+                        'height': img.get('height', '')
                     })
+                    if not alt:
+                        alt_missing_images.append(src)
                 
-                # Extract links
+                # Extract Open Graph tags
+                og_tags = {}
+                for og in soup.find_all('meta', property=lambda x: x and x.startswith('og:')):
+                    og_tags[og.get('property')] = og.get('content', '')
+                
+                # Extract Twitter Card tags
+                twitter_tags = {}
+                for tw in soup.find_all('meta', attrs={'name': lambda x: x and x.startswith('twitter:')}):
+                    twitter_tags[tw.get('name')] = tw.get('content', '')
+                
+                # Extract schema markup (JSON-LD)
+                schema_markup = []
+                for script in soup.find_all('script', type='application/ld+json'):
+                    if script.string:
+                        schema_markup.append(script.string.strip())
+                
+                # Extract charset and language
+                meta_charset = None
+                charset_tag = soup.find('meta', charset=True)
+                if charset_tag:
+                    meta_charset = charset_tag.get('charset')
+                
+                meta_lang = soup.html.get('lang') if soup.html else None
+                
+                # Extract paragraphs
+                paragraphs = [p.get_text(strip=True) for p in soup.find_all('p') if p.get_text(strip=True)]
+                
+                # Extract links - internal vs external
                 links = []
+                internal_links = []
+                external_links = []
                 for a in soup.find_all('a', href=True):
                     href = a['href']
                     absolute_url = urljoin(url, href)
                     if absolute_url.startswith('http'):
                         links.append(absolute_url)
+                        parsed_link = urlparse(absolute_url)
+                        parsed_base = urlparse(url)
+                        if parsed_link.netloc == parsed_base.netloc:
+                            internal_links.append(absolute_url)
+                        else:
+                            external_links.append(absolute_url)
                 
                 # Extract scripts and stylesheets
                 scripts = [script.get('src', '') for script in soup.find_all('script', src=True)]
@@ -177,6 +229,10 @@ class WebsiteCrawler:
                 
                 # Check HTTPS
                 has_https = url.startswith('https://')
+                
+                # Get response headers
+                response_headers = dict(response.headers)
+                content_type = response_headers.get('Content-Type', '')
                 
                 # Word count
                 text = soup.get_text()
