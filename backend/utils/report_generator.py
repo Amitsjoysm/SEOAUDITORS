@@ -135,24 +135,48 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
                 categories[cat] = []
             categories[cat].append(result)
         
+        # Priority Action Items
+        failed_results = [r for r in results if r.status.value == 'fail']
+        if failed_results:
+            story.append(Paragraph("🎯 Priority Action Items", heading_style))
+            priority_text = f"""These are the most critical issues we found. Fixing these will have the biggest impact on your SEO. 
+            We recommend starting here and working through them in order of impact score."""
+            story.append(Paragraph(priority_text, intro_style))
+            
+            # Sort by impact score and show top 5
+            failed_results.sort(key=lambda x: x.impact_score or 0, reverse=True)
+            for idx, result in enumerate(failed_results[:5], 1):
+                priority_item = f"{idx}. {result.check_name} (Impact: {result.impact_score}/100)"
+                story.append(Paragraph(priority_item, ParagraphStyle('priority', parent=styles['BodyText'], 
+                                                                     leftIndent=20, spaceAfter=6, textColor=colors.HexColor('#dc2626'))))
+            story.append(Spacer(1, 0.3*inch))
+        
         # Detailed Results by Category
         story.append(PageBreak())
-        story.append(Paragraph("Detailed Analysis", title_style))
+        story.append(Paragraph("📋 Detailed Findings & Solutions", title_style))
         story.append(Spacer(1, 0.2*inch))
         
         for category, cat_results in categories.items():
-            story.append(Paragraph(category, heading_style))
+            # Category header with count
+            passed_in_cat = len([r for r in cat_results if r.status.value == 'pass'])
+            failed_in_cat = len([r for r in cat_results if r.status.value == 'fail'])
             
-            for result in cat_results[:10]:  # Limit to prevent huge PDFs
-                # Check name
+            category_header = f"{category} ({passed_in_cat} passing, {failed_in_cat} needs attention)"
+            story.append(Paragraph(category_header, heading_style))
+            story.append(Spacer(1, 0.1*inch))
+            
+            for result in cat_results:
+                # Check name with icon
                 check_heading = ParagraphStyle(
                     'CheckHeading',
                     parent=styles['Heading3'],
                     fontSize=12,
-                    textColor=colors.HexColor('#4b5563'),
-                    spaceAfter=6
+                    textColor=colors.HexColor('#1f2937'),
+                    spaceAfter=8,
+                    spaceBefore=12
                 )
-                story.append(Paragraph(f"• {result.check_name}", check_heading))
+                status_icon = {"pass": "✅", "fail": "❌", "warning": "⚠️", "info": "ℹ️"}
+                story.append(Paragraph(f"{status_icon.get(result.status.value, '•')} {result.check_name}", check_heading))
                 
                 # Status badge
                 status_color = {
@@ -164,37 +188,52 @@ async def generate_pdf_report(audit, results: List, reports_dir: Path) -> Path:
                 
                 status_text = f"Status: {result.status.value.upper()}"
                 status_para = Paragraph(
-                    f"<font color='{status_color.get(result.status.value, colors.black)}'><b>{status_text}</b></font>",
+                    f"<font color='{status_color.get(result.status.value, colors.black)}'><b>{status_text}</b></font> | Impact Score: {result.impact_score or 0}/100",
                     styles['BodyText']
                 )
                 story.append(status_para)
+                story.append(Spacer(1, 0.05*inch))
                 
-                # Impact Score
-                if result.impact_score:
-                    story.append(Paragraph(f"<b>Impact Score:</b> {result.impact_score}/100", styles['BodyText']))
-                
-                # Current vs Recommended
+                # What we found (Current state)
                 if result.current_value:
-                    story.append(Paragraph(f"<b>Current:</b> {escape_html(result.current_value)}", styles['BodyText']))
-                if result.recommended_value:
-                    story.append(Paragraph(f"<b>Recommended:</b> {escape_html(result.recommended_value)}", styles['BodyText']))
+                    story.append(Paragraph("<b>What We Found:</b>", styles['BodyText']))
+                    story.append(Paragraph(escape_html(result.current_value), styles['BodyText']))
                 
-                # Cons (issues)
+                # What's working (Pros)
+                if result.pros:
+                    story.append(Paragraph("<b>What's Working Well:</b>", styles['BodyText']))
+                    for pro in result.pros[:3]:
+                        story.append(Paragraph(f"  ✓ {escape_html(pro)}", styles['BodyText']))
+                
+                # Issues found (Cons)
                 if result.cons:
-                    story.append(Paragraph("<b>Issues:</b>", styles['BodyText']))
-                    for con in result.cons[:3]:
-                        story.append(Paragraph(f"  - {escape_html(con)}", styles['BodyText']))
+                    story.append(Paragraph("<b>Issues Found:</b>", styles['BodyText']))
+                    for con in result.cons[:5]:  # Show more cons
+                        story.append(Paragraph(f"  • {escape_html(con)}", styles['BodyText']))
                 
-                # Solution
+                # Ranking Impact
+                if result.ranking_impact:
+                    story.append(Paragraph("<b>How This Affects Your Rankings:</b>", styles['BodyText']))
+                    story.append(Paragraph(escape_html(result.ranking_impact), styles['BodyText']))
+                
+                # Solution (Full solution, not truncated)
                 if result.solution:
-                    story.append(Paragraph(f"<b>Solution:</b> {escape_html(result.solution[:300])}...", styles['BodyText']))
+                    story.append(Paragraph("<b>How to Fix This:</b>", styles['BodyText']))
+                    # Split solution into paragraphs for better readability
+                    solution_parts = result.solution.split('\n\n')
+                    for part in solution_parts:
+                        if part.strip():
+                            story.append(Paragraph(escape_html(part.strip()), styles['BodyText']))
                 
-                story.append(Spacer(1, 0.15*inch))
+                # Enhancements (Advanced tips)
+                if result.enhancements:
+                    story.append(Paragraph("<b>Pro Tips & Advanced Optimizations:</b>", styles['BodyText']))
+                    for enhancement in result.enhancements[:5]:
+                        story.append(Paragraph(f"  💡 {escape_html(enhancement)}", styles['BodyText']))
+                
+                story.append(Spacer(1, 0.2*inch))
             
-            if len(cat_results) > 10:
-                story.append(Paragraph(f"... and {len(cat_results) - 10} more checks in this category", styles['Italic']))
-            
-            story.append(Spacer(1, 0.2*inch))
+            story.append(Spacer(1, 0.15*inch))
         
         # Build PDF
         doc.build(story)
