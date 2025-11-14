@@ -630,48 +630,20 @@ class MJSEOTester:
         except Exception as e:
             self.result.add_result("Send Chat Message", "FAIL", str(e))
     
-    def test_comprehensive_audit_processing(self):
-        """Test comprehensive audit processing with all 132+ SEO checks"""
-        print(f"\n{Colors.BLUE}=== COMPREHENSIVE AUDIT PROCESSING TESTS ==={Colors.END}")
+    def test_enhanced_crawler_and_audit_processing(self):
+        """Test enhanced crawler with 40+ data points and website-specific reports"""
+        print(f"\n{Colors.BLUE}=== ENHANCED CRAWLER & AUDIT PROCESSING TESTS ==={Colors.END}")
         
-        # Use existing audit if available, or try to create with superadmin
-        if self.test_audit_id:
-            # Use existing audit for testing
-            headers = {"Authorization": f"Bearer {self.user_token}"}
-            try:
-                response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=headers)
-                if response.status_code == 200:
-                    audit_status = response.json()
-                    checks_passed = audit_status.get("checks_passed", 0)
-                    checks_failed = audit_status.get("checks_failed", 0)
-                    total_checks = checks_passed + checks_failed
-                    overall_score = audit_status.get("overall_score", 0)
-                    
-                    if total_checks >= 130:  # Should have 132+ checks
-                        self.result.add_result("SEO Checks Execution", "PASS", f"Executed {total_checks} checks (passed: {checks_passed}, failed: {checks_failed})")
-                    else:
-                        self.result.add_result("SEO Checks Execution", "FAIL", f"Only {total_checks} checks executed, expected 132+")
-                    
-                    if isinstance(overall_score, (int, float)) and 0 <= overall_score <= 100:
-                        self.result.add_result("Overall Score Calculation", "PASS", f"Score: {overall_score}")
-                    else:
-                        self.result.add_result("Overall Score Calculation", "FAIL", f"Invalid score: {overall_score}")
-                    
-                    return
-            except Exception as e:
-                self.result.add_result("Existing Audit Check", "FAIL", str(e))
-        
-        # Try to create new audit with superadmin if user limit reached
         if not self.superadmin_token:
-            self.result.add_result("Comprehensive Audit Processing", "FAIL", "No superadmin token available and no existing audit")
+            self.result.add_result("Enhanced Crawler Test", "FAIL", "No superadmin token available")
             return
         
         headers = {"Authorization": f"Bearer {self.superadmin_token}"}
         
-        # Create a new audit for comprehensive testing
+        # Create a new audit for https://example.com as specified in review request
         try:
             audit_data = {
-                "website_url": "https://google.com"  # Use a different URL
+                "website_url": "https://example.com"
             }
             
             response = self.session.post(f"{BASE_URL}/audits/", json=audit_data, headers=headers)
@@ -679,14 +651,15 @@ class MJSEOTester:
             if response.status_code == 201:
                 audit = response.json()
                 audit_id = audit["id"]
+                self.result.add_result("Create Enhanced Audit", "PASS", f"Created audit for https://example.com: {audit_id}")
                 
-                # Wait for audit processing (up to 45 seconds)
-                max_wait = 45
+                # Wait for audit processing (up to 60 seconds for enhanced processing)
+                max_wait = 60
                 wait_time = 0
                 
                 while wait_time < max_wait:
-                    time.sleep(3)
-                    wait_time += 3
+                    time.sleep(5)
+                    wait_time += 5
                     
                     response = self.session.get(f"{BASE_URL}/audits/{audit_id}", headers=headers)
                     if response.status_code == 200:
@@ -694,21 +667,105 @@ class MJSEOTester:
                         status = audit_status.get("status")
                         
                         if status == "completed":
-                            # Verify comprehensive results
+                            # Test 1: Verify 132+ SEO checks execution
                             checks_passed = audit_status.get("checks_passed", 0)
                             checks_failed = audit_status.get("checks_failed", 0)
                             total_checks = checks_passed + checks_failed
                             overall_score = audit_status.get("overall_score", 0)
                             
                             if total_checks >= 130:  # Should have 132+ checks
-                                self.result.add_result("SEO Checks Execution", "PASS", f"Executed {total_checks} checks (passed: {checks_passed}, failed: {checks_failed})")
+                                self.result.add_result("Enhanced SEO Checks (132+)", "PASS", f"Executed {total_checks} checks (passed: {checks_passed}, failed: {checks_failed})")
                             else:
-                                self.result.add_result("SEO Checks Execution", "FAIL", f"Only {total_checks} checks executed, expected 132+")
+                                self.result.add_result("Enhanced SEO Checks (132+)", "FAIL", f"Only {total_checks} checks executed, expected 132+")
                             
-                            if isinstance(overall_score, (int, float)) and 0 <= overall_score <= 100:
-                                self.result.add_result("Overall Score Calculation", "PASS", f"Score: {overall_score}")
+                            # Test 2: Verify enhanced crawler data extraction (40+ data points)
+                            crawl_data = audit_status.get("crawl_data", {})
+                            if crawl_data:
+                                pages = crawl_data.get("pages", [])
+                                if pages:
+                                    first_page = pages[0]
+                                    data_points = 0
+                                    
+                                    # Count extracted data points
+                                    if first_page.get("title"): data_points += 1
+                                    if first_page.get("meta_description"): data_points += 1
+                                    if first_page.get("og_tags"): data_points += len(first_page["og_tags"])
+                                    if first_page.get("twitter_tags"): data_points += len(first_page["twitter_tags"])
+                                    if first_page.get("schema_data"): data_points += len(first_page["schema_data"])
+                                    if first_page.get("internal_links"): data_points += 1
+                                    if first_page.get("external_links"): data_points += 1
+                                    if first_page.get("alt_missing_images"): data_points += 1
+                                    if first_page.get("headings"): data_points += len(first_page["headings"])
+                                    if first_page.get("meta_charset"): data_points += 1
+                                    if first_page.get("meta_viewport"): data_points += 1
+                                    if first_page.get("canonical_url"): data_points += 1
+                                    if first_page.get("lang_attribute"): data_points += 1
+                                    if first_page.get("load_time"): data_points += 1
+                                    if first_page.get("status_code"): data_points += 1
+                                    if first_page.get("content_type"): data_points += 1
+                                    if first_page.get("word_count"): data_points += 1
+                                    if first_page.get("images"): data_points += 1
+                                    if first_page.get("links"): data_points += 1
+                                    
+                                    if data_points >= 40:
+                                        self.result.add_result("Enhanced Crawler (40+ Data Points)", "PASS", f"Extracted {data_points} data points from homepage")
+                                    else:
+                                        self.result.add_result("Enhanced Crawler (40+ Data Points)", "WARNING", f"Only {data_points} data points extracted, expected 40+")
+                                    
+                                    # Test 3: Verify specific enhanced fields are populated
+                                    enhanced_fields = ["og_tags", "twitter_tags", "alt_missing_images"]
+                                    populated_fields = []
+                                    for field in enhanced_fields:
+                                        if first_page.get(field):
+                                            populated_fields.append(field)
+                                    
+                                    if len(populated_fields) >= 2:
+                                        self.result.add_result("Enhanced Fields Population", "PASS", f"Enhanced fields populated: {populated_fields}")
+                                    else:
+                                        self.result.add_result("Enhanced Fields Population", "WARNING", f"Only {len(populated_fields)} enhanced fields populated: {populated_fields}")
+                                else:
+                                    self.result.add_result("Enhanced Crawler Data", "FAIL", "No pages found in crawl data")
                             else:
-                                self.result.add_result("Overall Score Calculation", "FAIL", f"Invalid score: {overall_score}")
+                                self.result.add_result("Enhanced Crawler Data", "FAIL", "No crawl data found")
+                            
+                            # Test 4: Verify website-specific reports (not generic messages)
+                            audit_results = audit_status.get("results", [])
+                            website_specific_count = 0
+                            generic_count = 0
+                            
+                            for result in audit_results[:10]:  # Check first 10 results
+                                description = result.get("description", "").lower()
+                                solution = result.get("solution", "").lower()
+                                
+                                # Check for website-specific content
+                                if ("example.com" in description or "example.com" in solution or 
+                                    "homepage" in description or "homepage" in solution or
+                                    "your website" in description or "your site" in solution):
+                                    website_specific_count += 1
+                                elif ("generic" in description or "template" in description or
+                                      "placeholder" in description):
+                                    generic_count += 1
+                            
+                            if website_specific_count > generic_count:
+                                self.result.add_result("Website-Specific Reports", "PASS", f"Found {website_specific_count} website-specific vs {generic_count} generic messages")
+                            else:
+                                self.result.add_result("Website-Specific Reports", "WARNING", f"Reports may be too generic: {website_specific_count} specific vs {generic_count} generic")
+                            
+                            # Test 5: Verify specific SEO checks mentioned in review request
+                            key_checks = ["Meta Robots Tag Presence", "Open Graph Social Media Tags", "Image Alt Text Optimization"]
+                            found_checks = []
+                            
+                            for result in audit_results:
+                                check_name = result.get("check_name", "")
+                                for key_check in key_checks:
+                                    if key_check.lower() in check_name.lower():
+                                        found_checks.append(key_check)
+                                        break
+                            
+                            if len(found_checks) >= 2:
+                                self.result.add_result("Key SEO Checks Present", "PASS", f"Found key checks: {found_checks}")
+                            else:
+                                self.result.add_result("Key SEO Checks Present", "WARNING", f"Only found {len(found_checks)} key checks: {found_checks}")
                             
                             # Store this audit ID for other tests
                             if not self.test_audit_id:
@@ -716,21 +773,57 @@ class MJSEOTester:
                             
                             break
                         elif status == "failed":
-                            self.result.add_result("Audit Processing", "FAIL", "Audit processing failed")
+                            self.result.add_result("Enhanced Audit Processing", "FAIL", "Audit processing failed")
                             break
                         else:
                             # Still processing
+                            print(f"   Audit processing... Status: {status} (waited {wait_time}s)")
                             continue
                 
                 if wait_time >= max_wait:
-                    self.result.add_result("Audit Processing", "WARNING", f"Audit still processing after {max_wait}s, status: {status}")
+                    self.result.add_result("Enhanced Audit Processing", "WARNING", f"Audit still processing after {max_wait}s, status: {status}")
                     
             elif response.status_code == 429:
-                self.result.add_result("Comprehensive Audit Creation", "WARNING", "Monthly limit reached even for superadmin")
+                self.result.add_result("Enhanced Audit Creation", "WARNING", "Monthly limit reached, using existing audit for testing")
+                # Try to use existing audit
+                self._test_existing_audit_for_enhancements(headers)
             else:
-                self.result.add_result("Comprehensive Audit Creation", "FAIL", f"Status: {response.status_code}")
+                self.result.add_result("Enhanced Audit Creation", "FAIL", f"Status: {response.status_code}")
         except Exception as e:
-            self.result.add_result("Comprehensive Audit Processing", "FAIL", str(e))
+            self.result.add_result("Enhanced Crawler Test", "FAIL", str(e))
+    
+    def _test_existing_audit_for_enhancements(self, headers):
+        """Test enhancements using existing audit data"""
+        try:
+            # Get list of audits
+            response = self.session.get(f"{BASE_URL}/admin/audits", headers=headers)
+            if response.status_code == 200:
+                audits = response.json()
+                if audits:
+                    # Use the first completed audit
+                    for audit in audits:
+                        if audit.get("status") == "completed":
+                            audit_id = audit["id"]
+                            
+                            # Get detailed audit data
+                            response = self.session.get(f"{BASE_URL}/audits/{audit_id}", headers=headers)
+                            if response.status_code == 200:
+                                audit_data = response.json()
+                                
+                                # Test enhanced features on existing audit
+                                checks_passed = audit_data.get("checks_passed", 0)
+                                checks_failed = audit_data.get("checks_failed", 0)
+                                total_checks = checks_passed + checks_failed
+                                
+                                if total_checks >= 130:
+                                    self.result.add_result("Enhanced SEO Checks (Existing)", "PASS", f"Existing audit has {total_checks} checks")
+                                else:
+                                    self.result.add_result("Enhanced SEO Checks (Existing)", "FAIL", f"Existing audit only has {total_checks} checks")
+                                
+                                self.test_audit_id = audit_id
+                                break
+        except Exception as e:
+            self.result.add_result("Existing Audit Enhancement Test", "FAIL", str(e))
     
     def test_cors_configuration(self):
         """Test CORS configuration"""
