@@ -155,6 +155,19 @@ async def init_database():
                         text_secondary="#cbd5e1",
                         border_radius="0.75rem",
                         font_family="Inter, system-ui, sans-serif"
+                    ),
+                    Theme(
+                        name="Light Serenity",
+                        is_active=False,
+                        primary_color="#0891b2",
+                        secondary_color="#06b6d4",
+                        accent_color="#a78bfa",
+                        background_color="#ffffff",
+                        surface_color="#f8f9fa",
+                        text_primary="#111827",
+                        text_secondary="#374151",
+                        border_radius="0.75rem",
+                        font_family="Inter, system-ui, sans-serif"
                     )
                 ]
                 
