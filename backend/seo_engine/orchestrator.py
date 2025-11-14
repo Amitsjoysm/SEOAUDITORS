@@ -168,11 +168,49 @@ Current Audit Context:
             logger.error(f"Error in chat: {str(e)}")
             return "I'm having trouble processing your request. Please try rephrasing or ask a different question."
     
-    async def research_topic(self, topic: str) -> str:
-        """Research SEO topic using Exa.ai (placeholder - would integrate actual Exa API)"""
-        # This would integrate with Exa.ai for deep research
-        # For now, using Groq for general SEO guidance
-        prompt = f"""
+    async def research_topic(self, topic: str, use_exa: bool = True) -> str:
+        """Research SEO topic using Exa.ai research agent"""
+        try:
+            if use_exa:
+                # Import research agent
+                from .research_agent import research_agent
+                
+                # Delegate to research agent
+                logger.info(f"Delegating research to Exa.ai agent for topic: {topic}")
+                research_results = await research_agent.research_keyword_trends(topic)
+                
+                # Combine Exa research with Groq analysis
+                exa_insights = f"""
+Research Results from Exa.ai:
+- Keyword: {research_results.get('keyword')}
+- Sources Found: {len(research_results.get('sources', []))}
+
+Top Sources:
+"""
+                for source in research_results.get('sources', [])[:5]:
+                    exa_insights += f"\n- {source.get('title')} ({source.get('url')})"
+                
+                # Now synthesize with Groq
+                prompt = f"""
+Based on the latest research data:
+
+{exa_insights}
+
+Provide comprehensive information about: {topic}
+
+Include:
+1. Current best practices (2024-2025)
+2. Key insights from the research
+3. Common mistakes to avoid
+4. Implementation steps
+5. Tools and resources
+6. Expected results/timeline
+
+Be detailed and actionable.
+"""
+            else:
+                # Fallback to direct Groq query
+                prompt = f"""
 Research and provide comprehensive information about this SEO topic:
 
 Topic: {topic}
@@ -186,13 +224,12 @@ Include:
 
 Be detailed and actionable.
 """
-        
-        try:
+            
             response = await asyncio.to_thread(
                 self.client.chat.completions.create,
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are an SEO research expert providing up-to-date, comprehensive information."},
+                    {"role": "system", "content": "You are an SEO research expert providing up-to-date, comprehensive information based on latest data."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
@@ -204,6 +241,39 @@ Be detailed and actionable.
         except Exception as e:
             logger.error(f"Error in research: {str(e)}")
             return "Unable to complete research. Please try again."
+    
+    async def delegate_to_research_agent(self, task: str, **kwargs) -> Dict[str, Any]:
+        """Delegate specialized tasks to the research sub-agent"""
+        try:
+            from .research_agent import research_agent
+            
+            logger.info(f"Delegating task to research agent: {task}")
+            
+            if task == "keyword_trends":
+                return await research_agent.research_keyword_trends(kwargs.get('keyword', ''))
+            elif task == "competitor_analysis":
+                return await research_agent.analyze_competitors(
+                    kwargs.get('domain', ''),
+                    kwargs.get('keywords', [])
+                )
+            elif task == "backlink_opportunities":
+                return await research_agent.find_backlink_opportunities(
+                    kwargs.get('topic', ''),
+                    kwargs.get('industry', '')
+                )
+            elif task == "content_ideas":
+                return await research_agent.get_content_ideas(
+                    kwargs.get('niche', ''),
+                    kwargs.get('keywords', [])
+                )
+            elif task == "technical_updates":
+                return await research_agent.research_technical_seo_updates()
+            else:
+                return {"error": f"Unknown task: {task}"}
+                
+        except Exception as e:
+            logger.error(f"Error delegating to research agent: {str(e)}")
+            return {"error": str(e)}
     
     def reset_conversation(self):
         """Reset conversation history"""
