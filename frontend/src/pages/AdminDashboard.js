@@ -687,6 +687,154 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
       </div>
     </div>
   );
+
+
+// PlanModal Component
+const PlanModal = ({ plan, onClose, onUpdate }) => {
+  const [formData, setFormData] = React.useState({
+    display_name: plan?.display_name || '',
+    description: plan?.description || '',
+    price: plan?.price || '',
+    max_audits_per_month: plan?.max_audits_per_month || '',
+    max_pages_per_audit: plan?.max_pages_per_audit || '',
+    stripe_price_id: plan?.stripe_price_id || '',
+    razorpay_plan_id: plan?.razorpay_plan_id || '',
+    is_active: plan?.is_active !== undefined ? plan.is_active : false
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const updateData = {
+      ...formData,
+      price: parseFloat(formData.price),
+      max_audits_per_month: formData.max_audits_per_month === 'unlimited' ? 999999 : parseInt(formData.max_audits_per_month),
+      max_pages_per_audit: parseInt(formData.max_pages_per_audit)
+    };
+    onUpdate(plan.id, updateData);
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold text-white mb-6">Edit Plan: {plan.name}</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
+            <input
+              type="text"
+              value={formData.display_name}
+              onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Pro Plan"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              rows="3"
+              placeholder="Perfect for growing businesses..."
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Price (USD/month)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="29.99"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Max Pages per Audit</label>
+              <input
+                type="number"
+                value={formData.max_pages_per_audit}
+                onChange={(e) => setFormData({ ...formData, max_pages_per_audit: e.target.value })}
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="10"
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Max Audits per Month</label>
+            <select
+              value={formData.max_audits_per_month === 999999 ? 'unlimited' : formData.max_audits_per_month}
+              onChange={(e) => setFormData({ ...formData, max_audits_per_month: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="2">2 audits</option>
+              <option value="10">10 audits</option>
+              <option value="25">25 audits</option>
+              <option value="50">50 audits</option>
+              <option value="100">100 audits</option>
+              <option value="unlimited">Unlimited</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Stripe Price ID</label>
+            <input
+              type="text"
+              value={formData.stripe_price_id}
+              onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              placeholder="price_1234567890abcdef"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              The Stripe Price ID for this plan. Get this from your Stripe Dashboard → Products → Prices
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Razorpay Plan ID (Optional)</label>
+            <input
+              type="text"
+              value={formData.razorpay_plan_id}
+              onChange={(e) => setFormData({ ...formData, razorpay_plan_id: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              placeholder="plan_1234567890abcdef"
+            />
+          </div>
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="is_active"
+              checked={formData.is_active}
+              onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+              className="w-4 h-4 text-purple-600 bg-slate-800 border-slate-700 rounded focus:ring-purple-500"
+            />
+            <label htmlFor="is_active" className="text-sm font-medium text-gray-300">
+              Plan is active and available for subscription
+            </label>
+          </div>
+          <div className="flex gap-4 pt-4">
+            <button
+              type="submit"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              Update Plan
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 };
 
 // PlanModal Component
