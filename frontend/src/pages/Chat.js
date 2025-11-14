@@ -53,17 +53,13 @@ const Chat = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`/chat/${auditId}`, {
-        message: input
+      const response = await axios.post(`/chat/`, {
+        audit_id: auditId,
+        content: input
       });
 
-      const assistantMessage = {
-        role: 'assistant',
-        content: response.data.response,
-        created_at: new Date().toISOString()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
+      // Backend returns full ChatMessageResponse with assistant message
+      setMessages(prev => [...prev, response.data]);
     } catch (error) {
       console.error('Failed to send message:', error);
       alert('Failed to send message. Please try again.');
