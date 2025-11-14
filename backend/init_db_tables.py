@@ -52,6 +52,7 @@ async def init_database():
                 "display_name": "Basic",
                 "description": "For small businesses and startups",
                 "price": 29.0,
+                "stripe_price_id": os.getenv("STRIPE_PRICE_BASIC", "price_REPLACE_WITH_YOUR_BASIC_PRICE_ID"),
                 "max_audits_per_month": 10,
                 "max_pages_per_audit": 15,
                 "features": [
@@ -67,6 +68,7 @@ async def init_database():
                 "display_name": "Pro",
                 "description": "For growing businesses and agencies",
                 "price": 99.0,
+                "stripe_price_id": os.getenv("STRIPE_PRICE_PRO", "price_REPLACE_WITH_YOUR_PRO_PRICE_ID"),
                 "max_audits_per_month": 50,
                 "max_pages_per_audit": 20,
                 "features": [
@@ -85,6 +87,7 @@ async def init_database():
                 "display_name": "Enterprise",
                 "description": "For large organizations",
                 "price": 299.0,
+                "stripe_price_id": os.getenv("STRIPE_PRICE_ENTERPRISE", "price_REPLACE_WITH_YOUR_ENTERPRISE_PRICE_ID"),
                 "max_audits_per_month": 999999,  # Unlimited
                 "max_pages_per_audit": 20,
                 "features": [
