@@ -5,7 +5,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import axios from '@/api/axios';
 import {
   Users, FileText, CreditCard, Settings, BarChart3,
-  Plus, Edit, Trash2, Check, X, Palette, ArrowLeft, Key, Eye, EyeOff, Copy
+  Plus, Edit, Trash2, Check, X, Palette, ArrowLeft, Key, Eye, EyeOff, Copy, Brain, Zap
 } from 'lucide-react';
 
 const AdminDashboard = () => {
