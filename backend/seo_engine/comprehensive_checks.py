@@ -26,23 +26,50 @@ class TechnicalSEOChecks:
     
     @staticmethod
     def check_meta_robots(pages: List[CrawledPage]) -> Dict[str, Any]:
-        missing_count = sum(1 for p in pages if not p.meta_robots)
+        missing_pages = [p for p in pages if not p.meta_robots]
+        missing_count = len(missing_pages)
         status = "fail" if missing_count > 0 else "pass"
+        
+        # Build detailed, human-like explanation with actual URLs
+        cons = []
+        if missing_count > 0:
+            cons.append(f"Found {missing_count} out of {len(pages)} pages without meta robots tags")
+            # Show actual URLs (up to 3 examples)
+            example_urls = [p.url for p in missing_pages[:3]]
+            cons.append(f"Pages missing meta robots: {', '.join(example_urls)}")
+            if missing_count > 3:
+                cons.append(f"...and {missing_count - 3} more pages")
+        
+        # Human-like solution with actual examples
+        solution = f"""Here's how to fix the meta robots issue on your website:
+
+1. Add this code to the <head> section of each page:
+   <meta name="robots" content="index, follow">
+
+2. For the pages we found ({len(missing_pages)} total), specifically add it to:
+   {', '.join([p.url.split('/')[-1] or 'homepage' for p in missing_pages[:5]])}
+
+3. If you're using a CMS like WordPress, use an SEO plugin (Yoast SEO, Rank Math) to automatically add these tags.
+
+4. For developers: Add the meta tag to your template header file so it appears on all pages automatically."""
+
         return {
-            "check_name": "Meta robots tag missing",
+            "check_name": "Meta Robots Tag Presence",
             "category": "Technical SEO",
             "status": status,
             "impact_score": 75,
-            "current_value": f"{missing_count}/{len(pages)} pages missing",
-            "recommended_value": "All pages should have meta robots",
-            "pros": ["Pages with meta robots have proper indexing control"] if missing_count < len(pages) else [],
-            "cons": [f"{missing_count} pages missing meta robots tag"] if missing_count > 0 else [],
-            "ranking_impact": "Missing meta robots can lead to 5-10% loss in crawl efficiency",
-            "solution": "Add <meta name='robots' content='index, follow'> to all pages",
+            "current_value": f"{len(pages) - missing_count} pages have meta robots, {missing_count} pages missing",
+            "recommended_value": "All pages should have meta robots directive for proper crawl control",
+            "pros": [f"{len(pages) - missing_count} pages already have meta robots configured"] if missing_count < len(pages) else [],
+            "cons": cons,
+            "ranking_impact": "Missing meta robots can reduce crawl efficiency by 5-10% and may cause unintended indexing issues. Search engines might waste crawl budget on pages you don't want indexed.",
+            "solution": solution,
             "enhancements": [
-                "Implement dynamic meta robots based on content quality",
-                "Use X-Robots-Tag HTTP header for non-HTML resources",
-                "Set up crawl budget optimization"
+                "Use 'noindex, follow' for thin content pages (tags, archives)",
+                "Implement X-Robots-Tag HTTP headers for PDF and image files",
+                "Set up robots.txt to complement your meta robots strategy",
+                "Monitor indexed pages in Google Search Console to verify directives are working",
+                "Consider using 'max-snippet', 'max-image-preview' directives for better control"
             ]
         }
     
