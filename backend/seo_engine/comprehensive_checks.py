@@ -1651,37 +1651,147 @@ Example: "Woman using laptop for video conference call in home office"
     
     @staticmethod
     def check_internal_linking(pages: List[CrawledPage]) -> Dict[str, Any]:
-        # Analyze internal link density
+        # Analyze internal link density using enhanced crawler data
         total_internal_links = 0
-        pages_with_few_links = 0
-        
-        base_domain = urlparse(pages[0].url).netloc if pages else ""
+        total_external_links = 0
+        pages_with_few_links = []
+        pages_with_good_links = []
         
         for page in pages:
-            internal_links = [link for link in page.links if base_domain in link]
-            total_internal_links += len(internal_links)
+            page_name = page.url.split('/')[-1] or 'homepage'
+            internal_count = len(page.internal_links) if page.internal_links else 0
+            external_count = len(page.external_links) if page.external_links else 0
             
-            if len(internal_links) < 3:
-                pages_with_few_links += 1
+            total_internal_links += internal_count
+            total_external_links += external_count
+            
+            if internal_count < 3:
+                pages_with_few_links.append({
+                    'page': page_name,
+                    'url': page.url,
+                    'internal_links': internal_count
+                })
+            else:
+                pages_with_good_links.append({
+                    'page': page_name,
+                    'internal_links': internal_count
+                })
         
         avg_links = total_internal_links / len(pages) if pages else 0
-        status = "pass" if avg_links >= 5 and pages_with_few_links == 0 else ("warning" if avg_links >= 3 else "fail")
+        avg_external = total_external_links / len(pages) if pages else 0
+        status = "pass" if avg_links >= 5 and len(pages_with_few_links) == 0 else ("warning" if avg_links >= 3 else "fail")
+        
+        # Build detailed cons
+        cons = []
+        if pages_with_few_links:
+            cons.append(f"{len(pages_with_few_links)} pages have insufficient internal linking (less than 3 links)")
+            cons.append(f"Average internal links per page: {avg_links:.1f} (recommended: 5-10)")
+            
+            for p in pages_with_few_links[:5]:
+                cons.append(f"  • {p['page']}: only {p['internal_links']} internal link(s)")
+            
+            if len(pages_with_few_links) > 5:
+                cons.append(f"  ...and {len(pages_with_few_links) - 5} more pages")
+        
+        # Build detailed solution
+        solution = f"""Internal linking is crucial for distributing PageRank and helping users navigate. Here's how to improve:
+
+**CURRENT STATE:**
+- Pages analyzed: {len(pages)}
+- Total internal links found: {total_internal_links}
+- Average internal links per page: {avg_links:.1f}
+- Pages with good linking (3+ links): {len(pages_with_good_links)}
+- Pages needing improvement: {len(pages_with_few_links)}
+
+**PAGES THAT NEED MORE INTERNAL LINKS:**"""
+
+        for p in pages_with_few_links[:8]:
+            solution += f"\n• {p['page']} ({p['url']}): Currently has {p['internal_links']} internal link(s)"
+            solution += f"\n  → Add 3-5 relevant internal links to related content"
+
+        solution += """
+
+**HOW TO ADD EFFECTIVE INTERNAL LINKS:**
+
+1. **Identify Linking Opportunities:**
+   - Look for relevant keywords in your content
+   - Find related pages/posts on your site
+   - Link from high-authority pages to new/important pages
+
+2. **Use Descriptive Anchor Text:**
+   ❌ Bad: "click here", "read more", "this page"
+   ✅ Good: "complete guide to SEO", "WordPress security best practices"
+
+3. **Strategic Placement:**
+   - Add links naturally within content paragraphs
+   - Use "Related Posts" or "You Might Also Like" sections
+   - Include navigation breadcrumbs
+   - Add contextual sidebar links
+
+4. **Implementation Example:**
+   ```html
+   <p>To improve your website's visibility, consider implementing 
+   <a href="/seo-best-practices">SEO best practices</a> and following our 
+   <a href="/technical-seo-guide">technical SEO checklist</a>.</p>
+   ```
+
+**INTERNAL LINKING STRATEGY:**
+
+🎯 **Hub & Spoke Model:**
+- Main topic page (hub) links to all related subtopic pages (spokes)
+- Each spoke page links back to hub and to related spokes
+- Example: "SEO Guide" hub → "On-Page SEO", "Technical SEO", "Link Building" spokes
+
+📊 **Priority Linking:**
+1. Homepage → Important pages (products, services, top content)
+2. High-traffic pages → New/underperforming pages (pass PageRank)
+3. Related content → Related content (improve user engagement)
+
+**QUICK WINS FOR YOUR SITE:**"""
+
+        if pages_with_few_links:
+            solution += f"\n1. Add 'Related Posts' section to: {', '.join([p['page'] for p in pages_with_few_links[:3]])}"
+            solution += f"\n2. Link from your homepage to: {', '.join([p['page'] for p in pages_with_few_links[:3]])}"
+            solution += "\n3. Create a resources/sitemap page linking to all important pages"
+            solution += "\n4. Add contextual links in your blog posts/content pages"
+
+        solution += """
+
+**TOOLS TO HELP:**
+- Google Search Console: Find your most linked-to pages
+- Screaming Frog: Analyze your current internal link structure
+- WordPress plugins: Link Whisper, Internal Link Juicer (for automated suggestions)"""
+
+        pros = []
+        if pages_with_good_links:
+            pros.append(f"{len(pages_with_good_links)} pages have good internal linking (3+ links)")
+        if avg_links >= 5:
+            pros.append(f"Average of {avg_links:.1f} internal links per page is good")
+        if total_internal_links > total_external_links:
+            pros.append(f"Good ratio: More internal links ({total_internal_links}) than external ({total_external_links})")
+        
         return {
-            "check_name": "Insufficient internal linking",
+            "check_name": "Internal Linking Structure",
             "category": "On-Page SEO",
             "status": status,
             "impact_score": 80,
-            "current_value": f"{avg_links:.1f} avg internal links per page",
-            "recommended_value": "5-10 contextual internal links per page",
-            "pros": [] if avg_links < 5 else ["Good internal linking"],
-            "cons": [f"{pages_with_few_links} pages have insufficient internal links"] if pages_with_few_links > 0 else [],
-            "ranking_impact": "Poor internal linking reduces PageRank distribution by 20-30%",
-            "solution": "Add contextual internal links to related content, use descriptive anchor text",
+            "current_value": f"{avg_links:.1f} avg internal links per page ({total_internal_links} total internal, {total_external_links} total external)",
+            "recommended_value": "5-10 contextual internal links per page with descriptive anchor text",
+            "pros": pros,
+            "cons": cons,
+            "ranking_impact": "Internal linking is critical for SEO. Poor internal linking structure can reduce PageRank distribution by 20-30%, preventing important pages from ranking well. It also increases crawl depth (pages are harder for Google to find) and reduces user engagement. Good internal linking can boost rankings of linked pages by 15-25%.",
+            "solution": solution,
             "enhancements": [
-                "Link to important pages from multiple sources",
-                "Use varied, descriptive anchor text",
-                "Implement hub and spoke model",
-                "Add related content sections"
+                "Implement breadcrumb navigation on all pages (helps both users and search engines)",
+                "Create pillar content pages that link to related cluster content",
+                "Use rel='nofollow' sparingly on internal links (only for login, register pages)",
+                "Add internal links in your first paragraph to increase link authority",
+                "Use jump links (#anchors) for long-form content navigation",
+                "Regularly audit and update internal links when you add new content",
+                "Create an HTML sitemap page for users (complementing XML sitemap for bots)",
+                "Link from your footer to important pages (about, contact, key services)",
+                "Use different variations of anchor text to the same page (avoid over-optimization)",
+                "Track internal link clicks in Google Analytics to optimize user flow"
             ]
         }
     
