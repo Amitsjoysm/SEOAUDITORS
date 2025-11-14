@@ -44,8 +44,8 @@ const AdminDashboard = () => {
       const [statsRes, usersRes, plansRes, themesRes, auditsRes, envKeysRes] = await Promise.all([
         axios.get('/admin/stats'),
         axios.get('/admin/users'),
-        axios.get('/plans'),
-        axios.get('/themes'),
+        axios.get('/plans/'),
+        axios.get('/themes/'),
         axios.get('/admin/audits'),
         axios.get('/admin/env-keys')
       ]);
