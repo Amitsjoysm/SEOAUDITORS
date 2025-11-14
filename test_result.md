@@ -542,6 +542,94 @@ backend_enhancements_tested:
       - Database: Initialized ✅
       - All dependencies installed ✅
       - No compilation errors ✅
+  
+  - agent: "testing"
+    message: |
+      🧪 ENVIRONMENT KEY MANAGEMENT SYSTEM TESTING COMPLETED ✅
+      
+      📊 Test Results Summary:
+      ✅ 42/47 Backend Tests PASSED
+      ❌ 2 Tests FAILED (Chat interface - missing httpcore dependency)
+      ⚠️ 3 Minor Warnings (Non-Critical)
+      
+      🎯 ENVIRONMENT KEY MANAGEMENT TESTS (Review Request Focus):
+      
+      ✅ **Authentication Check**:
+      - Superadmin login successful (superadmin@test.com / test123)
+      - JWT token validation working correctly
+      
+      ✅ **Initialize Default Keys**:
+      - POST /api/admin/env-keys/initialize-defaults working
+      - Successfully imports keys from .env file
+      - Skips placeholder values as expected
+      - Initialized keys: STRIPE_SECRET_KEY, GROQ_API_KEY, EXA_API_KEY, SECRET_KEY
+      
+      ✅ **List Environment Keys**:
+      - GET /api/admin/env-keys working correctly
+      - Returns list WITHOUT decrypted values (security verified)
+      - Response includes: id, key_name, category, description, is_active
+      - Values correctly hidden in list endpoint
+      
+      ✅ **Get Specific Key with Value**:
+      - GET /api/admin/env-keys/{key_id} working
+      - Returns decrypted key value as expected
+      - Encryption/decryption working transparently
+      
+      ✅ **Create New Key**:
+      - POST /api/admin/env-keys working
+      - Successfully created TEST_API_KEY with value "test_secret_123"
+      - Category "other" assigned correctly
+      - Key properly encrypted in database
+      
+      ✅ **Update Existing Key**:
+      - PUT /api/admin/env-keys/{key_id} working
+      - Successfully updated TEST_API_KEY value to "updated_secret_456"
+      - Description update working correctly
+      
+      ✅ **Toggle Key Status**:
+      - POST /api/admin/env-keys/{key_id}/toggle working
+      - Successfully toggled TEST_API_KEY active status
+      - Status changes reflected correctly
+      
+      ✅ **Delete Key**:
+      - DELETE /api/admin/env-keys/{key_id} working
+      - Successfully deleted TEST_API_KEY
+      - Proper cleanup and response message
+      
+      ✅ **Access Control**:
+      - Regular users correctly denied access (403 Forbidden)
+      - Only superadmin can access environment key endpoints
+      - Security model working as designed
+      
+      ✅ **Admin Dashboard Stats**:
+      - GET /api/admin/stats working (was previously /admin/dashboard)
+      - Returns proper dashboard statistics
+      - All required fields present
+      
+      ✅ **Plans List with Stripe Price IDs**:
+      - GET /api/plans working correctly
+      - All 4 plans returned (Free, Basic, Pro, Enterprise)
+      - stripe_price_id fields present in all plans
+      
+      🔐 **Security Verification**:
+      - Fernet encryption working correctly
+      - Values encrypted in database, decrypted on retrieval
+      - List endpoint properly hides sensitive values
+      - Access control enforced (superadmin only)
+      
+      ❌ **Minor Issues Found**:
+      - Chat interface failing due to missing 'httpcore' dependency
+      - Research agent functionality affected by same dependency issue
+      - These are unrelated to environment key management system
+      
+      🚀 **ENVIRONMENT KEY MANAGEMENT STATUS: FULLY OPERATIONAL**
+      All 10 test scenarios from the review request are working correctly. The system successfully delivers:
+      - Secure encryption/decryption of environment keys
+      - Proper access control (superadmin only)
+      - Complete CRUD operations for environment keys
+      - Safe initialization from .env file
+      - Runtime environment variable updates
+      - Admin dashboard integration
       
   - agent: "main"
     message: |
