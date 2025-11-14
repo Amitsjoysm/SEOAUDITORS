@@ -67,7 +67,8 @@ const AdminDashboard = () => {
         plansCount: plansRes.data.length,
         themesCount: themesRes.data.length,
         auditsCount: auditsRes.data.length,
-        envKeysCount: envKeysRes.data.length
+        envKeysCount: envKeysRes.data.length,
+        llmCount: llmRes.data.length
       });
     } catch (error) {
       console.error('Failed to fetch admin data:', error);
