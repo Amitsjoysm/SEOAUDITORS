@@ -290,3 +290,30 @@ class EnvironmentKey(Base):
     last_updated_by = Column(String)  # User ID who last updated
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+
+class LLMProvider(str, enum.Enum):
+    GROQ = "groq"
+    OPENAI = "openai"
+    ANTHROPIC = "anthropic"
+    GEMINI = "gemini"
+    OLLAMA = "ollama"
+
+
+class LLMSetting(Base):
+    """Model for storing LLM configuration"""
+    __tablename__ = "llm_settings"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    provider = Column(SQLEnum(LLMProvider), nullable=False)  # groq, openai, anthropic, gemini, ollama
+    model_name = Column(String, nullable=False)  # e.g., "llama-3.3-70b-versatile", "gpt-4", "claude-3-opus"
+    api_key_ref = Column(String)  # Reference to environment key name (e.g., "GROQ_API_KEY")
+    base_url = Column(String)  # For Ollama or custom endpoints
+    temperature = Column(Float, default=0.7)
+    max_tokens = Column(Integer, default=4096)
+    top_p = Column(Float, default=1.0)
+    is_active = Column(Boolean, default=False)  # Only one can be active
+    description = Column(Text)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
