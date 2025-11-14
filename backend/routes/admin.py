@@ -20,6 +20,7 @@ router = APIRouter(prefix="/admin", tags=["Admin"])
 logger = logging.getLogger(__name__)
 
 
+@router.get("/stats", response_model=AdminDashboardStats)
 @router.get("/dashboard", response_model=AdminDashboardStats)
 async def get_dashboard_stats(
     current_user: User = Depends(get_current_superadmin),
