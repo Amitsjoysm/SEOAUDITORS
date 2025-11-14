@@ -75,30 +75,99 @@ class TechnicalSEOChecks:
     
     @staticmethod
     def check_og_tags(pages: List[CrawledPage]) -> Dict[str, Any]:
-        missing = 0
-        for page in pages:
-            soup = BeautifulSoup(page.html, 'html.parser')
-            og_tags = soup.find_all('meta', property=re.compile(r'^og:'))
-            if not og_tags:
-                missing += 1
+        pages_with_og = []
+        pages_missing_og = []
+        partial_og_pages = []
         
+        for page in pages:
+            if page.og_tags and len(page.og_tags) > 0:
+                # Check if has essential OG tags
+                essential_tags = ['og:title', 'og:description', 'og:image', 'og:url']
+                has_essential = all(tag in page.og_tags for tag in essential_tags)
+                if has_essential:
+                    pages_with_og.append(page)
+                else:
+                    partial_og_pages.append({
+                        'url': page.url,
+                        'has': list(page.og_tags.keys()),
+                        'missing': [tag for tag in essential_tags if tag not in page.og_tags]
+                    })
+            else:
+                pages_missing_og.append(page)
+        
+        missing = len(pages_missing_og)
         status = "fail" if missing > len(pages) * 0.5 else ("warning" if missing > 0 else "pass")
+        
+        # Build detailed cons
+        cons = []
+        if missing > 0:
+            cons.append(f"{missing} pages completely missing Open Graph tags")
+            cons.append(f"Affected pages: {', '.join([p.url.split('/')[-1] or 'homepage' for p in pages_missing_og[:3]])}")
+            if missing > 3:
+                cons.append(f"...and {missing - 3} more pages")
+        
+        if partial_og_pages:
+            cons.append(f"{len(partial_og_pages)} pages have incomplete OG tags")
+            for partial in partial_og_pages[:2]:
+                cons.append(f"  • {partial['url'].split('/')[-1]}: missing {', '.join(partial['missing'])}")
+        
+        # Show what's working
+        pros = []
+        if pages_with_og:
+            pros.append(f"{len(pages_with_og)} pages have complete Open Graph implementation")
+            example_page = pages_with_og[0]
+            if example_page.og_tags.get('og:image'):
+                pros.append(f"Good! Your pages include OG images for rich social previews")
+        
+        # Human-like solution
+        solution = f"""Let me show you exactly how to add Open Graph tags to improve social sharing:
+
+**For pages currently missing OG tags ({len(pages_missing_og)} pages):**
+
+Add these meta tags in your <head> section:
+```html
+<meta property="og:title" content="Your Page Title - Make it catchy!" />
+<meta property="og:description" content="A compelling 2-3 sentence description that makes people want to click" />
+<meta property="og:image" content="https://yoursite.com/images/share-image.jpg" />
+<meta property="og:url" content="https://yoursite.com/current-page" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Your Brand Name" />
+```
+
+**Image requirements for best results:**
+- Size: 1200x630 pixels (Facebook/LinkedIn recommended)
+- Format: JPG or PNG
+- File size: Under 8MB
+- Must be publicly accessible URL
+
+**Example for your homepage:**
+Pages like "{pages_missing_og[0].url if pages_missing_og else 'your homepage'}" need these tags to show rich previews when shared on Facebook, LinkedIn, Twitter, and messaging apps.
+
+**Quick implementation tips:**
+1. If using WordPress: Install Yoast SEO or RankMath - they handle OG tags automatically
+2. If using React/Next.js: Use react-helmet or Next.js Head component
+3. For static sites: Add to your HTML template header"""
+
         return {
-            "check_name": "Open Graph (OG) tags missing",
+            "check_name": "Open Graph Social Media Tags",
             "category": "Technical SEO",
             "status": status,
             "impact_score": 70,
-            "current_value": f"{missing}/{len(pages)} pages missing OG tags",
-            "recommended_value": "All pages should have OG tags for social sharing",
-            "pros": [] if missing else ["Proper social media optimization"],
-            "cons": [f"{missing} pages missing Open Graph tags", "Poor social media appearance"] if missing else [],
-            "ranking_impact": "No direct ranking impact but reduces social traffic by 40-60%",
-            "solution": "Add og:title, og:description, og:image, og:url to all pages",
+            "current_value": f"{len(pages_with_og)} complete, {len(partial_og_pages)} partial, {len(pages_missing_og)} missing",
+            "recommended_value": "All pages should have complete OG tags (og:title, og:description, og:image, og:url)",
+            "pros": pros,
+            "cons": cons,
+            "ranking_impact": "While Open Graph doesn't directly affect Google rankings, it significantly impacts social media CTR. Pages without OG tags see 40-60% lower engagement when shared on social platforms. This reduces referral traffic and brand visibility.",
+            "solution": solution,
             "enhancements": [
-                "Use high-quality images (1200x630px)",
-                "Test with Facebook Sharing Debugger",
-                "Add og:type for content classification",
-                "Implement dynamic OG tags based on content"
+                "Add og:video for pages with video content to enable video previews",
+                "Use Twitter Card tags alongside OG tags for optimal Twitter display",
+                "Test your OG tags using Facebook Sharing Debugger (developers.facebook.com/tools/debug)",
+                "Create unique OG images for your most important pages",
+                "Add og:locale for international sites (e.g., 'en_US', 'fr_FR')",
+                "Consider og:article tags for blog posts (published_time, author, section)",
+                "Use absolute URLs for og:image, never relative paths",
+                "Set up og:image:width and og:image:height tags for faster rendering"
             ]
         }
     
