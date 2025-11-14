@@ -28,6 +28,10 @@ const AdminDashboard = () => {
   const [showKeyValue, setShowKeyValue] = useState({});
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [editingPlan, setEditingPlan] = useState(null);
+  const [llmSettings, setLlmSettings] = useState([]);
+  const [showLlmModal, setShowLlmModal] = useState(false);
+  const [editingLlm, setEditingLlm] = useState(null);
+  const [availableModels, setAvailableModels] = useState([]);
 
   useEffect(() => {
     if (user?.role !== 'superadmin') {
