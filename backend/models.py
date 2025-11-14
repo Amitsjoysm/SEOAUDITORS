@@ -231,7 +231,7 @@ class PaymentHistory(Base):
     failure_message = Column(Text)
     refund_amount = Column(Float)
     refund_reason = Column(String)
-    metadata = Column(JSON)  # Additional payment metadata
+    payment_metadata = Column(JSON)  # Additional payment metadata (renamed from metadata)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
