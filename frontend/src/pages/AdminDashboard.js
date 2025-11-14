@@ -5,8 +5,9 @@ import { useTheme } from '@/contexts/ThemeContext';
 import axios from '@/api/axios';
 import {
   Users, FileText, CreditCard, Settings, BarChart3,
-  Plus, Edit, Trash2, Check, X, Palette, ArrowLeft, Key, Eye, EyeOff, Copy, Brain, Zap
+  Plus, Edit, Trash2, Check, X, Palette, ArrowLeft, Key, Eye, EyeOff, Copy, Brain, Zap, Globe
 } from 'lucide-react';
+import AdminSEOSettings from '@/components/AdminSEOSettings';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
