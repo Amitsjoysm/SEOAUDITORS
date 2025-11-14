@@ -795,14 +795,14 @@ class MJSEOTester:
                                 audit_data = response.json()
                                 
                                 # Test enhanced features on existing audit
+                                total_checks_run = audit_data.get("total_checks_run", 0)
                                 checks_passed = audit_data.get("checks_passed", 0)
                                 checks_failed = audit_data.get("checks_failed", 0)
-                                total_checks = checks_passed + checks_failed
                                 
-                                if total_checks >= 130:
-                                    self.result.add_result("Enhanced SEO Checks (Existing)", "PASS", f"Existing audit has {total_checks} checks")
+                                if total_checks_run >= 130:
+                                    self.result.add_result("Enhanced SEO Checks (Existing)", "PASS", f"Existing audit has {total_checks_run} checks (passed: {checks_passed}, failed: {checks_failed})")
                                 else:
-                                    self.result.add_result("Enhanced SEO Checks (Existing)", "FAIL", f"Existing audit only has {total_checks} checks")
+                                    self.result.add_result("Enhanced SEO Checks (Existing)", "FAIL", f"Existing audit only has {total_checks_run} checks")
                                 
                                 self.test_audit_id = audit_id
                                 break
