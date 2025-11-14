@@ -435,6 +435,218 @@ const AdminDashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Environment Keys Tab */}
+        {activeTab === 'env-keys' && (
+          <div>
+            <div className="mb-6 flex gap-4">
+              <button
+                onClick={() => { setEditingKey(null); setShowKeyModal(true); }}
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                Add New Key
+              </button>
+              <button
+                onClick={handleInitializeDefaults}
+                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition-colors"
+              >
+                Initialize from .env
+              </button>
+            </div>
+
+            <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl border border-slate-800 overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-slate-800/50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Key Name</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Category</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Description</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Value</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Status</th>
+                      <th className="px-6 py-4 text-center text-sm font-semibold text-gray-300">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800">
+                    {envKeys.map((key) => (
+                      <tr key={key.id} className="hover:bg-slate-800/30 transition-colors">
+                        <td className="px-6 py-4 text-sm font-mono text-white">{key.key_name}</td>
+                        <td className="px-6 py-4 text-sm">
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                            key.category === 'payment' ? 'bg-green-500/20 text-green-400' :
+                            key.category === 'ai' ? 'bg-blue-500/20 text-blue-400' :
+                            key.category === 'email' ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-gray-500/20 text-gray-400'
+                          }`}>
+                            {key.category || 'other'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-300">{key.description || '-'}</td>
+                        <td className="px-6 py-4 text-sm">
+                          {showKeyValue[key.id] ? (
+                            <div className="flex items-center gap-2">
+                              <code className="text-xs bg-slate-800 px-2 py-1 rounded text-green-400 max-w-xs overflow-hidden text-ellipsis">
+                                {showKeyValue[key.id]}
+                              </code>
+                              <button
+                                onClick={() => handleCopyKey(showKeyValue[key.id])}
+                                className="text-gray-400 hover:text-white"
+                              >
+                                <Copy className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-gray-500">••••••••••••</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                            key.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                          }`}>
+                            {key.is_active ? 'Active' : 'Inactive'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={() => handleToggleKeyVisibility(key.id)}
+                              className="text-blue-400 hover:text-blue-300 transition-colors"
+                              title={showKeyValue[key.id] ? 'Hide value' : 'Show value'}
+                            >
+                              {showKeyValue[key.id] ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                            </button>
+                            <button
+                              onClick={() => { setEditingKey(key); setShowKeyModal(true); }}
+                              className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                              title="Edit"
+                            >
+                              <Edit className="w-5 h-5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteKey(key.id)}
+                              className="text-red-400 hover:text-red-300 transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Key Modal */}
+            {showKeyModal && (
+              <KeyModal
+                key={editingKey?.id || 'new'}
+                editingKey={editingKey}
+                onClose={() => { setShowKeyModal(false); setEditingKey(null); }}
+                onCreate={handleCreateKey}
+                onUpdate={handleUpdateKey}
+              />
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// KeyModal Component
+const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
+  const [formData, setFormData] = React.useState({
+    key_name: editingKey?.key_name || '',
+    key_value: '',
+    description: editingKey?.description || '',
+    category: editingKey?.category || 'other'
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (editingKey) {
+      onUpdate(editingKey.id, formData);
+    } else {
+      onCreate(formData);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-2xl w-full mx-4">
+        <h2 className="text-2xl font-bold text-white mb-6">
+          {editingKey ? 'Edit Environment Key' : 'Add New Environment Key'}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Key Name</label>
+            <input
+              type="text"
+              value={formData.key_name}
+              onChange={(e) => setFormData({ ...formData, key_name: e.target.value })}
+              disabled={!!editingKey}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 font-mono"
+              placeholder="STRIPE_SECRET_KEY"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Key Value</label>
+            <input
+              type="password"
+              value={formData.key_value}
+              onChange={(e) => setFormData({ ...formData, key_value: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              placeholder="Enter secret key value"
+              required={!editingKey}
+            />
+            {editingKey && (
+              <p className="text-xs text-gray-500 mt-1">Leave empty to keep existing value</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
+            <select
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            >
+              <option value="payment">Payment</option>
+              <option value="ai">AI</option>
+              <option value="email">Email</option>
+              <option value="database">Database</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              rows="3"
+              placeholder="Describe what this key is used for..."
+            />
+          </div>
+          <div className="flex gap-4 pt-4">
+            <button
+              type="submit"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              {editingKey ? 'Update Key' : 'Create Key'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
