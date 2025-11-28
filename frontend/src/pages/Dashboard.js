@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/api/axios';
+import ApolloNavbar from '@/components/ApolloNavbar';
+import ApolloFooter from '@/components/ApolloFooter';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
-import { BarChart3, LogOut, Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, Loader2, Settings, Key, Shield, CreditCard } from 'lucide-react';
+import { Plus, TrendingUp, Clock, CheckCircle2, AlertCircle, Loader2, Globe, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [audits, setAudits] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +49,6 @@ const Dashboard = () => {
         title: "Audit Created!",
         description: "Your SEO audit has been started. It will take a few minutes to complete.",
       });
-      // Poll for updates
       setTimeout(() => fetchAudits(), 2000);
     } catch (err) {
       const errorMsg = err.response?.data?.detail || 'Failed to create audit';
@@ -67,188 +65,206 @@ const Dashboard = () => {
 
   const getStatusBadge = (status) => {
     const variants = {
-      pending: { color: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30', icon: Clock },
-      crawling: { color: 'bg-blue-500/20 text-blue-300 border-blue-500/30', icon: Loader2 },
-      analyzing: { color: 'bg-purple-500/20 text-purple-300 border-purple-500/30', icon: Loader2 },
-      generating_report: { color: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30', icon: Loader2 },
-      completed: { color: 'bg-green-500/20 text-green-300 border-green-500/30', icon: CheckCircle2 },
-      failed: { color: 'bg-red-500/20 text-red-300 border-red-500/30', icon: AlertCircle }
+      pending: { bg: 'var(--apollo-warning-light)', color: 'var(--apollo-warning)', icon: Clock, label: 'Pending' },
+      crawling: { bg: 'var(--apollo-info-light)', color: 'var(--apollo-info)', icon: Loader2, label: 'Crawling', spin: true },
+      analyzing: { bg: 'var(--apollo-info-light)', color: 'var(--apollo-primary)', icon: Loader2, label: 'Analyzing', spin: true },
+      generating_report: { bg: 'var(--apollo-info-light)', color: 'var(--apollo-primary)', icon: Loader2, label: 'Generating Report', spin: true },
+      completed: { bg: 'var(--apollo-success-light)', color: 'var(--apollo-success)', icon: CheckCircle2, label: 'Completed' },
+      failed: { bg: 'var(--apollo-error-light)', color: 'var(--apollo-error)', icon: AlertCircle, label: 'Failed' }
     };
 
     const variant = variants[status] || variants.pending;
     const Icon = variant.icon;
 
     return (
-      <Badge className={`${variant.color} border`}>
-        <Icon className={`w-3 h-3 mr-1 ${status.includes('ing') ? 'animate-spin' : ''}`} />
-        {status.replace('_', ' ')}
-      </Badge>
+      <span className="apollo-badge" style={{ background: variant.bg, color: variant.color, display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+        <Icon className={`w-3 h-3 ${variant.spin ? 'animate-spin' : ''}`} />
+        {variant.label}
+      </span>
     );
   };
 
   const getScoreColor = (score) => {
-    if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
-    return 'text-red-400';
+    if (score >= 80) return 'var(--apollo-success)';
+    if (score >= 60) return 'var(--apollo-warning)';
+    return 'var(--apollo-error)';
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
-      {/* Navbar */}
-      <nav className="border-b border-white/10 backdrop-blur-sm bg-slate-950/50 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <BarChart3 className="w-8 h-8 text-blue-400" />
-            <span className="text-2xl font-bold text-white">MJ SEO</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-slate-300">Hello, {user?.full_name || user?.email}</span>
-            {user?.role === 'superadmin' && (
-              <Button variant="ghost" className="text-white" onClick={() => navigate('/admin')}>
-                <Shield className="w-4 h-4 mr-2" />
-                Admin
-              </Button>
-            )}
-            <Button variant="ghost" className="text-white" onClick={() => navigate('/plans')}>
-              <CreditCard className="w-4 h-4 mr-2" />
-              Plans
-            </Button>
-            <Button variant="ghost" className="text-white" onClick={() => navigate('/api-tokens')}>
-              <Key className="w-4 h-4 mr-2" />
-              API
-            </Button>
-            <Button variant="ghost" className="text-white" onClick={() => navigate('/settings')}>
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
-            <Button variant="ghost" className="text-white" onClick={logout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
-          </div>
-        </div>
-      </nav>
+    <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)' }}>
+      <ApolloNavbar />
 
-      <div className="container mx-auto px-4 py-8" data-testid="dashboard">
-        {/* Create New Audit */}
-        <Card className="bg-slate-900/80 border-white/10 backdrop-blur-sm mb-8">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center">
-              <Plus className="w-5 h-5 mr-2 text-blue-400" />
+      <div className="apollo-container" style={{ padding: '2rem 1.5rem' }} data-testid="dashboard">
+        {/* Page Header */}
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--apollo-gray-900)', marginBottom: '0.5rem' }}>
+            SEO Audits
+          </h1>
+          <p style={{ color: 'var(--apollo-gray-600)', fontSize: '0.875rem' }}>
+            Manage and track your website SEO audits
+          </p>
+        </div>
+
+        {/* Create New Audit Card */}
+        <div className="apollo-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--apollo-gray-900)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Plus className="w-5 h-5" style={{ color: 'var(--apollo-primary)' }} />
               Create New SEO Audit
-            </CardTitle>
-            <CardDescription className="text-slate-400">
-              Enter your website URL to start a comprehensive SEO analysis
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={createAudit} className="flex gap-4">
-              <div className="flex-1">
+            </h2>
+            <p style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-600)' }}>
+              Enter your website URL to start a comprehensive SEO analysis with 132 checks
+            </p>
+          </div>
+
+          <form onSubmit={createAudit}>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div style={{ flex: '1', minWidth: '300px' }}>
                 <Input
                   type="url"
                   placeholder="https://example.com"
                   value={websiteUrl}
                   onChange={(e) => setWebsiteUrl(e.target.value)}
                   required
-                  className="bg-slate-800 border-slate-700 text-white"
+                  className="apollo-input"
                   data-testid="new-audit-url-input"
                 />
               </div>
               <Button 
                 type="submit" 
-                className="bg-blue-600 hover:bg-blue-700" 
+                className="apollo-btn apollo-btn-primary"
                 disabled={creating}
                 data-testid="create-audit-btn"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
                 {creating ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...</>
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Creating...
+                  </>
                 ) : (
-                  <><Plus className="mr-2 h-4 w-4" /> Start Audit</>
+                  <>
+                    <Plus className="w-4 h-4" />
+                    Start Audit
+                  </>
                 )}
               </Button>
-            </form>
+            </div>
+
             {error && (
-              <Alert variant="destructive" className="mt-4 bg-red-900/50 border-red-500/50">
-                <AlertDescription className="text-red-200">{error}</AlertDescription>
+              <Alert 
+                variant="destructive" 
+                style={{ 
+                  marginTop: '1rem',
+                  background: 'var(--apollo-error-light)',
+                  border: '1px solid var(--apollo-error)',
+                  borderRadius: 'var(--apollo-radius)'
+                }}
+              >
+                <AlertDescription style={{ color: 'var(--apollo-error)' }}>
+                  {error}
+                </AlertDescription>
               </Alert>
             )}
-          </CardContent>
-        </Card>
+          </form>
+        </div>
 
         {/* Audits List */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-            <TrendingUp className="w-6 h-6 mr-2 text-blue-400" />
-            Your Audits
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--apollo-gray-900)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <TrendingUp className="w-5 h-5" style={{ color: 'var(--apollo-primary)' }} />
+              Your Audits ({audits.length})
+            </h2>
+          </div>
 
           {loading ? (
-            <div className="text-center py-12">
-              <Loader2 className="w-12 h-12 animate-spin text-blue-400 mx-auto mb-4" />
-              <p className="text-slate-400">Loading your audits...</p>
+            <div className="apollo-card" style={{ padding: '4rem', textAlign: 'center' }}>
+              <Loader2 className="w-12 h-12 animate-spin mx-auto" style={{ color: 'var(--apollo-primary)', marginBottom: '1rem' }} />
+              <p style={{ color: 'var(--apollo-gray-600)' }}>Loading your audits...</p>
             </div>
           ) : audits.length === 0 ? (
-            <Card className="bg-slate-900/50 border-white/10 backdrop-blur-sm">
-              <CardContent className="py-12 text-center">
-                <BarChart3 className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-                <p className="text-slate-400 text-lg">No audits yet. Create your first audit above!</p>
-              </CardContent>
-            </Card>
+            <div className="apollo-card" style={{ padding: '4rem', textAlign: 'center' }}>
+              <Globe className="w-16 h-16 mx-auto" style={{ color: 'var(--apollo-gray-400)', marginBottom: '1rem' }} />
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--apollo-gray-700)', marginBottom: '0.5rem' }}>
+                No audits yet
+              </h3>
+              <p style={{ color: 'var(--apollo-gray-600)', fontSize: '0.875rem' }}>
+                Create your first audit above to get started with SEO analysis
+              </p>
+            </div>
           ) : (
-            <div className="grid gap-4">
-              {audits.map((audit) => (
-                <Card 
-                  key={audit.id} 
-                  className="bg-slate-900/50 border-white/10 backdrop-blur-sm hover:bg-slate-900/70 transition-all cursor-pointer"
-                  onClick={() => navigate(`/audit/${audit.id}`)}
-                  data-testid={`audit-card-${audit.id}`}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-xl font-semibold text-white">{audit.website_url}</h3>
-                          {getStatusBadge(audit.status)}
+            <div className="apollo-card">
+              <table className="apollo-table">
+                <thead>
+                  <tr>
+                    <th>Website</th>
+                    <th>Status</th>
+                    <th>Score</th>
+                    <th>Pages</th>
+                    <th>Checks</th>
+                    <th>Created</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {audits.map((audit) => (
+                    <tr key={audit.id} data-testid={`audit-row-${audit.id}`}>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <Globe className="w-4 h-4" style={{ color: 'var(--apollo-gray-400)' }} />
+                          <span style={{ fontWeight: 500, color: 'var(--apollo-gray-900)' }}>
+                            {audit.website_url}
+                          </span>
                         </div>
-                        <p className="text-slate-400 text-sm mb-3">
-                          Created {format(new Date(audit.created_at), 'MMM dd, yyyy HH:mm')}
-                        </p>
-                        <div className="flex gap-6 text-sm">
-                          <div>
-                            <span className="text-slate-500">Pages: </span>
-                            <span className="text-white font-medium">{audit.pages_crawled}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500">Checks: </span>
-                            <span className="text-white font-medium">{audit.total_checks_run}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500">Passed: </span>
-                            <span className="text-green-400 font-medium">{audit.checks_passed}</span>
-                          </div>
-                          <div>
-                            <span className="text-slate-500">Failed: </span>
-                            <span className="text-red-400 font-medium">{audit.checks_failed}</span>
-                          </div>
-                        </div>
-                      </div>
-                      {audit.overall_score !== null && (
-                        <div className="text-right">
-                          <div className="text-sm text-slate-400 mb-1">Overall Score</div>
-                          <div className={`text-4xl font-bold ${getScoreColor(audit.overall_score)}`}>
+                      </td>
+                      <td>{getStatusBadge(audit.status)}</td>
+                      <td>
+                        {audit.overall_score !== null ? (
+                          <span style={{ 
+                            fontSize: '1.25rem', 
+                            fontWeight: 700, 
+                            color: getScoreColor(audit.overall_score) 
+                          }}>
                             {audit.overall_score}
-                          </div>
-                          <div className="text-sm text-slate-500">/ 100</div>
+                            <span style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-500)', fontWeight: 400 }}>/100</span>
+                          </span>
+                        ) : (
+                          <span style={{ color: 'var(--apollo-gray-400)', fontSize: '0.875rem' }}>-</span>
+                        )}
+                      </td>
+                      <td style={{ color: 'var(--apollo-gray-700)' }}>{audit.pages_crawled || 0}</td>
+                      <td>
+                        <div style={{ fontSize: '0.875rem' }}>
+                          <span style={{ color: 'var(--apollo-success)', fontWeight: 500 }}>{audit.checks_passed}</span>
+                          {' / '}
+                          <span style={{ color: 'var(--apollo-error)', fontWeight: 500 }}>{audit.checks_failed}</span>
                         </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      </td>
+                      <td style={{ color: 'var(--apollo-gray-600)', fontSize: '0.875rem' }}>
+                        {format(new Date(audit.created_at), 'MMM dd, yyyy')}
+                      </td>
+                      <td>
+                        <Button
+                          size="sm"
+                          onClick={() => navigate(`/audit/${audit.id}`)}
+                          className="apollo-btn apollo-btn-secondary"
+                          style={{ fontSize: '0.75rem', padding: '0.375rem 0.75rem', display: 'flex', alignItems: 'center', gap: '0.375rem' }}
+                        >
+                          <Eye className="w-3 h-3" />
+                          View
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
       </div>
+
+      <ApolloFooter />
     </div>
   );
 };
