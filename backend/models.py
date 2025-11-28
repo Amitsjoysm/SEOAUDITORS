@@ -111,6 +111,14 @@ class Audit(Base):
     checks_failed = Column(Integer, default=0)
     checks_warning = Column(Integer, default=0)
     overall_score = Column(Float)  # 0-100
+    
+    # Enhanced Scoring Fields
+    potential_score = Column(Float)  # Potential score if all issues fixed
+    score_grade = Column(String)  # A+, A, B+, etc.
+    score_interpretation = Column(Text)  # Human-readable assessment
+    category_scores = Column(JSON)  # Detailed category breakdown
+    analytics_summary = Column(JSON)  # Executive summary with key metrics
+    
     report_pdf_path = Column(String)
     report_docx_path = Column(String)
     error_message = Column(Text)
