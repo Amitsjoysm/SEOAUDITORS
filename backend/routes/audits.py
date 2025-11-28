@@ -46,11 +46,21 @@ async def process_audit(audit_id: str, website_url: str, max_pages: int):
             logger.info(f"Running SEO checks for audit {audit_id}")
             check_results = run_all_comprehensive_checks(pages)
             
+            # Generate comprehensive scoring report
+            logger.info(f"Calculating enhanced SEO scores for audit {audit_id}")
+            website_data = {
+                'url': website_url,
+                'total_pages': len(pages),
+                'crawl_time': sum(p.load_time for p in pages),
+                'avg_load_time': sum(p.load_time for p in pages) / len(pages) if pages else 0
+            }
+            scoring_report = generate_seo_report_with_scoring(check_results, website_data)
+            analytics = scoring_report['analytics']
+            
             # Save results
             passed = 0
             failed = 0
             warning = 0
-            total_impact = 0
             
             for check_result in check_results:
                 result_obj = AuditResult(
@@ -76,33 +86,23 @@ async def process_audit(audit_id: str, website_url: str, max_pages: int):
                     passed += 1
                 elif result_obj.status == CheckStatus.FAIL:
                     failed += 1
-                    total_impact += result_obj.impact_score
                 elif result_obj.status == CheckStatus.WARNING:
                     warning += 1
-                    total_impact += result_obj.impact_score * 0.5
             
-            # Calculate overall score (0-100)
-            total_checks = len(check_results)
-            if total_checks > 0:
-                # Score based on passed checks and impact of failed checks
-                base_score = (passed / total_checks) * 100
-                penalty = (total_impact / total_checks) * 0.3  # Impact penalty
-                overall_score = max(0, min(100, base_score - penalty))
-            else:
-                overall_score = 0
-            
-            # Update audit
+            # Update audit with enhanced scoring
             audit.status = AuditStatus.COMPLETED
-            audit.total_checks_run = total_checks
-            audit.checks_passed = passed
-            audit.checks_failed = failed
-            audit.checks_warning = warning
-            audit.overall_score = round(overall_score, 1)
+            audit.total_checks_run = analytics['total_checks']
+            audit.checks_passed = analytics['status_distribution']['passed']
+            audit.checks_failed = analytics['status_distribution']['failed']
+            audit.checks_warning = analytics['status_distribution']['warnings']
+            audit.overall_score = round(analytics['overall_score'], 1)
+            audit.potential_score = round(analytics['potential_score'], 1)
+            audit.score_grade = analytics['grade']
+            audit.score_interpretation = analytics['interpretation']
+            audit.category_scores = analytics['category_scores']
+            audit.analytics_summary = analytics['executive_summary']
             audit.completed_at = datetime.now(timezone.utc)
-            audit.audit_metadata = {
-                'crawl_time': sum(p.load_time for p in pages),
-                'avg_load_time': sum(p.load_time for p in pages) / len(pages) if pages else 0
-            }
+            audit.audit_metadata = website_data
             
             await db.commit()
             
