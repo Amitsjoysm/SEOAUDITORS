@@ -153,6 +153,9 @@ class AuditResponse(BaseModel):
     checks_failed: int
     checks_warning: int
     overall_score: Optional[float] = None
+    potential_score: Optional[float] = None
+    score_grade: Optional[str] = None
+    score_interpretation: Optional[str] = None
     error_message: Optional[str] = None
     created_at: datetime
     completed_at: Optional[datetime] = None
@@ -161,6 +164,8 @@ class AuditResponse(BaseModel):
 class AuditDetailResponse(AuditResponse):
     results: List[AuditResultResponse] = []
     metadata: Dict[str, Any] = {}
+    category_scores: Optional[List[Dict[str, Any]]] = []
+    analytics_summary: Optional[Dict[str, Any]] = {}
 
 
 # ============ Chat Schemas ============
