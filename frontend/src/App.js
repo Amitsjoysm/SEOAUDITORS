@@ -18,6 +18,7 @@ import PaymentSuccess from '@/pages/PaymentSuccess';
 import '@/App.css';
 import '@/styles/enhanced-ui.css';
 import '@/styles/theme.css';
+import '@/styles/apollo-theme.css';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
