@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import axios from '@/api/axios';
+import ApolloNavbar from '@/components/ApolloNavbar';
+import ApolloFooter from '@/components/ApolloFooter';
 import { Send, ArrowLeft, Bot, User } from 'lucide-react';
 
 const Chat = () => {
@@ -57,8 +59,6 @@ const Chat = () => {
         audit_id: auditId,
         content: input
       });
-
-      // Backend returns full ChatMessageResponse with assistant message
       setMessages(prev => [...prev, response.data]);
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -76,124 +76,128 @@ const Chat = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex flex-col">
-      {/* Header */}
-      <div className="bg-slate-900/50 backdrop-blur-xl border-b border-slate-800">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => navigate(`/audit/${auditId}`)}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <ArrowLeft className="w-6 h-6" />
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-white">SEO Consultant Chat</h1>
-                {audit && (
-                  <p className="text-sm text-gray-400">{audit.website_url}</p>
-                )}
+    <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)', display: 'flex', flexDirection: 'column' }}>
+      <ApolloNavbar />
+
+      {/* Chat Container */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', maxWidth: '1280px', width: '100%', margin: '0 auto', padding: '1.5rem' }}>
+        {/* Header */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <button
+            onClick={() => navigate(`/audit/${auditId}`)}
+            className="apollo-navbar-link"
+            style={{ display: 'inline-flex', marginBottom: '1rem' }}
+          >
+            <ArrowLeft className="w-4 h-4" style={{ marginRight: '0.5rem' }} />
+            Back to Audit
+          </button>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--apollo-gray-900)', marginBottom: '0.25rem' }}>
+            SEO Consultant Chat
+          </h1>
+          {audit && (
+            <p style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-600)' }}>{audit.website_url}</p>
+          )}
+        </div>
+
+        {/* Messages Area */}
+        <div className="apollo-card" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '1.5rem', overflowY: 'auto', maxHeight: 'calc(100vh - 300px)' }}>
+          <div style={{ flex: 1, overflowY: 'auto' }}>
+            {messages.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--apollo-gray-500)' }}>
+                <Bot className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--apollo-gray-400)' }} />
+                <p style={{ fontSize: '1.125rem', marginBottom: '0.5rem', color: 'var(--apollo-gray-700)' }}>
+                  Start a conversation
+                </p>
+                <p style={{ fontSize: '0.875rem' }}>
+                  Ask me anything about your SEO audit results
+                </p>
               </div>
-            </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {messages.map((msg, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      display: 'flex',
+                      gap: '1rem',
+                      alignItems: 'flex-start',
+                      flexDirection: msg.role === 'user' ? 'row-reverse' : 'row'
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        background: msg.role === 'user' ? 'var(--apollo-primary)' : 'var(--apollo-gray-200)',
+                        color: msg.role === 'user' ? 'white' : 'var(--apollo-gray-700)'
+                      }}
+                    >
+                      {msg.role === 'user' ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
+                    </div>
+                    <div
+                      style={{
+                        flex: 1,
+                        maxWidth: '70%',
+                        padding: '1rem',
+                        borderRadius: 'var(--apollo-radius-lg)',
+                        background: msg.role === 'user' ? 'var(--apollo-primary)' : 'var(--apollo-gray-100)',
+                        color: msg.role === 'user' ? 'white' : 'var(--apollo-gray-900)'
+                      }}
+                    >
+                      <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+                    </div>
+                  </div>
+                ))}
+                {loading && (
+                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--apollo-gray-200)', color: 'var(--apollo-gray-700)' }}>
+                      <Bot className="w-5 h-5" />
+                    </div>
+                    <div style={{ padding: '1rem', borderRadius: 'var(--apollo-radius-lg)', background: 'var(--apollo-gray-100)' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--apollo-gray-400)', animation: 'bounce 1.4s infinite ease-in-out' }}></div>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--apollo-gray-400)', animation: 'bounce 1.4s 0.2s infinite ease-in-out' }}></div>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--apollo-gray-400)', animation: 'bounce 1.4s 0.4s infinite ease-in-out' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {messages.length === 0 && (
-            <div className="text-center py-12">
-              <Bot className="w-16 h-16 text-purple-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">
-                Chat with AI SEO Expert
-              </h3>
-              <p className="text-gray-400">
-                Ask questions about your audit results, get recommendations, and learn how to improve your SEO
-              </p>
-            </div>
-          )}
-
-          {messages.map((message, idx) => (
-            <div
-              key={idx}
-              className={`flex gap-4 ${
-                message.role === 'user' ? 'flex-row-reverse' : 'flex-row'
-              }`}
+        {/* Input Area */}
+        <div style={{ marginTop: '1rem' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end' }}>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask about your SEO audit..."
+              disabled={loading}
+              className="apollo-input"
+              style={{ flex: 1, minHeight: '100px', resize: 'vertical' }}
+            />
+            <button
+              onClick={handleSend}
+              disabled={loading || !input.trim()}
+              className="apollo-btn apollo-btn-primary"
+              style={{ padding: '1rem 1.5rem', height: '60px' }}
             >
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-                message.role === 'user'
-                  ? 'bg-purple-500'
-                  : 'bg-gradient-to-br from-blue-500 to-purple-600'
-              }`}>
-                {message.role === 'user' ? (
-                  <User className="w-5 h-5 text-white" />
-                ) : (
-                  <Bot className="w-5 h-5 text-white" />
-                )}
-              </div>
-
-              <div
-                className={`flex-1 max-w-3xl ${
-                  message.role === 'user'
-                    ? 'bg-purple-500/20 border border-purple-500/30'
-                    : 'bg-slate-900/50 border border-slate-800'
-                } rounded-2xl p-4`}
-              >
-                <div className="text-white whitespace-pre-wrap">
-                  {message.content}
-                </div>
-                <div className="text-xs text-gray-500 mt-2">
-                  {new Date(message.created_at).toLocaleTimeString()}
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {loading && (
-            <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                <Bot className="w-5 h-5 text-white" />
-              </div>
-              <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-4">
-                <div className="flex gap-2">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
-
-      {/* Input Area */}
-      <div className="bg-slate-900/50 backdrop-blur-xl border-t border-slate-800">
-        <div className="container mx-auto px-4 py-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex gap-4">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Ask anything about your SEO audit..."
-                disabled={loading}
-                className="flex-1 bg-slate-800 text-white px-6 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
-              />
-              <button
-                onClick={handleSend}
-                disabled={!input.trim() || loading}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Send className="w-5 h-5" />
-              </button>
-            </div>
+              <Send className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
+
+      <ApolloFooter />
     </div>
   );
 };
