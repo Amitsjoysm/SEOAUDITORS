@@ -1,0 +1,333 @@
+/* Apollo.io Inspired Design System */
+
+:root {
+  /* Primary Colors - Apollo Purple/Blue */
+  --apollo-primary: #6366f1;
+  --apollo-primary-dark: #4f46e5;
+  --apollo-primary-light: #818cf8;
+  --apollo-secondary: #8b5cf6;
+  --apollo-accent: #06b6d4;
+  
+  /* Neutral Colors */
+  --apollo-white: #ffffff;
+  --apollo-gray-50: #f9fafb;
+  --apollo-gray-100: #f3f4f6;
+  --apollo-gray-200: #e5e7eb;
+  --apollo-gray-300: #d1d5db;
+  --apollo-gray-400: #9ca3af;
+  --apollo-gray-500: #6b7280;
+  --apollo-gray-600: #4b5563;
+  --apollo-gray-700: #374151;
+  --apollo-gray-800: #1f2937;
+  --apollo-gray-900: #111827;
+  
+  /* Status Colors */
+  --apollo-success: #10b981;
+  --apollo-success-light: #d1fae5;
+  --apollo-warning: #f59e0b;
+  --apollo-warning-light: #fef3c7;
+  --apollo-error: #ef4444;
+  --apollo-error-light: #fee2e2;
+  --apollo-info: #3b82f6;
+  --apollo-info-light: #dbeafe;
+  
+  /* Shadows */
+  --apollo-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --apollo-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --apollo-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --apollo-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --apollo-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Border Radius */
+  --apollo-radius-sm: 0.25rem;
+  --apollo-radius: 0.5rem;
+  --apollo-radius-md: 0.75rem;
+  --apollo-radius-lg: 1rem;
+  --apollo-radius-xl: 1.5rem;
+  
+  /* Spacing */
+  --apollo-space-xs: 0.25rem;
+  --apollo-space-sm: 0.5rem;
+  --apollo-space-md: 1rem;
+  --apollo-space-lg: 1.5rem;
+  --apollo-space-xl: 2rem;
+  --apollo-space-2xl: 3rem;
+  
+  /* Typography */
+  --apollo-font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --apollo-font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+/* Global Resets & Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--apollo-font-sans);
+  background-color: var(--apollo-gray-50);
+  color: var(--apollo-gray-900);
+  line-height: 1.6;
+}
+
+/* Apollo-style Container */
+.apollo-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Apollo-style Card */
+.apollo-card {
+  background: var(--apollo-white);
+  border-radius: var(--apollo-radius-lg);
+  box-shadow: var(--apollo-shadow);
+  border: 1px solid var(--apollo-gray-200);
+  transition: all 0.2s ease;
+}
+
+.apollo-card:hover {
+  box-shadow: var(--apollo-shadow-md);
+}
+
+/* Apollo-style Button */
+.apollo-btn {
+  font-weight: 500;
+  border-radius: var(--apollo-radius);
+  padding: 0.625rem 1.25rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  font-size: 0.875rem;
+}
+
+.apollo-btn-primary {
+  background: var(--apollo-primary);
+  color: white;
+}
+
+.apollo-btn-primary:hover {
+  background: var(--apollo-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--apollo-shadow-md);
+}
+
+.apollo-btn-secondary {
+  background: var(--apollo-white);
+  color: var(--apollo-gray-700);
+  border: 1px solid var(--apollo-gray-300);
+}
+
+.apollo-btn-secondary:hover {
+  background: var(--apollo-gray-50);
+  border-color: var(--apollo-gray-400);
+}
+
+/* Apollo-style Input */
+.apollo-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--apollo-gray-300);
+  border-radius: var(--apollo-radius);
+  font-size: 0.875rem;
+  transition: all 0.15s ease;
+  background: var(--apollo-white);
+}
+
+.apollo-input:focus {
+  outline: none;
+  border-color: var(--apollo-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Apollo-style Badge */
+.apollo-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.apollo-badge-success {
+  background: var(--apollo-success-light);
+  color: var(--apollo-success);
+}
+
+.apollo-badge-warning {
+  background: var(--apollo-warning-light);
+  color: var(--apollo-warning);
+}
+
+.apollo-badge-error {
+  background: var(--apollo-error-light);
+  color: var(--apollo-error);
+}
+
+.apollo-badge-info {
+  background: var(--apollo-info-light);
+  color: var(--apollo-info);
+}
+
+/* Apollo-style Table */
+.apollo-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.apollo-table thead {
+  background: var(--apollo-gray-50);
+}
+
+.apollo-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--apollo-gray-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--apollo-gray-200);
+}
+
+.apollo-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--apollo-gray-200);
+  font-size: 0.875rem;
+}
+
+.apollo-table tbody tr:hover {
+  background: var(--apollo-gray-50);
+}
+
+/* Utility Classes */
+.apollo-text-primary {
+  color: var(--apollo-primary);
+}
+
+.apollo-text-secondary {
+  color: var(--apollo-gray-600);
+}
+
+.apollo-text-muted {
+  color: var(--apollo-gray-500);
+}
+
+.apollo-bg-gradient {
+  background: linear-gradient(135deg, var(--apollo-primary) 0%, var(--apollo-secondary) 100%);
+}
+
+/* Animations */
+@keyframes apollo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.apollo-fade-in {
+  animation: apollo-fade-in 0.3s ease;
+}
+
+/* Navbar Styles */
+.apollo-navbar {
+  background: var(--apollo-white);
+  border-bottom: 1px solid var(--apollo-gray-200);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.apollo-navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.apollo-navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--apollo-gray-900);
+  text-decoration: none;
+}
+
+.apollo-navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.apollo-navbar-link {
+  color: var(--apollo-gray-700);
+  text-decoration: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--apollo-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.apollo-navbar-link:hover {
+  background: var(--apollo-gray-100);
+  color: var(--apollo-gray-900);
+}
+
+/* Footer Styles */
+.apollo-footer {
+  background: var(--apollo-gray-900);
+  color: var(--apollo-gray-300);
+  padding: 3rem 0 1.5rem;
+  margin-top: 4rem;
+}
+
+.apollo-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.apollo-footer-section h4 {
+  color: var(--apollo-white);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.apollo-footer-link {
+  color: var(--apollo-gray-400);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  transition: color 0.15s ease;
+}
+
+.apollo-footer-link:hover {
+  color: var(--apollo-white);
+}
+
+.apollo-footer-bottom {
+  border-top: 1px solid var(--apollo-gray-800);
+  padding-top: 1.5rem;
+  text-align: center;
+  color: var(--apollo-gray-500);
+  font-size: 0.875rem;
+}
