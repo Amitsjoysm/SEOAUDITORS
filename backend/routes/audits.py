@@ -275,3 +275,74 @@ async def get_audit_detail(
     }
     
     return audit_dict
+
+
+
+@router.get("/{audit_id}/analytics")
+async def get_audit_analytics(
+    audit_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get detailed analytics and scoring for an audit"""
+    # Get audit
+    result = await db.execute(
+        select(Audit).where(Audit.id == audit_id)
+    )
+    audit = result.scalar_one_or_none()
+    
+    if not audit:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Audit not found"
+        )
+    
+    # Check ownership (superadmins can see all)
+    if audit.user_id != current_user.id and current_user.role != 'superadmin':
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to view this audit"
+        )
+    
+    # Get all results to generate priority roadmap
+    result = await db.execute(
+        select(AuditResult)
+        .where(AuditResult.audit_id == audit_id)
+    )
+    results = result.scalars().all()
+    
+    # Convert results to dict format
+    check_results = []
+    for r in results:
+        check_results.append({
+            'check_name': r.check_name,
+            'category': r.category,
+            'status': r.status.value,
+            'impact_score': r.impact_score,
+            'ranking_impact': r.ranking_impact,
+            'solution': r.solution,
+            'enhancements': r.enhancements or []
+        })
+    
+    # Generate priority roadmap
+    from seo_engine.analytics_scoring import SEOScoreCalculator
+    calculator = SEOScoreCalculator()
+    roadmap = calculator.generate_priority_roadmap(check_results)
+    
+    # Return complete analytics
+    return {
+        'overall_score': audit.overall_score,
+        'potential_score': audit.potential_score,
+        'score_gap': (audit.potential_score or audit.overall_score) - (audit.overall_score or 0),
+        'grade': audit.score_grade,
+        'interpretation': audit.score_interpretation,
+        'category_scores': audit.category_scores or [],
+        'executive_summary': audit.analytics_summary or {},
+        'priority_roadmap': roadmap,
+        'status_distribution': {
+            'passed': audit.checks_passed,
+            'warnings': audit.checks_warning,
+            'failed': audit.checks_failed,
+            'total': audit.total_checks_run
+        }
+    }
