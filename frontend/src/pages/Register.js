@@ -1,121 +1,301 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import ApolloNavbar from '@/components/ApolloNavbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { BarChart3, Loader2 } from 'lucide-react';
+import { User, Mail, Lock, Loader2 } from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [formData, setFormData] = useState({ email: '', password: '', full_name: '' });
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setLoading(true);
 
     try {
       await register(formData.email, formData.password, formData.full_name);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      setError(err.response?.data?.detail || 'Registration failed');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-slate-900/80 border-white/10 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <BarChart3 className="w-12 h-12 text-blue-400" />
+    <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)' }}>
+      <ApolloNavbar />
+      
+      <div style={{ 
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '4rem 1rem',
+        minHeight: 'calc(100vh - 80px)'
+      }}>
+        <div className="apollo-card" style={{ 
+          width: '100%',
+          maxWidth: '480px',
+          padding: '3rem'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h1 style={{ 
+              fontSize: '2rem', 
+              fontWeight: 700,
+              color: 'var(--apollo-gray-900)',
+              marginBottom: '0.5rem'
+            }}>
+              Create Account
+            </h1>
+            <p style={{ 
+              fontSize: '0.875rem',
+              color: 'var(--apollo-gray-600)'
+            }}>
+              Start your SEO journey today
+            </p>
           </div>
-          <CardTitle className="text-2xl font-bold text-white">Create Your Account</CardTitle>
-          <CardDescription className="text-slate-400">Start auditing your website for free</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive" className="bg-red-900/50 border-red-500/50">
-                <AlertDescription className="text-red-200">{error}</AlertDescription>
-              </Alert>
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="full_name" className="text-white">Full Name</Label>
-              <Input
-                id="full_name"
-                type="text"
-                placeholder="John Doe"
-                value={formData.full_name}
-                onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                className="bg-slate-800 border-slate-700 text-white"
-                data-testid="register-name-input"
-              />
+          {error && (
+            <Alert 
+              variant="destructive"
+              style={{ 
+                marginBottom: '1.5rem',
+                background: 'var(--apollo-error-light)',
+                border: '1px solid var(--apollo-error)',
+                borderRadius: 'var(--apollo-radius)'
+              }}
+            >
+              <AlertDescription style={{ color: 'var(--apollo-error)' }}>
+                {error}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <Label 
+                htmlFor="full_name"
+                style={{ 
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  color: 'var(--apollo-gray-700)'
+                }}
+              >
+                Full Name
+              </Label>
+              <div style={{ position: 'relative' }}>
+                <User 
+                  className="w-5 h-5" 
+                  style={{ 
+                    position: 'absolute',
+                    left: '0.875rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--apollo-gray-400)'
+                  }} 
+                />
+                <Input
+                  id="full_name"
+                  name="full_name"
+                  type="text"
+                  placeholder="John Doe"
+                  value={formData.full_name}
+                  onChange={handleChange}
+                  required
+                  className="apollo-input"
+                  style={{ paddingLeft: '2.75rem' }}
+                  data-testid="register-name-input"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-white">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                className="bg-slate-800 border-slate-700 text-white"
-                data-testid="register-email-input"
-              />
+            <div style={{ marginBottom: '1.5rem' }}>
+              <Label 
+                htmlFor="email"
+                style={{ 
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  color: 'var(--apollo-gray-700)'
+                }}
+              >
+                Email Address
+              </Label>
+              <div style={{ position: 'relative' }}>
+                <Mail 
+                  className="w-5 h-5" 
+                  style={{ 
+                    position: 'absolute',
+                    left: '0.875rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--apollo-gray-400)'
+                  }} 
+                />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="apollo-input"
+                  style={{ paddingLeft: '2.75rem' }}
+                  data-testid="register-email-input"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-white">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                required
-                minLength={6}
-                className="bg-slate-800 border-slate-700 text-white"
-                data-testid="register-password-input"
-              />
+            <div style={{ marginBottom: '1.5rem' }}>
+              <Label 
+                htmlFor="password"
+                style={{ 
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  color: 'var(--apollo-gray-700)'
+                }}
+              >
+                Password
+              </Label>
+              <div style={{ position: 'relative' }}>
+                <Lock 
+                  className="w-5 h-5" 
+                  style={{ 
+                    position: 'absolute',
+                    left: '0.875rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--apollo-gray-400)'
+                  }} 
+                />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  className="apollo-input"
+                  style={{ paddingLeft: '2.75rem' }}
+                  data-testid="register-password-input"
+                />
+              </div>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full bg-blue-600 hover:bg-blue-700" 
+            <div style={{ marginBottom: '1.5rem' }}>
+              <Label 
+                htmlFor="confirmPassword"
+                style={{ 
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  color: 'var(--apollo-gray-700)'
+                }}
+              >
+                Confirm Password
+              </Label>
+              <div style={{ position: 'relative' }}>
+                <Lock 
+                  className="w-5 h-5" 
+                  style={{ 
+                    position: 'absolute',
+                    left: '0.875rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--apollo-gray-400)'
+                  }} 
+                />
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className="apollo-input"
+                  style={{ paddingLeft: '2.75rem' }}
+                  data-testid="register-confirm-password-input"
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
               disabled={loading}
+              className="apollo-btn apollo-btn-primary"
+              style={{ width: '100%', marginBottom: '1rem' }}
               data-testid="register-submit-btn"
             >
               {loading ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating account...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
               ) : (
                 'Create Account'
               )}
             </Button>
 
-            <div className="text-center text-sm text-slate-400">
+            <div style={{ 
+              textAlign: 'center',
+              fontSize: '0.875rem',
+              color: 'var(--apollo-gray-600)'
+            }}>
               Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => navigate('/login')}
-                className="text-blue-400 hover:underline"
+              <Link 
+                to="/login" 
+                style={{ 
+                  color: 'var(--apollo-primary)',
+                  textDecoration: 'none',
+                  fontWeight: 500
+                }}
               >
                 Sign in
-              </button>
+              </Link>
             </div>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

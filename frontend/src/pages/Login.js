@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import ApolloNavbar from '@/components/ApolloNavbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { BarChart3, Loader2 } from 'lucide-react';
+import { Lock, Mail, Loader2, CheckCircle2 } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,87 +22,225 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await login(formData.email, formData.password);
+      await login(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
+      setError(err.response?.data?.detail || 'Invalid credentials');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-slate-900/80 border-white/10 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <BarChart3 className="w-12 h-12 text-blue-400" />
+    <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)' }}>
+      <ApolloNavbar />
+      
+      <div style={{ 
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '4rem 1rem',
+        minHeight: 'calc(100vh - 80px)'
+      }}>
+        <div className="apollo-card" style={{ 
+          width: '100%',
+          maxWidth: '480px',
+          padding: '3rem'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h1 style={{ 
+              fontSize: '2rem', 
+              fontWeight: 700,
+              color: 'var(--apollo-gray-900)',
+              marginBottom: '0.5rem'
+            }}>
+              Welcome Back
+            </h1>
+            <p style={{ 
+              fontSize: '0.875rem',
+              color: 'var(--apollo-gray-600)'
+            }}>
+              Sign in to your account to continue
+            </p>
           </div>
-          <CardTitle className="text-2xl font-bold text-white">Welcome to MJ SEO</CardTitle>
-          <CardDescription className="text-slate-400">Sign in to access your SEO audits</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <Alert variant="destructive" className="bg-red-900/50 border-red-500/50">
-                <AlertDescription className="text-red-200">{error}</AlertDescription>
-              </Alert>
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-white">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                className="bg-slate-800 border-slate-700 text-white"
-                data-testid="login-email-input"
-              />
+          {error && (
+            <Alert 
+              variant="destructive"
+              style={{ 
+                marginBottom: '1.5rem',
+                background: 'var(--apollo-error-light)',
+                border: '1px solid var(--apollo-error)',
+                borderRadius: 'var(--apollo-radius)'
+              }}
+            >
+              <AlertDescription style={{ color: 'var(--apollo-error)' }}>
+                {error}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <Label 
+                htmlFor="email"
+                style={{ 
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  color: 'var(--apollo-gray-700)'
+                }}
+              >
+                Email Address
+              </Label>
+              <div style={{ position: 'relative' }}>
+                <Mail 
+                  className="w-5 h-5" 
+                  style={{ 
+                    position: 'absolute',
+                    left: '0.875rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--apollo-gray-400)'
+                  }} 
+                />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="apollo-input"
+                  style={{ paddingLeft: '2.75rem' }}
+                  data-testid="login-email-input"
+                />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-white">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                required
-                className="bg-slate-800 border-slate-700 text-white"
-                data-testid="login-password-input"
-              />
+            <div style={{ marginBottom: '1.5rem' }}>
+              <Label 
+                htmlFor="password"
+                style={{ 
+                  display: 'block',
+                  marginBottom: '0.5rem',
+                  fontSize: '0.875rem',
+                  fontWeight: 500,
+                  color: 'var(--apollo-gray-700)'
+                }}
+              >
+                Password
+              </Label>
+              <div style={{ position: 'relative' }}>
+                <Lock 
+                  className="w-5 h-5" 
+                  style={{ 
+                    position: 'absolute',
+                    left: '0.875rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--apollo-gray-400)'
+                  }} 
+                />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="apollo-input"
+                  style={{ paddingLeft: '2.75rem' }}
+                  data-testid="login-password-input"
+                />
+              </div>
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full bg-blue-600 hover:bg-blue-700" 
+            <Button
+              type="submit"
               disabled={loading}
+              className="apollo-btn apollo-btn-primary"
+              style={{ width: '100%', marginBottom: '1rem' }}
               data-testid="login-submit-btn"
             >
               {loading ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing in...</>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
               ) : (
                 'Sign In'
               )}
             </Button>
 
-            <div className="text-center text-sm text-slate-400">
+            <div style={{ 
+              textAlign: 'center',
+              fontSize: '0.875rem',
+              color: 'var(--apollo-gray-600)'
+            }}>
               Don't have an account?{' '}
-              <button
-                type="button"
-                onClick={() => navigate('/register')}
-                className="text-blue-400 hover:underline"
+              <Link 
+                to="/register" 
+                style={{ 
+                  color: 'var(--apollo-primary)',
+                  textDecoration: 'none',
+                  fontWeight: 500
+                }}
               >
                 Sign up
-              </button>
+              </Link>
             </div>
           </form>
-        </CardContent>
-      </Card>
+
+          <div style={{ 
+            marginTop: '2rem',
+            paddingTop: '2rem',
+            borderTop: '1px solid var(--apollo-gray-200)'
+          }}>
+            <p style={{ 
+              fontSize: '0.75rem',
+              color: 'var(--apollo-gray-500)',
+              textAlign: 'center',
+              marginBottom: '1rem'
+            }}>
+              Demo Credentials
+            </p>
+            <div style={{ 
+              display: 'grid',
+              gap: '0.5rem',
+              fontSize: '0.75rem'
+            }}>
+              <div style={{ 
+                padding: '0.75rem',
+                background: 'var(--apollo-gray-50)',
+                borderRadius: 'var(--apollo-radius)',
+                border: '1px solid var(--apollo-gray-200)'
+              }}>
+                <div style={{ fontWeight: 600, color: 'var(--apollo-gray-700)', marginBottom: '0.25rem' }}>
+                  Superadmin
+                </div>
+                <div style={{ color: 'var(--apollo-gray-600)' }}>
+                  superadmin@test.com / test123
+                </div>
+              </div>
+              <div style={{ 
+                padding: '0.75rem',
+                background: 'var(--apollo-gray-50)',
+                borderRadius: 'var(--apollo-radius)',
+                border: '1px solid var(--apollo-gray-200)'
+              }}>
+                <div style={{ fontWeight: 600, color: 'var(--apollo-gray-700)', marginBottom: '0.25rem' }}>
+                  Test User
+                </div>
+                <div style={{ color: 'var(--apollo-gray-600)' }}>
+                  test@example.com / test123
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
