@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, Loader2, ArrowRight } from 'lucide-react';
 import axios from '@/api/axios';
+import ApolloNavbar from '@/components/ApolloNavbar';
+import ApolloFooter from '@/components/ApolloFooter';
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -33,75 +35,97 @@ const PaymentSuccess = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-purple-400 mx-auto mb-4" />
-          <p className="text-white text-lg">Processing your payment...</p>
+      <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <Loader2 className="w-12 h-12 animate-spin mx-auto mb-4" style={{ color: 'var(--apollo-primary)' }} />
+          <p style={{ color: 'var(--apollo-gray-700)', fontSize: '1.125rem' }}>Processing your payment...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
-        {/* Success Animation */}
-        <div className="text-center mb-8">
-          <div className="inline-block p-4 bg-green-500/20 rounded-full mb-4">
-            <CheckCircle className="w-20 h-20 text-green-400" />
+    <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)' }}>
+      <ApolloNavbar />
+      
+      <div className="apollo-container" style={{ padding: '4rem 1.5rem' }}>
+        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+          {/* Success Animation */}
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <div style={{ 
+              display: 'inline-block', 
+              padding: '1.5rem', 
+              background: 'var(--apollo-success-light)', 
+              borderRadius: '50%', 
+              marginBottom: '1.5rem'
+            }}>
+              <CheckCircle className="w-20 h-20" style={{ color: 'var(--apollo-success)' }} />
+            </div>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--apollo-gray-900)', marginBottom: '0.5rem' }}>
+              Payment Successful!
+            </h1>
+            <p style={{ color: 'var(--apollo-gray-600)', fontSize: '1.125rem' }}>
+              Your subscription is now active
+            </p>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">Payment Successful!</h1>
-          <p className="text-gray-400">Your subscription is now active</p>
-        </div>
 
-        {/* Subscription Details */}
-        {subscription && (
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Subscription Details</h2>
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-gray-400">Plan:</span>
-                <span className="text-white font-medium">{subscription.plan.display_name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Price:</span>
-                <span className="text-white font-medium">${subscription.plan.price}/month</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Audits per month:</span>
-                <span className="text-white font-medium">{subscription.plan.max_audits_per_month}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400">Status:</span>
-                <span className="text-green-400 font-medium capitalize">{subscription.status}</span>
+          {/* Subscription Details */}
+          {subscription && (
+            <div className="apollo-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--apollo-gray-900)', marginBottom: '1.5rem' }}>
+                Subscription Details
+              </h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--apollo-gray-600)' }}>Plan:</span>
+                  <span style={{ color: 'var(--apollo-gray-900)', fontWeight: 500 }}>{subscription.plan.display_name}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--apollo-gray-600)' }}>Price:</span>
+                  <span style={{ color: 'var(--apollo-gray-900)', fontWeight: 500 }}>${subscription.plan.price}/month</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--apollo-gray-600)' }}>Audits per month:</span>
+                  <span style={{ color: 'var(--apollo-gray-900)', fontWeight: 500 }}>{subscription.plan.max_audits_per_month}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--apollo-gray-600)' }}>Status:</span>
+                  <span className="apollo-badge apollo-badge-success" style={{ textTransform: 'capitalize' }}>
+                    {subscription.status}
+                  </span>
+                </div>
               </div>
             </div>
+          )}
+
+          {/* CTA Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="apollo-btn apollo-btn-primary"
+              style={{ width: '100%', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem' }}
+            >
+              Go to Dashboard
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            
+            <button
+              onClick={() => navigate('/settings')}
+              className="apollo-btn apollo-btn-secondary"
+              style={{ width: '100%', padding: '1rem', fontSize: '1rem' }}
+            >
+              Manage Subscription
+            </button>
           </div>
-        )}
 
-        {/* CTA Buttons */}
-        <div className="space-y-3">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-3 px-6 rounded-xl font-semibold hover:shadow-xl hover:shadow-purple-500/50 transition-all flex items-center justify-center gap-2"
-          >
-            Go to Dashboard
-            <ArrowRight className="w-5 h-5" />
-          </button>
-          
-          <button
-            onClick={() => navigate('/settings')}
-            className="w-full bg-white/5 border border-white/10 text-white py-3 px-6 rounded-xl font-semibold hover:bg-white/10 transition-all"
-          >
-            Manage Subscription
-          </button>
+          {/* Email Confirmation Notice */}
+          <p style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-500)', textAlign: 'center' }}>
+            A confirmation email with your receipt has been sent to your email address
+          </p>
         </div>
-
-        {/* Email Confirmation Notice */}
-        <p className="text-sm text-gray-500 text-center mt-6">
-          A confirmation email with your receipt has been sent to your email address
-        </p>
       </div>
+
+      <ApolloFooter />
     </div>
   );
 };
