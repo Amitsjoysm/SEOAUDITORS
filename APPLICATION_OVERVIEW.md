@@ -241,7 +241,7 @@ CORS_ORIGINS="*"
 
 **Frontend** (`/app/frontend/.env`):
 ```env
-REACT_APP_BACKEND_URL=https://appollo-clone-ui.preview.emergentagent.com
+REACT_APP_BACKEND_URL=https://theme-audit-fix.preview.emergentagent.com
 REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
@@ -251,7 +251,7 @@ REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
 ### 1. Access the Application
 - Frontend: Visit the application URL in your browser
-- Backend API: `https://appollo-clone-ui.preview.emergentagent.com/api`
+- Backend API: `https://theme-audit-fix.preview.emergentagent.com/api`
 
 ### 2. Login as Superadmin
 1. Navigate to `/login`

@@ -18,4 +18,4 @@ Allow: /*.webp$
 Allow: /*.svg$
 
 # Sitemap location
-Sitemap: https://appollo-clone-ui.preview.emergentagent.com/sitemap.xml
+Sitemap: https://theme-audit-fix.preview.emergentagent.com/sitemap.xml

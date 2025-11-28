@@ -11,7 +11,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://appollo-clone-ui.preview.emergentagent.com/api"
+BASE_URL = "https://theme-audit-fix.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 TEST_USER_EMAIL = "testuser@mjseo.com"
@@ -1145,7 +1145,7 @@ class MJSEOTester:
         try:
             # Test preflight request
             headers = {
-                'Origin': 'https://appollo-clone-ui.preview.emergentagent.com',
+                'Origin': 'https://theme-audit-fix.preview.emergentagent.com',
                 'Access-Control-Request-Method': 'POST',
                 'Access-Control-Request-Headers': 'Content-Type, Authorization'
             }
