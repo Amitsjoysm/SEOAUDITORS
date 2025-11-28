@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/api/axios';
+import ApolloNavbar from '@/components/ApolloNavbar';
+import ApolloFooter from '@/components/ApolloFooter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -62,9 +64,9 @@ const AuditDetail = () => {
   };
 
   const getScoreColor = (score) => {
-    if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
-    return 'text-red-400';
+    if (score >= 80) return 'var(--apollo-success)';
+    if (score >= 60) return 'var(--apollo-warning)';
+    return 'var(--apollo-error)';
   };
 
   const getCategoryIcon = (category) => {
@@ -75,14 +77,14 @@ const AuditDetail = () => {
       'Content Quality': CheckCircle2
     };
     const Icon = icons[category] || CheckCircle2;
-    return <Icon className="w-5 h-5" />;
+    return <Icon className="w-5 h-5" style={{ color: 'var(--apollo-primary)' }} />;
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'pass': return <CheckCircle2 className="w-5 h-5 text-green-400" />;
-      case 'fail': return <XCircle className="w-5 h-5 text-red-400" />;
-      case 'warning': return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
+      case 'pass': return <CheckCircle2 className="w-5 h-5" style={{ color: 'var(--apollo-success)' }} />;
+      case 'fail': return <XCircle className="w-5 h-5" style={{ color: 'var(--apollo-error)' }} />;
+      case 'warning': return <AlertTriangle className="w-5 h-5" style={{ color: 'var(--apollo-warning)' }} />;
       default: return null;
     }
   };
@@ -159,16 +161,30 @@ const AuditDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-400" />
+      <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Loader2 className="w-12 h-12 animate-spin" style={{ color: 'var(--apollo-primary)' }} />
       </div>
     );
   }
 
   if (!audit) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl">Audit not found</div>
+      <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)' }}>
+        <ApolloNavbar />
+        <div className="apollo-container" style={{ padding: '4rem 1.5rem', textAlign: 'center' }}>
+          <div className="apollo-card" style={{ padding: '3rem', maxWidth: '600px', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--apollo-gray-900)', marginBottom: '1rem' }}>
+              Audit not found
+            </h2>
+            <p style={{ color: 'var(--apollo-gray-600)', marginBottom: '1.5rem' }}>
+              The audit you're looking for doesn't exist or you don't have permission to view it.
+            </p>
+            <Button onClick={() => navigate('/dashboard')} className="apollo-btn apollo-btn-primary">
+              Back to Dashboard
+            </Button>
+          </div>
+        </div>
+        <ApolloFooter />
       </div>
     );
   }
@@ -176,223 +192,254 @@ const AuditDetail = () => {
   const groupedResults = audit.results ? groupResultsByCategory(audit.results) : {};
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
-      {/* Navbar */}
-      <nav className="border-b border-white/10 backdrop-blur-sm bg-slate-950/50 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Button 
-            variant="ghost" 
-            className="text-white"
-            onClick={() => navigate('/dashboard')}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          <div className="flex items-center space-x-2">
-            <BarChart3 className="w-8 h-8 text-blue-400" />
-            <span className="text-2xl font-bold text-white">MJ SEO</span>
-          </div>
-        </div>
-      </nav>
+    <div style={{ minHeight: '100vh', background: 'var(--apollo-gray-50)' }}>
+      <ApolloNavbar />
 
-      <div className="container mx-auto px-4 py-8" data-testid="audit-detail">
+      <div className="apollo-container" style={{ padding: '2rem 1.5rem' }} data-testid="audit-detail">
+        {/* Back Button */}
+        <Button 
+          variant="ghost" 
+          className="apollo-navbar-link"
+          onClick={() => navigate('/dashboard')}
+          style={{ marginBottom: '1.5rem', display: 'inline-flex' }}
+        >
+          <ArrowLeft className="w-4 h-4" style={{ marginRight: '0.5rem' }} />
+          Back to Dashboard
+        </Button>
+
         {/* Header Card */}
-        <Card className="glass-card card-hover depth-shadow mb-8">
-          <CardContent className="p-8">
-            <div className="flex items-start justify-between">
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold text-white mb-2">{audit.website_url}</h1>
-                <div className="flex items-center gap-4 text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4" />
-                    {audit.pages_crawled} pages crawled
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    {audit.total_checks_run} checks completed
-                  </div>
+        <div className="apollo-card apollo-fade-in" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
+            <div style={{ flex: '1', minWidth: '300px' }}>
+              <h1 style={{ fontSize: '1.875rem', fontWeight: 700, color: 'var(--apollo-gray-900)', marginBottom: '1rem' }}>
+                {audit.website_url}
+              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', color: 'var(--apollo-gray-600)', fontSize: '0.875rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Globe className="w-4 h-4" />
+                  {audit.pages_crawled} pages crawled
                 </div>
-                {polling && (
-                  <div className="mt-4 flex items-center gap-2 text-blue-400">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Processing audit... Status: {audit.status.replace('_', ' ')}
-                  </div>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Clock className="w-4 h-4" />
+                  {audit.total_checks_run} checks completed
+                </div>
               </div>
-              {audit.overall_score !== null && (
-                <div className="text-center">
-                  <div className="text-sm text-slate-400 mb-2">Overall SEO Score</div>
-                  <div className={`text-6xl font-bold neon-glow score-animation ${getScoreColor(audit.overall_score)}`}>
-                    {audit.overall_score}
-                  </div>
-                  <div className="text-slate-500 mt-1">/ 100</div>
-                  <Progress 
-                    value={audit.overall_score} 
-                    className="mt-4 w-32"
-                  />
+              {polling && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--apollo-primary)', marginTop: '1rem' }}>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span style={{ fontSize: '0.875rem' }}>Processing audit... Status: {audit.status.replace('_', ' ')}</span>
                 </div>
               )}
             </div>
-
             {audit.overall_score !== null && (
-              <>
-                <div className="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/10">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-400">{audit.checks_passed}</div>
-                    <div className="text-slate-400 text-sm">Passed</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-red-400">{audit.checks_failed}</div>
-                    <div className="text-slate-400 text-sm">Failed</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-yellow-400">{audit.checks_warning}</div>
-                    <div className="text-slate-400 text-sm">Warnings</div>
-                  </div>
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <div style={{ fontSize: '0.75rem', color: 'var(--apollo-gray-600)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
+                  Overall SEO Score
                 </div>
-
-                {/* Action Buttons */}
-                {audit.status === 'completed' && (
-                  <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-white/10">
-                    <Button
-                      onClick={handleDownloadPdf}
-                      disabled={downloadingPdf}
-                      className="flex-1 min-w-[200px] btn-3d bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all duration-300"
-                    >
-                      {downloadingPdf ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Generating PDF...
-                        </>
-                      ) : (
-                        <>
-                          <Download className="w-4 h-4 mr-2" />
-                          Download PDF Report
-                        </>
-                      )}
-                    </Button>
-
-                    <Button
-                      onClick={handleDownloadDocx}
-                      disabled={downloadingDocx}
-                      className="flex-1 min-w-[200px] btn-3d bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300"
-                    >
-                      {downloadingDocx ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Generating DOCX...
-                        </>
-                      ) : (
-                        <>
-                          <FileText className="w-4 h-4 mr-2" />
-                          Download DOCX Report
-                        </>
-                      )}
-                    </Button>
-
-                    <Button
-                      onClick={() => navigate(`/chat/${id}`)}
-                      className="flex-1 min-w-[200px] btn-3d ripple bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 text-white shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all duration-300"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      Chat with AI SEO Expert
-                    </Button>
-                  </div>
-                )}
-              </>
+                <div style={{ fontSize: '4rem', fontWeight: 700, color: getScoreColor(audit.overall_score), lineHeight: 1 }}>
+                  {audit.overall_score}
+                </div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-500)', marginTop: '0.25rem' }}>
+                  / 100
+                </div>
+                <Progress 
+                  value={audit.overall_score} 
+                  className="mt-4"
+                  style={{ width: '120px', margin: '1rem auto 0' }}
+                />
+              </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+
+          {audit.overall_score !== null && (
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1.5rem', marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid var(--apollo-gray-200)' }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--apollo-success)' }}>{audit.checks_passed}</div>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-600)' }}>Passed</div>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--apollo-error)' }}>{audit.checks_failed}</div>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-600)' }}>Failed</div>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--apollo-warning)' }}>{audit.checks_warning}</div>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--apollo-gray-600)' }}>Warnings</div>
+                </div>
+              </div>
+
+              {/* Action Buttons - HIGHLY VISIBLE */}
+              {audit.status === 'completed' && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid var(--apollo-gray-200)' }}>
+                  <button
+                    onClick={handleDownloadPdf}
+                    disabled={downloadingPdf}
+                    className="apollo-btn apollo-btn-primary"
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem' }}
+                  >
+                    {downloadingPdf ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Generating PDF...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-5 h-5" />
+                        Download PDF Report
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={handleDownloadDocx}
+                    disabled={downloadingDocx}
+                    className="apollo-btn apollo-btn-secondary"
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem' }}
+                  >
+                    {downloadingDocx ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Generating DOCX...
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="w-5 h-5" />
+                        Download DOCX Report
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => navigate(`/chat/${id}`)}
+                    className="apollo-btn"
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem', background: 'var(--apollo-success)', color: 'white' }}
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Chat with AI SEO Expert
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
 
         {/* Results by Category */}
         {audit.results && audit.results.length > 0 && (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Detailed Check Results</h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--apollo-gray-900)', marginBottom: '0.5rem' }}>
+              Detailed Check Results
+            </h2>
             {Object.entries(groupedResults).map(([category, results]) => (
-              <Card key={category} className="glass-card card-hover">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    {getCategoryIcon(category)}
-                    {category}
-                    <Badge className="ml-auto bg-slate-800 text-white">
+              <div key={category} className="apollo-card apollo-fade-in">
+                <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--apollo-gray-200)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      {getCategoryIcon(category)}
+                      <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--apollo-gray-900)' }}>
+                        {category}
+                      </h3>
+                    </div>
+                    <span className="apollo-badge apollo-badge-info">
                       {results.length} checks
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                    </span>
+                  </div>
+                </div>
+                <div style={{ padding: '1rem' }}>
                   <Accordion type="single" collapsible className="space-y-2">
                     {results.map((result, index) => (
-                      <AccordionItem key={result.id} value={`item-${index}`} className="border border-white/10 rounded-lg px-4 bg-slate-800/30">
+                      <AccordionItem 
+                        key={result.id} 
+                        value={`item-${index}`} 
+                        style={{ border: '1px solid var(--apollo-gray-200)', borderRadius: 'var(--apollo-radius)', padding: '0 1rem' }}
+                      >
                         <AccordionTrigger className="hover:no-underline">
-                          <div className="flex items-center gap-3 flex-1 text-left">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, textAlign: 'left' }}>
                             {getStatusIcon(result.status)}
-                            <span className="text-white font-medium">{result.check_name}</span>
+                            <span style={{ color: 'var(--apollo-gray-900)', fontWeight: 500 }}>{result.check_name}</span>
                             {result.impact_score && (
-                              <Badge className="ml-auto mr-4 bg-blue-900/50 text-blue-300">
+                              <span className="apollo-badge" style={{ marginLeft: 'auto', marginRight: '1rem', background: 'var(--apollo-info-light)', color: 'var(--apollo-info)' }}>
                                 Impact: {result.impact_score}/100
-                              </Badge>
+                              </span>
                             )}
                           </div>
                         </AccordionTrigger>
-                        <AccordionContent className="text-slate-300 space-y-4 pt-4">
-                          {result.current_value && (
-                            <div>
-                              <div className="text-sm font-semibold text-slate-400 mb-1">Current Value:</div>
-                              <div className="text-white">{result.current_value}</div>
-                            </div>
-                          )}
-                          {result.recommended_value && (
-                            <div>
-                              <div className="text-sm font-semibold text-slate-400 mb-1">Recommended:</div>
-                              <div className="text-white">{result.recommended_value}</div>
-                            </div>
-                          )}
-                          {result.pros && result.pros.length > 0 && (
-                            <div>
-                              <div className="text-sm font-semibold text-green-400 mb-2">✅ Pros:</div>
-                              <ul className="list-disc list-inside space-y-1 text-slate-300">
-                                {result.pros.map((pro, i) => <li key={i}>{pro}</li>)}
-                              </ul>
-                            </div>
-                          )}
-                          {result.cons && result.cons.length > 0 && (
-                            <div>
-                              <div className="text-sm font-semibold text-red-400 mb-2">❌ Cons:</div>
-                              <ul className="list-disc list-inside space-y-1 text-slate-300">
-                                {result.cons.map((con, i) => <li key={i}>{con}</li>)}
-                              </ul>
-                            </div>
-                          )}
-                          {result.ranking_impact && (
-                            <div>
-                              <div className="text-sm font-semibold text-yellow-400 mb-1">📊 Ranking Impact:</div>
-                              <div className="text-slate-300">{result.ranking_impact}</div>
-                            </div>
-                          )}
-                          {result.solution && (
-                            <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
-                              <div className="text-sm font-semibold text-blue-300 mb-2">💡 Solution:</div>
-                              <div className="text-slate-200 whitespace-pre-wrap">{result.solution}</div>
-                            </div>
-                          )}
-                          {result.enhancements && result.enhancements.length > 0 && (
-                            <div>
-                              <div className="text-sm font-semibold text-purple-400 mb-2">🚀 Enhancement Suggestions:</div>
-                              <ul className="list-disc list-inside space-y-1 text-slate-300">
-                                {result.enhancements.map((enh, i) => <li key={i}>{enh}</li>)}
-                              </ul>
-                            </div>
-                          )}
+                        <AccordionContent style={{ color: 'var(--apollo-gray-700)', paddingTop: '1rem' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            {result.current_value && (
+                              <div>
+                                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--apollo-gray-600)', marginBottom: '0.25rem' }}>
+                                  Current Value:
+                                </div>
+                                <div style={{ color: 'var(--apollo-gray-900)' }}>{result.current_value}</div>
+                              </div>
+                            )}
+                            {result.recommended_value && (
+                              <div>
+                                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--apollo-gray-600)', marginBottom: '0.25rem' }}>
+                                  Recommended:
+                                </div>
+                                <div style={{ color: 'var(--apollo-gray-900)' }}>{result.recommended_value}</div>
+                              </div>
+                            )}
+                            {result.pros && result.pros.length > 0 && (
+                              <div>
+                                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--apollo-success)', marginBottom: '0.5rem' }}>
+                                  ✅ Pros:
+                                </div>
+                                <ul style={{ listStyle: 'disc', paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                  {result.pros.map((pro, i) => <li key={i} style={{ color: 'var(--apollo-gray-700)' }}>{pro}</li>)}
+                                </ul>
+                              </div>
+                            )}
+                            {result.cons && result.cons.length > 0 && (
+                              <div>
+                                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--apollo-error)', marginBottom: '0.5rem' }}>
+                                  ❌ Cons:
+                                </div>
+                                <ul style={{ listStyle: 'disc', paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                  {result.cons.map((con, i) => <li key={i} style={{ color: 'var(--apollo-gray-700)' }}>{con}</li>)}
+                                </ul>
+                              </div>
+                            )}
+                            {result.ranking_impact && (
+                              <div>
+                                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--apollo-warning)', marginBottom: '0.25rem' }}>
+                                  📊 Ranking Impact:
+                                </div>
+                                <div style={{ color: 'var(--apollo-gray-700)' }}>{result.ranking_impact}</div>
+                              </div>
+                            )}
+                            {result.solution && (
+                              <div style={{ background: 'var(--apollo-info-light)', border: '1px solid var(--apollo-info)', borderRadius: 'var(--apollo-radius)', padding: '1rem' }}>
+                                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--apollo-info)', marginBottom: '0.5rem' }}>
+                                  💡 Solution:
+                                </div>
+                                <div style={{ color: 'var(--apollo-gray-900)', whiteSpace: 'pre-wrap' }}>{result.solution}</div>
+                              </div>
+                            )}
+                            {result.enhancements && result.enhancements.length > 0 && (
+                              <div>
+                                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--apollo-secondary)', marginBottom: '0.5rem' }}>
+                                  🚀 Enhancement Suggestions:
+                                </div>
+                                <ul style={{ listStyle: 'disc', paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                                  {result.enhancements.map((enh, i) => <li key={i} style={{ color: 'var(--apollo-gray-700)' }}>{enh}</li>)}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
                         </AccordionContent>
                       </AccordionItem>
                     ))}
                   </Accordion>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         )}
       </div>
+
+      <ApolloFooter />
     </div>
   );
 };
