@@ -43,18 +43,20 @@ A production-grade, enterprise-level SEO platform with:
 
 ### **Backend Enhancements**
 
-#### **1. API Integration Layer (9 APIs)**
+#### **1. API Integration Layer (Revised with DataForSEO)**
 | API | Purpose | Priority | Status |
 |-----|---------|----------|--------|
-| Exa.ai | Research & competitor analysis | ⭐ High | ✅ Done |
-| Lighthouse CLI | Real performance scores, Core Web Vitals | ⭐ High | 🔄 To Do |
-| SerpAPI | SERP rankings, competitors, featured snippets | ⭐ High | 🔄 To Do |
-| Google Search Console | Keyword rankings, CTR, impressions | ⭐ High | 🔄 To Do |
-| Google Analytics | Traffic, user behavior, conversions | 🟡 Medium | 🔄 To Do |
-| Google Trends | Seasonal trends, content timing | 🟡 Medium | 🔄 To Do |
-| Bing Webmaster Tools | Additional keyword data, Bing rankings | 🟢 Low | 🔄 To Do |
-| Ahrefs Webmaster | Backlink analysis, domain authority | 🟢 Low | 🔄 To Do |
-| Common Crawl | Historical SEO data, archived backlinks | 🟢 Low | 🔄 To Do |
+| **DataForSEO SERP** | Real SERP rankings, competitors, featured snippets, PAA | ⭐⭐⭐ CRITICAL | 🔄 To Do |
+| **DataForSEO Keywords** | 2B+ keywords, search volume, difficulty, opportunities | ⭐⭐⭐ CRITICAL | 🔄 To Do |
+| **DataForSEO Backlinks** | Complete backlink profiles, toxic links, opportunities | ⭐⭐⭐ CRITICAL | 🔄 To Do |
+| **DataForSEO On-Page** | Professional site crawl, orphan pages, internal linking | ⭐⭐ HIGH | 🔄 To Do |
+| **DataForSEO Domain Analytics** | Domain authority, traffic estimates, competitive metrics | ⭐⭐ HIGH | 🔄 To Do |
+| Lighthouse CLI | Real performance scores, Core Web Vitals | ⭐⭐ HIGH | 🔄 To Do |
+| Google Search Console | Direct GSC integration for user's site data | ⭐ MEDIUM | 🔄 To Do |
+| Google Analytics | Direct GA integration for user's site data | 🟡 MEDIUM | 🔄 To Do |
+| Exa.ai | Research & content intelligence | ⭐ MEDIUM | ✅ Done |
+
+**Note**: DataForSEO replaces SerpAPI, Google Trends, Bing Webmaster, Ahrefs, and Common Crawl with a unified, more powerful solution.
 
 #### **2. New Database Models**
 - **APIKeyPool** - Manage multiple API keys per service with rotation
