@@ -270,12 +270,12 @@ const AuditDetail = () => {
 
               {/* Action Buttons - HIGHLY VISIBLE */}
               {audit.status === 'completed' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid var(--apollo-gray-200)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid var(--apollo-gray-200)' }}>
                   <button
                     onClick={handleDownloadPdf}
                     disabled={downloadingPdf}
                     className="apollo-btn apollo-btn-primary"
-                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem' }}
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.95rem' }}
                   >
                     {downloadingPdf ? (
                       <>
@@ -285,7 +285,7 @@ const AuditDetail = () => {
                     ) : (
                       <>
                         <Download className="w-5 h-5" />
-                        Download PDF Report
+                        Download PDF
                       </>
                     )}
                   </button>
@@ -294,7 +294,7 @@ const AuditDetail = () => {
                     onClick={handleDownloadDocx}
                     disabled={downloadingDocx}
                     className="apollo-btn apollo-btn-secondary"
-                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem' }}
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.95rem' }}
                   >
                     {downloadingDocx ? (
                       <>
@@ -304,7 +304,7 @@ const AuditDetail = () => {
                     ) : (
                       <>
                         <FileText className="w-5 h-5" />
-                        Download DOCX Report
+                        Download DOCX
                       </>
                     )}
                   </button>
@@ -312,10 +312,28 @@ const AuditDetail = () => {
                   <button
                     onClick={() => navigate(`/chat/${id}`)}
                     className="apollo-btn"
-                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '1rem', background: 'var(--apollo-success)', color: 'white' }}
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.95rem', background: 'var(--apollo-success)', color: 'white' }}
                   >
                     <MessageCircle className="w-5 h-5" />
-                    Chat with AI SEO Expert
+                    Chat with AI
+                  </button>
+
+                  <button
+                    onClick={() => navigate(`/audit/${id}/competitors`)}
+                    className="apollo-btn"
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.95rem', background: 'var(--apollo-primary)', color: 'white' }}
+                  >
+                    <TrendingUp className="w-5 h-5" />
+                    View Competitors {audit.competitor_count > 0 && `(${audit.competitor_count})`}
+                  </button>
+
+                  <button
+                    onClick={() => navigate(`/audit/${id}/opportunities`)}
+                    className="apollo-btn"
+                    style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontSize: '0.95rem', background: '#f59e0b', color: 'white' }}
+                  >
+                    <BarChart3 className="w-5 h-5" />
+                    Content Ideas {audit.opportunities_found > 0 && `(${audit.opportunities_found})`}
                   </button>
                 </div>
               )}
