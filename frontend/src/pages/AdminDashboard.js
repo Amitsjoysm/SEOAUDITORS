@@ -333,6 +333,13 @@ const AdminDashboard = () => {
               <h1 className="text-3xl font-bold text-white">Super Admin Dashboard</h1>
             </div>
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate('/admin/integrations')}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+              >
+                <Settings className="w-4 h-4" />
+                Integrations
+              </button>
               <span className="text-gray-400">Welcome, {user?.full_name || user?.email}</span>
             </div>
           </div>
