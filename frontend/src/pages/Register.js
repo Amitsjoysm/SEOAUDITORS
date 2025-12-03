@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import ApolloNavbar from '@/components/ApolloNavbar';
@@ -10,7 +10,7 @@ import { User, Mail, Lock, Loader2 } from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const { register, user } = useAuth();
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -19,6 +19,13 @@ const Register = () => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
