@@ -60,9 +60,9 @@ async def download_pdf_report(
     )
     results = result.scalars().all()
     
-    # Generate PDF
+    # Generate PDF with enhanced data
     try:
-        pdf_path = await generate_pdf_report(audit, results, REPORTS_DIR)
+        pdf_path = await generate_enhanced_pdf_report(audit, results, REPORTS_DIR)
         
         # Update audit with PDF path
         audit.report_pdf_path = str(pdf_path)
