@@ -12,9 +12,7 @@ from database import get_db
 from models import User, Audit, AuditResult, AuditStatus, Subscription, CheckStatus
 from schemas import AuditCreate, AuditResponse, AuditDetailResponse, AuditResultResponse
 from auth import get_current_user
-from seo_engine import crawl_website, run_all_comprehensive_checks
-from seo_engine.orchestrator import SEOOrchestrator
-from seo_engine.scoring_integration import generate_seo_report_with_scoring
+from seo_engine.audit_processor import process_audit_background_task
 
 router = APIRouter(prefix="/audits", tags=["Audits"])
 logger = logging.getLogger(__name__)
