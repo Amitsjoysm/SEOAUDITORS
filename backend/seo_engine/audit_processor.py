@@ -57,11 +57,11 @@ async def process_audit_enhanced(audit_id: str, website_url: str, max_pages: int
             'pages': pages,
             'crawl_time': sum(p.load_time for p in pages) if pages else 0,
             'avg_load_time': sum(p.load_time for p in pages) / len(pages) if pages else 0,
-            'has_robots': any(p.url.endswith('/robots.txt') for p in pages),
-            'has_sitemap': any(p.url.endswith('/sitemap.xml') for p in pages),
+            'has_robots': any('robots.txt' in p.url for p in pages),
+            'has_sitemap': any('sitemap.xml' in p.url for p in pages),
             'is_https': website_url.startswith('https://'),
             'has_blog': any('blog' in p.url.lower() for p in pages),
-            'avg_word_count': sum(len(p.content.split()) for p in pages) / len(pages) if pages else 0
+            'avg_word_count': sum(len(p.html.split()) for p in pages) / len(pages) if pages else 0
         }
         
         await db.commit()
