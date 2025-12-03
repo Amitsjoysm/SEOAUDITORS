@@ -18,4 +18,4 @@ Allow: /*.webp$
 Allow: /*.svg$
 
 # Sitemap location
-Sitemap: https://seo-audit-sync-1.preview.emergentagent.com/sitemap.xml
+Sitemap: https://codebase-sync-49.preview.emergentagent.com/sitemap.xml

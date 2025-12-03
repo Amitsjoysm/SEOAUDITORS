@@ -10,7 +10,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://seo-audit-sync-1.preview.emergentagent.com/api"
+BASE_URL = "https://codebase-sync-49.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 TEST_USER_EMAIL = "testuser@mjseo.com"
