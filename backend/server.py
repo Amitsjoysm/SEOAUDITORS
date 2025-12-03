@@ -18,7 +18,7 @@ load_dotenv(ROOT_DIR / '.env')
 # Import routes
 from routes import auth, audits, plans, admin, chat, api_tokens, reports, themes, env_keys, llm_settings, seo_settings
 from routes import payments_stripe, admin_payments
-from routes import api_key_pool, integrations, competitors, content_opportunities, anomalies
+from routes import api_key_pool, integrations, competitors, content_opportunities, anomalies, google_oauth
 
 # Configure logging
 logging.basicConfig(
@@ -191,6 +191,7 @@ api_router.include_router(integrations.router)  # Integration monitoring
 api_router.include_router(competitors.router)  # Competitor analysis
 api_router.include_router(content_opportunities.router)  # Content opportunities
 api_router.include_router(anomalies.router)  # Anomaly detection
+api_router.include_router(google_oauth.router)  # Google OAuth
 
 # Include API router in main app
 app.include_router(api_router)
