@@ -106,6 +106,10 @@ async def get_current_superadmin(
     return current_user
 
 
+# Alias for consistency
+require_superadmin = get_current_superadmin
+
+
 async def get_user_from_api_token(
     x_api_token: Optional[str] = Header(None),
     db: AsyncSession = Depends(get_db)
