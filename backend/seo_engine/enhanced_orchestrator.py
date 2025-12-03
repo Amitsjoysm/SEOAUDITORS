@@ -12,7 +12,7 @@ import logging
 from seo_engine.multi_llm_client import get_active_llm_client
 from services.dataforseo_service import get_dataforseo_client
 from services.lighthouse_service import lighthouse_service
-from seo_engine.research_agent import ResearchAgent
+from seo_engine.research_agent import SEOResearchAgent
 
 logger = logging.getLogger(__name__)
 
