@@ -294,21 +294,21 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl">Loading admin dashboard...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-900 text-xl">Loading admin dashboard...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-8 max-w-md">
           <h2 className="text-red-400 text-xl font-bold mb-4">Error Loading Dashboard</h2>
           <p className="text-gray-300 mb-4">{error}</p>
           <button
             onClick={() => fetchData()}
-            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+            className="px-6 py-2 bg-red-500 hover:bg-red-600 text-gray-900 rounded-lg transition-colors"
           >
             Retry
           </button>
@@ -318,29 +318,29 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-slate-900/50 backdrop-blur-xl border-b border-slate-800">
+      <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
-              <h1 className="text-3xl font-bold text-white">Super Admin Dashboard</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Super Admin Dashboard</h1>
             </div>
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/admin/integrations')}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                className="bg-indigo-600 hover:bg-indigo-700 text-gray-900 px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <Settings className="w-4 h-4" />
                 Integrations
               </button>
-              <span className="text-gray-400">Welcome, {user?.full_name || user?.email}</span>
+              <span className="text-gray-600">Welcome, {user?.full_name || user?.email}</span>
             </div>
           </div>
         </div>
@@ -364,8 +364,8 @@ const AdminDashboard = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/50'
-                  : 'bg-slate-800 text-gray-400 hover:bg-slate-700'
+                  ? 'bg-purple-500 text-gray-900 shadow-lg shadow-purple-500/50'
+                  : 'bg-slate-800 text-gray-600 hover:bg-slate-700'
               }`}
             >
               <tab.icon className="w-5 h-5" />
@@ -377,40 +377,40 @@ const AdminDashboard = () => {
         {/* Overview Tab */}
         {activeTab === 'overview' && stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 <Users className="w-8 h-8 text-purple-400" />
-                <span className="text-3xl font-bold text-white">{stats.total_users}</span>
+                <span className="text-3xl font-bold text-gray-900">{stats.total_users}</span>
               </div>
-              <h3 className="text-gray-400">Total Users</h3>
+              <h3 className="text-gray-600">Total Users</h3>
             </div>
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 <FileText className="w-8 h-8 text-blue-400" />
-                <span className="text-3xl font-bold text-white">{stats.total_audits}</span>
+                <span className="text-3xl font-bold text-gray-900">{stats.total_audits}</span>
               </div>
-              <h3 className="text-gray-400">Total Audits</h3>
+              <h3 className="text-gray-600">Total Audits</h3>
             </div>
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 <CreditCard className="w-8 h-8 text-green-400" />
-                <span className="text-3xl font-bold text-white">{stats.active_subscriptions}</span>
+                <span className="text-3xl font-bold text-gray-900">{stats.active_subscriptions}</span>
               </div>
-              <h3 className="text-gray-400">Active Subscriptions</h3>
+              <h3 className="text-gray-600">Active Subscriptions</h3>
             </div>
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800">
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 <FileText className="w-8 h-8 text-pink-400" />
-                <span className="text-3xl font-bold text-white">{stats.audits_today}</span>
+                <span className="text-3xl font-bold text-gray-900">{stats.audits_today}</span>
               </div>
-              <h3 className="text-gray-400">Audits Today</h3>
+              <h3 className="text-gray-600">Audits Today</h3>
             </div>
           </div>
         )}
 
         {/* Users Tab */}
         {activeTab === 'users' && (
-          <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl border border-slate-800 overflow-hidden">
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-slate-800/50">
@@ -426,7 +426,7 @@ const AdminDashboard = () => {
                 <tbody className="divide-y divide-slate-800">
                   {users.map((u) => (
                     <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="px-6 py-4 text-sm text-white">{u.email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{u.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-300">{u.full_name || '-'}</td>
                       <td className="px-6 py-4 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -445,7 +445,7 @@ const AdminDashboard = () => {
                           {u.is_active ? 'Active' : 'Inactive'}
                         </button>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-400">
+                      <td className="px-6 py-4 text-sm text-gray-600">
                         {new Date(u.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -470,17 +470,17 @@ const AdminDashboard = () => {
         {activeTab === 'plans' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {plans.map((plan) => (
-              <div key={plan.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800 relative">
+              <div key={plan.id} className="bg-white rounded-xl p-6 border border-gray-200 relative">
                 <button
                   onClick={() => { setEditingPlan(plan); setShowPlanModal(true); }}
-                  className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                  className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 transition-colors"
                   title="Edit Plan"
                 >
                   <Edit className="w-5 h-5" />
                 </button>
-                <h3 className="text-2xl font-bold text-white mb-2">{plan.display_name}</h3>
-                <p className="text-gray-400 text-sm mb-4">{plan.description}</p>
-                <div className="text-3xl font-bold text-white mb-4">${plan.price}/mo</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.display_name}</h3>
+                <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
+                <div className="text-3xl font-bold text-gray-900 mb-4">${plan.price}/mo</div>
                 <div className="space-y-2 mb-4">
                   <div className="text-sm text-gray-300">
                     <strong>Max Audits:</strong> {plan.max_audits_per_month === 999999 ? 'Unlimited' : plan.max_audits_per_month}
@@ -522,7 +522,7 @@ const AdminDashboard = () => {
             <div className="mb-6">
               <button
                 onClick={() => { setEditingTheme(null); setShowThemeModal(true); }}
-                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Create New Theme
@@ -530,10 +530,10 @@ const AdminDashboard = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {themes.map((t) => (
-                <div key={t.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800 relative">
+                <div key={t.id} className="bg-white rounded-xl p-6 border border-gray-200 relative">
                   <div className="absolute top-4 right-4 flex gap-2">
                     {t.is_active ? (
-                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                      <div className="bg-green-500 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                         <Check className="w-3 h-3" />
                         Active
                       </div>
@@ -541,7 +541,7 @@ const AdminDashboard = () => {
                       <>
                         <button
                           onClick={() => { setEditingTheme(t); setShowThemeModal(true); }}
-                          className="text-gray-400 hover:text-white transition-colors"
+                          className="text-gray-600 hover:text-gray-900 transition-colors"
                           title="Edit Theme"
                         >
                           <Edit className="w-5 h-5" />
@@ -556,31 +556,31 @@ const AdminDashboard = () => {
                       </>
                     )}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4">{t.name}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">{t.name}</h3>
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <div>
-                      <div className="text-xs text-gray-400 mb-1">Primary</div>
+                      <div className="text-xs text-gray-600 mb-1">Primary</div>
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.primary_color }}></div>
                         <span className="text-xs text-gray-300">{t.primary_color}</span>
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-400 mb-1">Secondary</div>
+                      <div className="text-xs text-gray-600 mb-1">Secondary</div>
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.secondary_color }}></div>
                         <span className="text-xs text-gray-300">{t.secondary_color}</span>
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-400 mb-1">Accent</div>
+                      <div className="text-xs text-gray-600 mb-1">Accent</div>
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.accent_color }}></div>
                         <span className="text-xs text-gray-300">{t.accent_color}</span>
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-400 mb-1">Background</div>
+                      <div className="text-xs text-gray-600 mb-1">Background</div>
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-lg border-2 border-gray-700" style={{ backgroundColor: t.background_color }}></div>
                         <span className="text-xs text-gray-300">{t.background_color}</span>
@@ -590,7 +590,7 @@ const AdminDashboard = () => {
                   {!t.is_active && (
                     <button
                       onClick={() => handleActivateTheme(t.id)}
-                      className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+                      className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors"
                     >
                       Activate Theme
                     </button>
@@ -613,7 +613,7 @@ const AdminDashboard = () => {
 
         {/* Audits Tab */}
         {activeTab === 'audits' && (
-          <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl border border-slate-800 overflow-hidden">
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-slate-800/50">
@@ -628,7 +628,7 @@ const AdminDashboard = () => {
                 <tbody className="divide-y divide-slate-800">
                   {audits.slice(0, 50).map((audit) => (
                     <tr key={audit.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="px-6 py-4 text-sm text-white">{audit.website_url}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900">{audit.website_url}</td>
                       <td className="px-6 py-4 text-sm text-gray-300">{audit.user_email}</td>
                       <td className="px-6 py-4 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -639,10 +639,10 @@ const AdminDashboard = () => {
                           {audit.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-white">
+                      <td className="px-6 py-4 text-sm text-gray-900">
                         {audit.overall_score ? `${Math.round(audit.overall_score)}%` : '-'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-400">
+                      <td className="px-6 py-4 text-sm text-gray-600">
                         {new Date(audit.created_at).toLocaleDateString()}
                       </td>
                     </tr>
@@ -659,7 +659,7 @@ const AdminDashboard = () => {
             <div className="mb-6">
               <button
                 onClick={() => { setEditingLlm(null); setShowLlmModal(true); }}
-                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Add LLM Configuration
@@ -668,10 +668,10 @@ const AdminDashboard = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {llmSettings.map((llm) => (
-                <div key={llm.id} className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800 relative">
+                <div key={llm.id} className="bg-white rounded-xl p-6 border border-gray-200 relative">
                   <div className="absolute top-4 right-4 flex gap-2">
                     {llm.is_active ? (
-                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                      <div className="bg-green-500 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
                         <Zap className="w-3 h-3" />
                         Active
                       </div>
@@ -679,7 +679,7 @@ const AdminDashboard = () => {
                       <>
                         <button
                           onClick={() => { setEditingLlm(llm); setShowLlmModal(true); }}
-                          className="text-gray-400 hover:text-white transition-colors"
+                          className="text-gray-600 hover:text-gray-900 transition-colors"
                           title="Edit LLM Setting"
                         >
                           <Edit className="w-5 h-5" />
@@ -696,14 +696,14 @@ const AdminDashboard = () => {
                   </div>
                   
                   <div className="mb-4">
-                    <h3 className="text-xl font-bold text-white mb-2 capitalize">{llm.provider}</h3>
-                    <p className="text-sm text-gray-400">{llm.description || 'No description'}</p>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 capitalize">{llm.provider}</h3>
+                    <p className="text-sm text-gray-600">{llm.description || 'No description'}</p>
                   </div>
                   
                   <div className="space-y-3 mb-4">
                     <div>
                       <div className="text-xs text-gray-500 mb-1">Model</div>
-                      <div className="text-sm text-white font-mono bg-slate-800 px-2 py-1 rounded">
+                      <div className="text-sm text-gray-900 font-mono bg-slate-800 px-2 py-1 rounded">
                         {llm.model_name}
                       </div>
                     </div>
@@ -730,7 +730,7 @@ const AdminDashboard = () => {
                   {!llm.is_active && (
                     <button
                       onClick={() => handleActivateLlm(llm.id)}
-                      className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+                      className="w-full py-2 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors"
                     >
                       Activate LLM
                     </button>
@@ -759,20 +759,20 @@ const AdminDashboard = () => {
             <div className="mb-6 flex gap-4">
               <button
                 onClick={() => { setEditingKey(null); setShowKeyModal(true); }}
-                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Add New Key
               </button>
               <button
                 onClick={handleInitializeDefaults}
-                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition-colors"
+                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-gray-900 rounded-lg font-semibold transition-colors"
               >
                 Initialize from .env
               </button>
             </div>
 
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl border border-slate-800 overflow-hidden">
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-slate-800/50">
@@ -789,10 +789,10 @@ const AdminDashboard = () => {
                     {envKeys.length === 0 ? (
                       <tr>
                         <td colSpan="6" className="px-6 py-12 text-center">
-                          <p className="text-gray-400 mb-4">No environment keys found</p>
+                          <p className="text-gray-600 mb-4">No environment keys found</p>
                           <button
                             onClick={handleInitializeDefaults}
-                            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                            className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-gray-900 rounded-lg transition-colors"
                           >
                             Initialize from .env
                           </button>
@@ -801,13 +801,13 @@ const AdminDashboard = () => {
                     ) : (
                       envKeys.map((key) => (
                       <tr key={key.id} className="hover:bg-slate-800/30 transition-colors">
-                        <td className="px-6 py-4 text-sm font-mono text-white">{key.key_name}</td>
+                        <td className="px-6 py-4 text-sm font-mono text-gray-900">{key.key_name}</td>
                         <td className="px-6 py-4 text-sm">
                           <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                             key.category === 'payment' ? 'bg-green-500/20 text-green-400' :
                             key.category === 'ai' ? 'bg-blue-500/20 text-blue-400' :
                             key.category === 'email' ? 'bg-yellow-500/20 text-yellow-400' :
-                            'bg-gray-500/20 text-gray-400'
+                            'bg-gray-500/20 text-gray-600'
                           }`}>
                             {key.category || 'other'}
                           </span>
@@ -821,7 +821,7 @@ const AdminDashboard = () => {
                               </code>
                               <button
                                 onClick={() => handleCopyKey(showKeyValue[key.id])}
-                                className="text-gray-400 hover:text-white"
+                                className="text-gray-600 hover:text-gray-900"
                               >
                                 <Copy className="w-4 h-4" />
                               </button>
@@ -910,8 +910,8 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-2xl w-full mx-4">
-        <h2 className="text-2xl font-bold text-white mb-6">
+      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
           {editingKey ? 'Edit Environment Key' : 'Add New Environment Key'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -922,7 +922,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
               value={formData.key_name}
               onChange={(e) => setFormData({ ...formData, key_name: e.target.value })}
               disabled={!!editingKey}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 font-mono"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 font-mono"
               placeholder="STRIPE_SECRET_KEY"
               required
             />
@@ -933,7 +933,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
               type="password"
               value={formData.key_value}
               onChange={(e) => setFormData({ ...formData, key_value: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
               placeholder="Enter secret key value"
               required={!editingKey}
             />
@@ -946,7 +946,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="payment">Payment</option>
               <option value="ai">AI</option>
@@ -960,7 +960,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Describe what this key is used for..."
             />
@@ -968,14 +968,14 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               {editingKey ? 'Update Key' : 'Create Key'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -1012,8 +1012,8 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">Edit Plan: {plan.name}</h2>
+      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Edit Plan: {plan.name}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
@@ -1021,7 +1021,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.display_name}
               onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Pro Plan"
               required
             />
@@ -1031,7 +1031,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Perfect for growing businesses..."
             />
@@ -1044,7 +1044,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="29.99"
                 required
               />
@@ -1055,7 +1055,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 type="number"
                 value={formData.max_pages_per_audit}
                 onChange={(e) => setFormData({ ...formData, max_pages_per_audit: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="10"
                 required
               />
@@ -1066,7 +1066,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <select
               value={formData.max_audits_per_month === 999999 ? 'unlimited' : formData.max_audits_per_month}
               onChange={(e) => setFormData({ ...formData, max_audits_per_month: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="2">2 audits</option>
               <option value="10">10 audits</option>
@@ -1082,7 +1082,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.stripe_price_id}
               onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
               placeholder="price_1234567890abcdef"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1095,7 +1095,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.razorpay_plan_id}
               onChange={(e) => setFormData({ ...formData, razorpay_plan_id: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
               placeholder="plan_1234567890abcdef"
             />
           </div>
@@ -1114,14 +1114,14 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               Update Plan
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -1159,8 +1159,8 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">Edit Plan</h2>
+      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Edit Plan</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Display Name</label>
@@ -1168,7 +1168,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.display_name}
               onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Pro Plan"
               required
             />
@@ -1178,7 +1178,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Perfect for growing businesses..."
             />
@@ -1191,7 +1191,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="29.99"
                 required
               />
@@ -1202,7 +1202,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 type="number"
                 value={formData.max_pages_per_audit}
                 onChange={(e) => setFormData({ ...formData, max_pages_per_audit: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="10"
                 required
               />
@@ -1213,7 +1213,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <select
               value={formData.max_audits_per_month === 999999 ? 'unlimited' : formData.max_audits_per_month}
               onChange={(e) => setFormData({ ...formData, max_audits_per_month: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="1">1 audit</option>
               <option value="5">5 audits</option>
@@ -1230,7 +1230,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.stripe_price_id}
               onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
               placeholder="price_1234567890abcdef"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1252,14 +1252,14 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               Update Plan
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -1296,8 +1296,8 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">
+      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
           {theme ? 'Edit Theme' : 'Create New Theme'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -1307,7 +1307,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="My Awesome Theme"
               required
             />
@@ -1327,7 +1327,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.primary_color}
                   onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#a78bfa"
                 />
               </div>
@@ -1346,7 +1346,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.secondary_color}
                   onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#fbbf24"
                 />
               </div>
@@ -1365,7 +1365,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.accent_color}
                   onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#34d399"
                 />
               </div>
@@ -1384,7 +1384,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.background_color}
                   onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#0f172a"
                 />
               </div>
@@ -1403,7 +1403,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.surface_color}
                   onChange={(e) => setFormData({ ...formData, surface_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#1e293b"
                 />
               </div>
@@ -1422,7 +1422,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.text_primary}
                   onChange={(e) => setFormData({ ...formData, text_primary: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#f8fafc"
                 />
               </div>
@@ -1441,7 +1441,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.text_secondary}
                   onChange={(e) => setFormData({ ...formData, text_secondary: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#cbd5e1"
                 />
               </div>
@@ -1451,14 +1451,14 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               {theme ? 'Update Theme' : 'Create Theme'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               Cancel
             </button>
@@ -1507,8 +1507,8 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-slate-800 p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">
+      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
           {llm ? 'Edit LLM Configuration' : 'Add New LLM Configuration'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -1518,7 +1518,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
               value={formData.provider}
               onChange={(e) => setFormData({ ...formData, provider: e.target.value, model_name: '' })}
               disabled={!!llm}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
               required
             >
               {providerOptions.map(opt => (
@@ -1532,7 +1532,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
             <select
               value={formData.model_name}
               onChange={(e) => setFormData({ ...formData, model_name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               required
             >
               <option value="">Select a model...</option>
@@ -1550,7 +1550,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
               type="text"
               value={formData.api_key_ref}
               onChange={(e) => setFormData({ ...formData, api_key_ref: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
               placeholder="GROQ_API_KEY or OPENAI_API_KEY"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1565,7 +1565,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 type="text"
                 value={formData.base_url}
                 onChange={(e) => setFormData({ ...formData, base_url: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                 placeholder="http://localhost:11434/v1"
               />
             </div>
@@ -1581,7 +1581,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="2"
                 value={formData.temperature}
                 onChange={(e) => setFormData({ ...formData, temperature: parseFloat(e.target.value) })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <div>
@@ -1592,7 +1592,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="200000"
                 value={formData.max_tokens}
                 onChange={(e) => setFormData({ ...formData, max_tokens: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <div>
@@ -1604,7 +1604,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="1"
                 value={formData.top_p}
                 onChange={(e) => setFormData({ ...formData, top_p: parseFloat(e.target.value) })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
@@ -1614,7 +1614,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Describe this LLM configuration..."
             />
@@ -1623,14 +1623,14 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               {llm ? 'Update Configuration' : 'Create Configuration'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-gray-900 rounded-lg font-semibold transition-colors"
             >
               Cancel
             </button>

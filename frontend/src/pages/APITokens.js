@@ -89,33 +89,33 @@ const APITokens = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-900 text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-slate-900/50 backdrop-blur-xl border-b border-slate-800">
+      <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/dashboard')}
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
               >
                 <ArrowLeft className="w-6 h-6" />
               </button>
               <div>
-                <h1 className="text-3xl font-bold text-white">API Tokens</h1>
-                <p className="text-gray-400 mt-1">Manage your API tokens for programmatic access</p>
+                <h1 className="text-3xl font-bold text-gray-900">API Tokens</h1>
+                <p className="text-gray-600 mt-1">Manage your API tokens for programmatic access</p>
               </div>
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all"
+              className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-gray-900 px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all"
             >
               <Plus className="w-5 h-5" />
               Create Token
@@ -132,11 +132,11 @@ const APITokens = () => {
             <div className="flex items-start gap-4">
               <Key className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="text-white font-semibold mb-2">About API Tokens</h3>
+                <h3 className="text-gray-900 font-semibold mb-2">About API Tokens</h3>
                 <p className="text-gray-300 text-sm mb-2">
                   API tokens allow you to access MJ SEO APIs programmatically. Use these tokens in your applications or MCP server integrations.
                 </p>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-600 text-sm">
                   Keep your tokens secure and never share them publicly. You can disable or delete tokens at any time.
                 </p>
               </div>
@@ -145,13 +145,13 @@ const APITokens = () => {
 
           {/* Tokens List */}
           {tokens.length === 0 ? (
-            <div className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-12 border border-slate-800 text-center">
+            <div className="bg-white rounded-xl p-12 border border-gray-200 text-center">
               <Key className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No API Tokens Yet</h3>
-              <p className="text-gray-400 mb-6">Create your first API token to get started</p>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No API Tokens Yet</h3>
+              <p className="text-gray-600 mb-6">Create your first API token to get started</p>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                className="bg-purple-500 hover:bg-purple-600 text-gray-900 px-6 py-3 rounded-lg font-semibold transition-colors"
               >
                 Create Token
               </button>
@@ -161,12 +161,12 @@ const APITokens = () => {
               {tokens.map((token) => (
                 <div
                   key={token.id}
-                  className="bg-slate-900/50 backdrop-blur-xl rounded-xl p-6 border border-slate-800"
+                  className="bg-white rounded-xl p-6 border border-gray-200"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-white">{token.name || 'Unnamed Token'}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{token.name || 'Unnamed Token'}</h3>
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                           token.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
                         }`}>
@@ -174,18 +174,18 @@ const APITokens = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 mb-2">
-                        <code className="text-sm text-gray-400 bg-slate-800 px-3 py-1 rounded font-mono">
+                        <code className="text-sm text-gray-600 bg-slate-800 px-3 py-1 rounded font-mono">
                           {visibleTokens[token.id] ? token.token : maskToken(token.token)}
                         </code>
                         <button
                           onClick={() => toggleTokenVisibility(token.id)}
-                          className="text-gray-400 hover:text-white transition-colors"
+                          className="text-gray-600 hover:text-gray-900 transition-colors"
                         >
                           {visibleTokens[token.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                         <button
                           onClick={() => handleCopyToken(token.token)}
-                          className="text-gray-400 hover:text-white transition-colors"
+                          className="text-gray-600 hover:text-gray-900 transition-colors"
                         >
                           {copiedToken === token.token ? (
                             <Check className="w-4 h-4 text-green-400" />
@@ -232,8 +232,8 @@ const APITokens = () => {
       {/* Create Token Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 rounded-2xl p-8 max-w-md w-full border border-slate-800">
-            <h2 className="text-2xl font-bold text-white mb-6">Create API Token</h2>
+          <div className="bg-slate-900 rounded-2xl p-8 max-w-md w-full border border-gray-200">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Create API Token</h2>
             
             {newToken ? (
               <div>
@@ -243,12 +243,12 @@ const APITokens = () => {
                     Make sure to copy your token now. You won't be able to see it again!
                   </p>
                   <div className="bg-slate-800 p-3 rounded-lg">
-                    <code className="text-sm text-white break-all">{newToken}</code>
+                    <code className="text-sm text-gray-900 break-all">{newToken}</code>
                   </div>
                 </div>
                 <button
                   onClick={() => handleCopyToken(newToken)}
-                  className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-semibold transition-colors mb-3"
+                  className="w-full bg-purple-500 hover:bg-purple-600 text-gray-900 py-3 rounded-lg font-semibold transition-colors mb-3"
                 >
                   {copiedToken === newToken ? (
                     <span className="flex items-center justify-center gap-2">
@@ -265,7 +265,7 @@ const APITokens = () => {
                     setShowCreateModal(false);
                     setNewToken(null);
                   }}
-                  className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                  className="w-full bg-slate-800 hover:bg-slate-700 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Close
                 </button>
@@ -281,13 +281,13 @@ const APITokens = () => {
                     value={tokenName}
                     onChange={(e) => setTokenName(e.target.value)}
                     placeholder="e.g., Production API, MCP Server"
-                    className="w-full bg-slate-800 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full bg-slate-800 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
                 <div className="flex gap-3">
                   <button
                     onClick={handleCreateToken}
-                    className="flex-1 bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                    className="flex-1 bg-purple-500 hover:bg-purple-600 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
                   >
                     Create
                   </button>
@@ -296,7 +296,7 @@ const APITokens = () => {
                       setShowCreateModal(false);
                       setTokenName('');
                     }}
-                    className="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg font-semibold transition-colors"
+                    className="flex-1 bg-slate-800 hover:bg-slate-700 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
                   >
                     Cancel
                   </button>
