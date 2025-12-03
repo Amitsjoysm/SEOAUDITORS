@@ -146,44 +146,55 @@ async def process_audit_enhanced(audit_id: str, website_url: str, max_pages: int
         # PHASE 5: SAVE COMPETITORS (if found)
         # ========================================================================
         competitor_data = orchestrator_result.get('api_data', {}).get('competitors', {})
-        if competitor_data and competitor_data.get('tasks'):
+        if competitor_data and isinstance(competitor_data, dict) and competitor_data.get('tasks'):
             logger.info(f"🏆 Saving competitor analysis")
-            for task in competitor_data.get('tasks', [])[:10]:  # Top 10 competitors
-                for item in task.get('result', [])[:5]:
-                    competitor = CompetitorAnalysis(
-                        audit_id=audit_id,
-                        competitor_url=item.get('domain', ''),
-                        competitor_domain=item.get('domain', ''),
-                        domain_authority=item.get('metrics', {}).get('organic', {}).get('pos_1', 0),
-                        organic_traffic_estimate=item.get('metrics', {}).get('organic', {}).get('etv', 0),
-                        data_source='dataforseo'
-                    )
-                    db.add(competitor)
-                    audit.competitor_count += 1
+            try:
+                for task in competitor_data.get('tasks', [])[:10]:  # Top 10 competitors
+                    if task and isinstance(task, dict):
+                        for item in task.get('result', [])[:5]:
+                            if item and isinstance(item, dict):
+                                competitor = CompetitorAnalysis(
+                                    audit_id=audit_id,
+                                    competitor_url=item.get('domain', ''),
+                                    competitor_domain=item.get('domain', ''),
+                                    domain_authority=item.get('metrics', {}).get('organic', {}).get('pos_1', 0) if isinstance(item.get('metrics'), dict) else None,
+                                    organic_traffic_estimate=item.get('metrics', {}).get('organic', {}).get('etv', 0) if isinstance(item.get('metrics'), dict) else None,
+                                    data_source='dataforseo'
+                                )
+                                db.add(competitor)
+                                audit.competitor_count += 1
+            except Exception as e:
+                logger.warning(f"Error saving competitors: {e}")
         
         # ========================================================================
         # PHASE 6: GENERATE CONTENT OPPORTUNITIES
         # ========================================================================
         keyword_data = orchestrator_result.get('api_data', {}).get('keywords', {})
-        if keyword_data and keyword_data.get('tasks'):
+        if keyword_data and isinstance(keyword_data, dict) and keyword_data.get('tasks'):
             logger.info(f"💡 Generating content opportunities")
-            for task in keyword_data.get('tasks', [])[:1]:
-                for item in task.get('result', [])[:20]:  # Top 20 keyword opportunities
-                    keyword_info = item.get('keyword_info', {})
-                    opportunity = ContentOpportunity(
-                        audit_id=audit_id,
-                        opportunity_type=OpportunityType.KEYWORD_GAP,
-                        keyword=item.get('keyword', ''),
-                        search_volume=keyword_info.get('search_volume'),
-                        keyword_difficulty=keyword_info.get('competition', 0) * 100,
-                        cpc_value=keyword_info.get('cpc'),
-                        potential_traffic=keyword_info.get('search_volume', 0) // 10,  # Estimate
-                        competition_level='low' if keyword_info.get('competition', 0) < 0.3 else 'medium',
-                        priority_score=min(100, keyword_info.get('search_volume', 0) / 100),
-                        status='pending'
-                    )
-                    db.add(opportunity)
-                    audit.opportunities_found += 1
+            try:
+                for task in keyword_data.get('tasks', [])[:1]:
+                    if task and isinstance(task, dict):
+                        for item in task.get('result', [])[:20]:  # Top 20 keyword opportunities
+                            if item and isinstance(item, dict):
+                                keyword_info = item.get('keyword_info', {})
+                                if isinstance(keyword_info, dict):
+                                    opportunity = ContentOpportunity(
+                                        audit_id=audit_id,
+                                        opportunity_type=OpportunityType.KEYWORD_GAP,
+                                        keyword=item.get('keyword', ''),
+                                        search_volume=keyword_info.get('search_volume'),
+                                        keyword_difficulty=keyword_info.get('competition', 0) * 100 if keyword_info.get('competition') else 0,
+                                        cpc_value=keyword_info.get('cpc'),
+                                        potential_traffic=keyword_info.get('search_volume', 0) // 10 if keyword_info.get('search_volume') else 0,
+                                        competition_level='low' if keyword_info.get('competition', 0) < 0.3 else 'medium',
+                                        priority_score=min(100, keyword_info.get('search_volume', 0) / 100) if keyword_info.get('search_volume') else 0,
+                                        status='pending'
+                                    )
+                                    db.add(opportunity)
+                                    audit.opportunities_found += 1
+            except Exception as e:
+                logger.warning(f"Error saving content opportunities: {e}")
         
         # ========================================================================
         # PHASE 7: UPDATE AUDIT WITH FINAL DATA
