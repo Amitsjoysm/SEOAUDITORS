@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '@/api/axios';
 import { Toaster, toast } from 'react-hot-toast';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001/api';
 
 const ContentOpportunitiesPage = () => {
   const { auditId } = useParams();
@@ -27,24 +25,17 @@ const ContentOpportunitiesPage = () => {
 
   const fetchOpportunities = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
       // Fetch audit details
-      const auditResponse = await axios.get(`${API_URL}/audits/${auditId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const auditResponse = await api.get(`/audits/${auditId}`);
       setAudit(auditResponse.data);
 
       // Fetch opportunities
-      const opportunitiesResponse = await axios.get(
-        `${API_URL}/audits/${auditId}/opportunities`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const opportunitiesResponse = await api.get(`/audits/${auditId}/opportunities/`);
       setOpportunities(opportunitiesResponse.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching opportunities:', error);
-      toast.error('Failed to load content opportunities');
+      toast.error(error.response?.data?.detail || 'Failed to load content opportunities');
       setLoading(false);
     }
   };
