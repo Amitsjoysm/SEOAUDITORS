@@ -165,14 +165,6 @@ class MultiLLMClient:
         
         return response.text
     
-    async def generate(self, prompt: str, max_tokens: int = None) -> str:
-        """
-        Async wrapper for generate - for compatibility
-        Accepts a single prompt string
-        """
-        messages = [{"role": "user", "content": prompt}]
-        return self.generate(messages)
-    
     def __str__(self):
         return f"MultiLLMClient(provider={self.provider}, model={self.model})"
 
