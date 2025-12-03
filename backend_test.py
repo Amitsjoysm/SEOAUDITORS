@@ -241,7 +241,7 @@ class ProductionTester:
         
         try:
             headers = {"Authorization": f"Bearer {self.superadmin_token}"}
-            response = self.session.get(f"{BASE_URL}/admin/integrations", headers=headers)
+            response = self.session.get(f"{BASE_URL}/admin/integrations/", headers=headers)
             
             if response.status_code == 200:
                 integrations = response.json()
