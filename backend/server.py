@@ -190,6 +190,7 @@ api_router.include_router(api_key_pool.router)  # API key pool management
 api_router.include_router(integrations.router)  # Integration monitoring
 api_router.include_router(competitors.router)  # Competitor analysis
 api_router.include_router(content_opportunities.router)  # Content opportunities
+api_router.include_router(anomalies.router)  # Anomaly detection
 
 # Include API router in main app
 app.include_router(api_router)
