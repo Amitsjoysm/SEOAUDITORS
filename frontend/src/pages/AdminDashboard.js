@@ -522,7 +522,7 @@ const AdminDashboard = () => {
             <div className="mb-6">
               <button
                 onClick={() => { setEditingTheme(null); setShowThemeModal(true); }}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Create New Theme
@@ -590,7 +590,7 @@ const AdminDashboard = () => {
                   {!t.is_active && (
                     <button
                       onClick={() => handleActivateTheme(t.id)}
-                      className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors"
+                      className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors"
                     >
                       Activate Theme
                     </button>
@@ -659,7 +659,7 @@ const AdminDashboard = () => {
             <div className="mb-6">
               <button
                 onClick={() => { setEditingLlm(null); setShowLlmModal(true); }}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Add LLM Configuration
@@ -730,7 +730,7 @@ const AdminDashboard = () => {
                   {!llm.is_active && (
                     <button
                       onClick={() => handleActivateLlm(llm.id)}
-                      className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors"
+                      className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors"
                     >
                       Activate LLM
                     </button>
@@ -759,7 +759,7 @@ const AdminDashboard = () => {
             <div className="mb-6 flex gap-4">
               <button
                 onClick={() => { setEditingKey(null); setShowKeyModal(true); }}
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Add New Key
@@ -968,7 +968,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors"
             >
               {editingKey ? 'Update Key' : 'Create Key'}
             </button>
@@ -1114,7 +1114,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors"
             >
               Update Plan
             </button>
@@ -1252,7 +1252,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors"
             >
               Update Plan
             </button>
@@ -1451,7 +1451,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors"
             >
               {theme ? 'Update Theme' : 'Create Theme'}
             </button>
@@ -1623,7 +1623,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-gray-900 rounded-lg font-semibold transition-colors"
+              className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold transition-colors"
             >
               {llm ? 'Update Configuration' : 'Create Configuration'}
             </button>
