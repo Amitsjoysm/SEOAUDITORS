@@ -388,3 +388,185 @@ class SEOSettings(Base):
     last_updated_by = Column(String)  # User ID
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+# ============================================================================
+# NEW MODELS FOR PRODUCTION-GRADE FEATURES
+# ============================================================================
+
+class APIServiceType(str, enum.Enum):
+    """API service types"""
+    DATAFORSEO = "dataforseo"
+    LIGHTHOUSE = "lighthouse"
+    GOOGLE_SEARCH_CONSOLE = "google_search_console"
+    GOOGLE_ANALYTICS = "google_analytics"
+    EXA_AI = "exa_ai"
+    GROQ = "groq"
+    OPENAI = "openai"
+    ANTHROPIC = "anthropic"
+    GEMINI = "gemini"
+
+
+class APIKeyPool(Base):
+    """Manage multiple API keys per service with rotation"""
+    __tablename__ = "api_key_pool"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    service_name = Column(SQLEnum(APIServiceType), nullable=False, index=True)
+    api_key = Column(Text, nullable=False)  # Encrypted API key
+    api_username = Column(String)  # For services requiring username (DataForSEO)
+    is_active = Column(Boolean, default=True)
+    quota_limit = Column(Integer)  # Daily/Monthly limit
+    quota_used = Column(Integer, default=0)
+    quota_reset_at = Column(DateTime(timezone=True))
+    priority = Column(Integer, default=1)  # 1=highest, 5=lowest
+    last_used_at = Column(DateTime(timezone=True))
+    health_status = Column(String, default="healthy")  # healthy, degraded, failed
+    consecutive_failures = Column(Integer, default=0)
+    notes = Column(Text)  # Admin notes about this key
+    added_by = Column(String, ForeignKey("users.id"))  # Admin who added the key
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class APIIntegrationStatus(Base):
+    """Track health, uptime, errors per API service"""
+    __tablename__ = "api_integration_status"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    service_name = Column(SQLEnum(APIServiceType), nullable=False, unique=True, index=True)
+    is_healthy = Column(Boolean, default=True)
+    last_check_at = Column(DateTime(timezone=True))
+    success_count_24h = Column(Integer, default=0)
+    failure_count_24h = Column(Integer, default=0)
+    avg_response_time_ms = Column(Float)  # Average response time in milliseconds
+    uptime_percentage = Column(Float)  # 24-hour uptime percentage
+    error_message = Column(Text)  # Last error message
+    last_error_at = Column(DateTime(timezone=True))
+    total_requests_today = Column(Integer, default=0)
+    cost_today = Column(Float, default=0.0)  # Estimated cost in USD
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class CompetitorAnalysis(Base):
+    """Store competitor insights and gaps"""
+    __tablename__ = "competitor_analysis"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    audit_id = Column(String, ForeignKey("audits.id", ondelete="CASCADE"), nullable=False)
+    competitor_url = Column(String, nullable=False)
+    competitor_domain = Column(String)
+    competitor_score = Column(Float)  # Overall SEO score
+    domain_authority = Column(Float)  # DA/DR score
+    backlink_count = Column(Integer)
+    referring_domains = Column(Integer)
+    organic_traffic_estimate = Column(Integer)
+    keyword_overlap = Column(JSON)  # Keywords both sites rank for
+    keyword_gaps = Column(JSON)  # Keywords only competitor ranks for
+    content_gap_analysis = Column(JSON)  # Content opportunities
+    strengths = Column(JSON)  # What competitor does better
+    weaknesses = Column(JSON)  # What we do better
+    top_performing_pages = Column(JSON)  # Their best pages
+    data_source = Column(String)  # dataforseo, manual, etc.
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationships
+    audit = relationship("Audit", backref="competitor_analyses")
+
+
+class OpportunityType(str, enum.Enum):
+    """Types of content opportunities"""
+    KEYWORD_GAP = "keyword_gap"
+    FEATURED_SNIPPET = "featured_snippet"
+    TOPIC_CLUSTER = "topic_cluster"
+    BACKLINK_OPPORTUNITY = "backlink_opportunity"
+    CONTENT_UPDATE = "content_update"
+    NEW_CONTENT = "new_content"
+    INTERNAL_LINKING = "internal_linking"
+
+
+class ContentOpportunity(Base):
+    """AI-generated content recommendations"""
+    __tablename__ = "content_opportunities"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    audit_id = Column(String, ForeignKey("audits.id", ondelete="CASCADE"), nullable=False)
+    opportunity_type = Column(SQLEnum(OpportunityType), nullable=False)
+    keyword = Column(String)  # Target keyword
+    current_position = Column(Integer)  # Current ranking position (if any)
+    target_position = Column(Integer)  # Target ranking position
+    search_volume = Column(Integer)  # Monthly search volume
+    keyword_difficulty = Column(Float)  # 0-100 difficulty score
+    cpc_value = Column(Float)  # Cost per click
+    potential_traffic = Column(Integer)  # Estimated monthly traffic if ranked #1
+    competition_level = Column(String)  # low, medium, high
+    content_brief = Column(Text)  # AI-generated content brief
+    recommended_word_count = Column(Integer)
+    recommended_headings = Column(JSON)  # H2, H3 suggestions
+    related_keywords = Column(JSON)  # LSI keywords
+    competitor_analysis = Column(JSON)  # Top 10 competitor insights
+    ai_recommendations = Column(Text)  # AI suggestions for content
+    priority_score = Column(Float)  # 0-100 priority score
+    estimated_effort_hours = Column(Float)  # Time to create content
+    status = Column(String, default="pending")  # pending, in_progress, completed, dismissed
+    assigned_to = Column(String)  # User ID if assigned
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationships
+    audit = relationship("Audit", backref="content_opportunities")
+
+
+class AnomalyType(str, enum.Enum):
+    """Types of anomalies"""
+    TRAFFIC_DROP = "traffic_drop"
+    TRAFFIC_SPIKE = "traffic_spike"
+    RANKING_DROP = "ranking_drop"
+    RANKING_GAIN = "ranking_gain"
+    PERFORMANCE_DEGRADATION = "performance_degradation"
+    INDEX_COVERAGE_ISSUE = "index_coverage_issue"
+    BACKLINK_LOSS = "backlink_loss"
+    CRAWL_ERROR_SPIKE = "crawl_error_spike"
+    CORE_WEB_VITALS_FAIL = "core_web_vitals_fail"
+
+
+class AnomalySeverity(str, enum.Enum):
+    """Severity levels"""
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class AnomalyDetection(Base):
+    """Automated issue detection and alerts"""
+    __tablename__ = "anomaly_detection"
+    
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    audit_id = Column(String, ForeignKey("audits.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    anomaly_type = Column(SQLEnum(AnomalyType), nullable=False)
+    severity = Column(SQLEnum(AnomalySeverity), nullable=False)
+    detected_at = Column(DateTime(timezone=True), server_default=func.now())
+    metric_name = Column(String)  # e.g., "organic_traffic", "page_load_time"
+    expected_value = Column(Float)  # Expected/baseline value
+    actual_value = Column(Float)  # Actual observed value
+    deviation_percentage = Column(Float)  # % change from expected
+    statistical_significance = Column(Float)  # p-value or z-score
+    impact_assessment = Column(Text)  # Description of impact
+    root_cause_analysis = Column(Text)  # AI-generated RCA
+    recommended_action = Column(Text)  # What to do about it
+    affected_pages = Column(JSON)  # List of affected URLs
+    is_resolved = Column(Boolean, default=False)
+    resolved_at = Column(DateTime(timezone=True))
+    resolved_by = Column(String)  # User ID who resolved it
+    resolution_notes = Column(Text)
+    alert_sent = Column(Boolean, default=False)  # Email/notification sent
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationships
+    audit = relationship("Audit", backref="anomalies")
+    user = relationship("User", backref="anomalies")
