@@ -168,7 +168,7 @@ const APITokens = () => {
                       <div className="flex items-center gap-3 mb-2">
                         <h3 className="text-lg font-semibold text-gray-900">{token.name || 'Unnamed Token'}</h3>
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          token.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                          token.is_active ? 'bg-green-500/20 text-green-600' : 'bg-red-500/20 text-red-400'
                         }`}>
                           {token.is_active ? 'Active' : 'Disabled'}
                         </span>
@@ -188,7 +188,7 @@ const APITokens = () => {
                           className="text-gray-600 hover:text-gray-900 transition-colors"
                         >
                           {copiedToken === token.token ? (
-                            <Check className="w-4 h-4 text-green-400" />
+                            <Check className="w-4 h-4 text-green-600" />
                           ) : (
                             <Copy className="w-4 h-4" />
                           )}
@@ -209,7 +209,7 @@ const APITokens = () => {
                         className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                           token.is_active
                             ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
-                            : 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                            : 'bg-green-500/20 text-green-600 hover:bg-green-500/30'
                         }`}
                       >
                         {token.is_active ? 'Disable' : 'Enable'}
@@ -238,7 +238,7 @@ const APITokens = () => {
             {newToken ? (
               <div>
                 <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 mb-4">
-                  <p className="text-green-400 text-sm mb-2 font-semibold">Token created successfully!</p>
+                  <p className="text-green-600 text-sm mb-2 font-semibold">Token created successfully!</p>
                   <p className="text-gray-300 text-sm mb-3">
                     Make sure to copy your token now. You won't be able to see it again!
                   </p>
