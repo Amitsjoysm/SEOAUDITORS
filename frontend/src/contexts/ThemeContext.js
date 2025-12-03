@@ -26,15 +26,15 @@ export const ThemeProvider = ({ children }) => {
       applyTheme(response.data);
     } catch (error) {
       console.error('Failed to fetch theme:', error);
-      // Use default theme
+      // Use default Apollo.io light theme
       const defaultTheme = {
-        primary_color: '#a78bfa',
-        secondary_color: '#fbbf24',
-        accent_color: '#34d399',
-        background_color: '#0f172a',
-        surface_color: '#1e293b',
-        text_primary: '#f8fafc',
-        text_secondary: '#cbd5e1',
+        primary_color: '#6366f1',
+        secondary_color: '#8b5cf6',
+        accent_color: '#06b6d4',
+        background_color: '#f9fafb',
+        surface_color: '#ffffff',
+        text_primary: '#111827',
+        text_secondary: '#6b7280',
         border_radius: '0.75rem',
         font_family: 'Inter, system-ui, sans-serif'
       };
