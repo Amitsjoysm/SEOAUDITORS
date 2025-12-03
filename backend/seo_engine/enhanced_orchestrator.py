@@ -83,7 +83,7 @@ Provide a concise technical SEO analysis with:
 Keep response under 300 words."""
         
         try:
-            response = await self.llm_client.generate(prompt, max_tokens=500)
+            response = self.llm_client.generate(prompt, max_tokens=500)
             return {
                 "success": True,
                 "agent": self.name,
@@ -126,7 +126,7 @@ Focus on actionable recommendations that help this site rank higher in AI/LLM re
 Keep response under 300 words."""
         
         try:
-            response = await self.llm_client.generate(prompt, max_tokens=500)
+            response = self.llm_client.generate(prompt, max_tokens=500)
             return {
                 "success": True,
                 "agent": self.name,
@@ -169,7 +169,7 @@ Provide:
 Keep response under 300 words."""
         
         try:
-            response = await self.llm_client.generate(prompt, max_tokens=500)
+            response = self.llm_client.generate(prompt, max_tokens=500)
             return {
                 "success": True,
                 "agent": self.name,
@@ -208,7 +208,7 @@ Provide:
 Keep response under 250 words."""
         
         try:
-            response = await self.llm_client.generate(prompt, max_tokens=400)
+            response = self.llm_client.generate(prompt, max_tokens=400)
             return {
                 "success": True,
                 "agent": self.name,
@@ -252,7 +252,7 @@ Provide:
 Keep response under 250 words."""
         
         try:
-            response = await self.llm_client.generate(prompt, max_tokens=400)
+            response = self.llm_client.generate(prompt, max_tokens=400)
             return {
                 "success": True,
                 "agent": self.name,
@@ -290,7 +290,7 @@ Provide:
 Keep response under 300 words."""
         
         try:
-            response = await self.llm_client.generate(prompt, max_tokens=500)
+            response = self.llm_client.generate(prompt, max_tokens=500)
             return {
                 "success": True,
                 "agent": self.name,
@@ -538,7 +538,7 @@ Based on ALL agent analyses, create:
 Keep total response under 400 words. Be specific and actionable."""
         
         try:
-            synthesis = await self.llm_client.generate(prompt, max_tokens=700)
+            synthesis = self.llm_client.generate(prompt, max_tokens=700)
             return {
                 "synthesis": synthesis,
                 "generated_at": datetime.utcnow().isoformat()
@@ -576,7 +576,7 @@ Generate:
 Keep response under 500 words."""
         
         try:
-            brief = await self.llm_client.generate(prompt, max_tokens=800)
+            brief = self.llm_client.generate(prompt, max_tokens=800)
             return {
                 "success": True,
                 "keyword": keyword,
