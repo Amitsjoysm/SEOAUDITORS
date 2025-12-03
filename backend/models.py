@@ -119,6 +119,18 @@ class Audit(Base):
     category_scores = Column(JSON)  # Detailed category breakdown
     analytics_summary = Column(JSON)  # Executive summary with key metrics
     
+    # API Integration Data
+    lighthouse_score = Column(Float)  # Lighthouse performance score
+    lighthouse_data = Column(JSON)  # Full Lighthouse report
+    serp_data = Column(JSON)  # SERP rankings from DataForSEO
+    backlink_data = Column(JSON)  # Backlink data from DataForSEO
+    keyword_data = Column(JSON)  # Keyword data from DataForSEO
+    gsc_data = Column(JSON)  # Google Search Console data
+    ga_data = Column(JSON)  # Google Analytics data
+    competitor_count = Column(Integer, default=0)
+    opportunities_found = Column(Integer, default=0)
+    anomalies_detected = Column(Integer, default=0)
+    
     report_pdf_path = Column(String)
     report_docx_path = Column(String)
     error_message = Column(Text)
