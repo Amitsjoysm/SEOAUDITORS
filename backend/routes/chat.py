@@ -60,81 +60,24 @@ async def send_message(
         if not enhanced_orchestrator.llm_client:
             await enhanced_orchestrator.initialize(db)
         
-        # Determine which sub-agent(s) to use based on user query
-        user_query_lower = message_data.content.lower()
+        # Prepare enhanced audit context with all data
+        enhanced_context = {
+            "website_url": audit.website_url,
+            "overall_score": audit.overall_score,
+            "checks_failed": audit.checks_failed,
+            "checks_passed": audit.checks_passed,
+            "pages_crawled": audit.pages_crawled,
+            "competitor_count": audit.competitor_count or 0,
+            "opportunities_found": audit.opportunities_found or 0,
+            "anomalies_detected": audit.anomalies_detected or 0,
+            "lighthouse_score": audit.lighthouse_data.get('performance_score') if audit.lighthouse_data else None,
+            "has_lighthouse_data": bool(audit.lighthouse_data),
+            "has_competitor_data": audit.competitor_count > 0,
+            "has_opportunity_data": audit.opportunities_found > 0
+        }
         
-        # Route to appropriate sub-agent(s)
-        if any(word in user_query_lower for word in ['competitor', 'competition', 'rival', 'vs']):
-            # Use Competitor Analysis Agent
-            agent = enhanced_orchestrator.sub_agents.get('competitor')
-            agent_context = {
-                'url': audit.website_url,
-                'competitor_data': audit.serp_data or {},
-                'serp_data': audit.serp_data or {}
-            }
-            result = await agent.analyze(agent_context) if agent else None
-            ai_response = result.get('analysis', 'Competitor analysis not available') if result else 'Agent unavailable'
-            
-        elif any(word in user_query_lower for word in ['content', 'keyword', 'topic', 'write', 'article']):
-            # Use Content Optimization Agent
-            agent = enhanced_orchestrator.sub_agents.get('content')
-            agent_context = {
-                'url': audit.website_url,
-                'crawl_data': {'pages': []},  # Simplified
-                'keyword_data': audit.keyword_data or {}
-            }
-            result = await agent.analyze(agent_context) if agent else None
-            ai_response = result.get('analysis', 'Content analysis not available') if result else 'Agent unavailable'
-            
-        elif any(word in user_query_lower for word in ['backlink', 'link', 'linking', 'authority']):
-            # Use Backlink Analysis Agent
-            agent = enhanced_orchestrator.sub_agents.get('backlink')
-            agent_context = {
-                'url': audit.website_url,
-                'backlink_data': audit.backlink_data or {}
-            }
-            result = await agent.analyze(agent_context) if agent else None
-            ai_response = result.get('analysis', 'Backlink analysis not available') if result else 'Agent unavailable'
-            
-        elif any(word in user_query_lower for word in ['performance', 'speed', 'slow', 'fast', 'web vitals', 'cwv']):
-            # Use Performance Agent
-            agent = enhanced_orchestrator.sub_agents.get('performance')
-            agent_context = {
-                'url': audit.website_url,
-                'lighthouse_data': audit.lighthouse_data or {}
-            }
-            result = await agent.analyze(agent_context) if agent else None
-            ai_response = result.get('analysis', 'Performance analysis not available') if result else 'Agent unavailable'
-            
-        elif any(word in user_query_lower for word in ['technical', 'crawl', 'index', 'robots', 'sitemap']):
-            # Use Technical SEO Agent
-            agent = enhanced_orchestrator.sub_agents.get('technical')
-            agent_context = {
-                'url': audit.website_url,
-                'crawl_data': {'pages': []},
-                'lighthouse_data': audit.lighthouse_data or {}
-            }
-            result = await agent.analyze(agent_context) if agent else None
-            ai_response = result.get('analysis', 'Technical analysis not available') if result else 'Agent unavailable'
-            
-        else:
-            # Use general LLM for generic questions
-            llm_client = await get_active_llm_client(db)
-            
-            # Build context from audit data
-            context_prompt = f"""You are an expert SEO consultant. Answer the user's question about their website.
-
-Website: {audit.website_url}
-Overall SEO Score: {audit.overall_score}/100
-Pages Crawled: {audit.pages_crawled}
-Checks Passed: {audit.checks_passed}
-Checks Failed: {audit.checks_failed}
-
-User Question: {message_data.content}
-
-Provide a helpful, specific answer focused on improving their SEO and ranking higher in both search engines and LLM recommendations (Claude, GPT, Gemini). Keep response under 300 words."""
-            
-            ai_response = llm_client.generate(context_prompt, max_tokens=500)
+        # Use orchestrator's intelligent chat with sub-agent routing
+        ai_response = await enhanced_orchestrator.chat(user_message.content, enhanced_context)
         
         # Save assistant message
         assistant_message = ChatMessage(
