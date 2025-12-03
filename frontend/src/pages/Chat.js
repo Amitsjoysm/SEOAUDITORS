@@ -105,12 +105,26 @@ const Chat = () => {
             {messages.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--apollo-gray-500)' }}>
                 <Bot className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--apollo-gray-400)' }} />
-                <p style={{ fontSize: '1.125rem', marginBottom: '0.5rem', color: 'var(--apollo-gray-700)' }}>
-                  Start a conversation
+                <p style={{ fontSize: '1.125rem', marginBottom: '0.5rem', color: 'var(--apollo-gray-700)', fontWeight: 600 }}>
+                  AI SEO Consultant with 6 Specialized Agents
                 </p>
-                <p style={{ fontSize: '0.875rem' }}>
+                <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>
                   Ask me anything about your SEO audit results
                 </p>
+                <div style={{ textAlign: 'left', maxWidth: '600px', margin: '2rem auto', padding: '1.5rem', background: 'var(--apollo-gray-50)', borderRadius: 'var(--apollo-radius-lg)', fontSize: '0.875rem' }}>
+                  <p style={{ fontWeight: 600, marginBottom: '0.75rem', color: 'var(--apollo-gray-900)' }}>💡 Our AI has access to 6 specialized agents:</p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    <li style={{ marginBottom: '0.5rem' }}>🔧 <strong>Technical SEO Agent</strong> - Crawling, indexing, robots.txt</li>
+                    <li style={{ marginBottom: '0.5rem' }}>✍️ <strong>Content Agent</strong> - Content strategy, LLM optimization</li>
+                    <li style={{ marginBottom: '0.5rem' }}>🏆 <strong>Competitor Agent</strong> - Competitive intelligence, gaps</li>
+                    <li style={{ marginBottom: '0.5rem' }}>🔗 <strong>Backlink Agent</strong> - Link building, authority</li>
+                    <li style={{ marginBottom: '0.5rem' }}>⚡ <strong>Performance Agent</strong> - Speed, Core Web Vitals</li>
+                    <li style={{ marginBottom: '0.5rem' }}>🔍 <strong>Keyword Agent</strong> - Keyword opportunities</li>
+                  </ul>
+                  <p style={{ marginTop: '1rem', fontSize: '0.8125rem', color: 'var(--apollo-gray-600)' }}>
+                    Just ask your question naturally - I'll route it to the right expert!
+                  </p>
+                </div>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
