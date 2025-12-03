@@ -68,9 +68,18 @@ export const ThemeProvider = ({ children }) => {
     // Add data attribute for CSS to detect theme type
     root.setAttribute('data-theme', isLight ? 'light' : 'dark');
     
-    // Update body background for smoother transition
-    document.body.style.backgroundColor = themeData.background_color;
-    document.body.style.color = themeData.text_primary;
+    // IMPORTANT: Don't apply body background on admin/integrations routes
+    const isAdminRoute = window.location.pathname.startsWith('/admin');
+    
+    if (!isAdminRoute) {
+      // Only apply theme background on non-admin pages
+      document.body.style.backgroundColor = themeData.background_color;
+      document.body.style.color = themeData.text_primary;
+    } else {
+      // Force light background on admin pages
+      document.body.style.backgroundColor = '#f9fafb';
+      document.body.style.color = '#111827';
+    }
 
     // Apply custom CSS if present
     if (themeData.custom_css) {
