@@ -123,7 +123,7 @@ async def internal_error_handler(request: Request, exc):
 # ============================================================================
 
 # GZIP compression
-app.add_middleware(GZIPMiddleware, minimum_size=1000)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # Trusted hosts (optional - uncomment and configure for production)
 # app.add_middleware(
