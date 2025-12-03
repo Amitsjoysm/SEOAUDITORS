@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '@/api/axios';
 import { Toaster, toast } from 'react-hot-toast';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001/api';
 
 const CompetitorsPage = () => {
   const { auditId } = useParams();
@@ -21,41 +19,30 @@ const CompetitorsPage = () => {
 
   const fetchAuditAndCompetitors = async () => {
     try {
-      const token = localStorage.getItem('token');
-      
       // Fetch audit details
-      const auditResponse = await axios.get(`${API_URL}/audits/${auditId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const auditResponse = await api.get(`/audits/${auditId}`);
       setAudit(auditResponse.data);
 
       // Fetch competitors
-      const competitorsResponse = await axios.get(
-        `${API_URL}/audits/${auditId}/competitors`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const competitorsResponse = await api.get(`/audits/${auditId}/competitors/`);
       setCompetitors(competitorsResponse.data);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching competitors:', error);
-      toast.error('Failed to load competitors');
+      toast.error(error.response?.data?.detail || 'Failed to load competitors');
       setLoading(false);
     }
   };
 
   const viewKeywordGaps = async (competitorId) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(
-        `${API_URL}/audits/${auditId}/competitors/${competitorId}/keyword-gaps`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.get(`/audits/${auditId}/competitors/${competitorId}/keyword-gaps`);
       setKeywordGaps(response.data.keyword_gaps || []);
       setShowKeywordGaps(true);
       setSelectedCompetitor(competitors.find(c => c.id === competitorId));
     } catch (error) {
       console.error('Error fetching keyword gaps:', error);
-      toast.error('Failed to load keyword gaps');
+      toast.error(error.response?.data?.detail || 'Failed to load keyword gaps');
     }
   };
 
