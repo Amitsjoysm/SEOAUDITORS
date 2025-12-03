@@ -1,12 +1,13 @@
 """
 Enhanced SEO Orchestrator with Sub-Agents
-Coordinates multiple specialized agents for comprehensive SEO analysis.
+Combines original orchestrator features + new specialized agents
 Integrates with all external APIs (DataForSEO, Lighthouse, GSC, GA, Exa.ai)
 """
 import asyncio
 import time
 from typing import Dict, List, Any, Optional
 from datetime import datetime
+from functools import wraps
 import logging
 
 from seo_engine.multi_llm_client import get_active_llm_client
@@ -15,6 +16,25 @@ from services.lighthouse_service import lighthouse_service
 from seo_engine.research_agent import SEOResearchAgent
 
 logger = logging.getLogger(__name__)
+
+
+def retry_on_failure(max_retries=3, delay=1):
+    """Decorator for retry logic (Parlant.io-style reliability)"""
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            for attempt in range(max_retries):
+                try:
+                    return await func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_retries - 1:
+                        logger.error(f"Failed after {max_retries} attempts: {str(e)}")
+                        raise
+                    logger.warning(f"Attempt {attempt + 1} failed: {str(e)}. Retrying...")
+                    await asyncio.sleep(delay * (attempt + 1))
+            return None
+        return wrapper
+    return decorator
 
 
 class SEOSubAgent:
