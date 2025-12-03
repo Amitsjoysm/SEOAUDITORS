@@ -495,11 +495,18 @@ class EnhancedSEOOrchestrator:
             # Extract keywords from crawl data
             keywords = []
             for page in crawl_data.get('pages', [])[:5]:
-                if page.get('title'):
+                # Handle both dict and CrawledPage object
+                if hasattr(page, 'title'):
+                    if page.title:
+                        keywords.append(page.title)
+                elif isinstance(page, dict) and page.get('title'):
                     keywords.append(page['title'])
             
             if not keywords:
-                keywords = [url]
+                # Use domain name as fallback
+                from urllib.parse import urlparse
+                domain = urlparse(url).netloc
+                keywords = [domain]
             
             result = await client.get_keyword_data(keywords[:10])
             return result.get('data', {}) if result.get('success') else {}
