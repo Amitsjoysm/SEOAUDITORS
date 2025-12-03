@@ -922,7 +922,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
               value={formData.key_name}
               onChange={(e) => setFormData({ ...formData, key_name: e.target.value })}
               disabled={!!editingKey}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 font-mono"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 font-mono"
               placeholder="STRIPE_SECRET_KEY"
               required
             />
@@ -933,7 +933,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
               type="password"
               value={formData.key_value}
               onChange={(e) => setFormData({ ...formData, key_value: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
               placeholder="Enter secret key value"
               required={!editingKey}
             />
@@ -946,7 +946,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="payment">Payment</option>
               <option value="ai">AI</option>
@@ -960,7 +960,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               rows="3"
               placeholder="Describe what this key is used for..."
             />
@@ -1021,7 +1021,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.display_name}
               onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="Pro Plan"
               required
             />
@@ -1031,7 +1031,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               rows="3"
               placeholder="Perfect for growing businesses..."
             />
@@ -1044,7 +1044,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="29.99"
                 required
               />
@@ -1055,7 +1055,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 type="number"
                 value={formData.max_pages_per_audit}
                 onChange={(e) => setFormData({ ...formData, max_pages_per_audit: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="10"
                 required
               />
@@ -1066,7 +1066,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <select
               value={formData.max_audits_per_month === 999999 ? 'unlimited' : formData.max_audits_per_month}
               onChange={(e) => setFormData({ ...formData, max_audits_per_month: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="2">2 audits</option>
               <option value="10">10 audits</option>
@@ -1082,7 +1082,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.stripe_price_id}
               onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm"
               placeholder="price_1234567890abcdef"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1095,7 +1095,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.razorpay_plan_id}
               onChange={(e) => setFormData({ ...formData, razorpay_plan_id: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm"
               placeholder="plan_1234567890abcdef"
             />
           </div>
@@ -1105,7 +1105,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               id="is_active"
               checked={formData.is_active}
               onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
+              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500"
             />
             <label htmlFor="is_active" className="text-sm font-medium text-gray-300">
               Plan is active and available for subscription
@@ -1168,7 +1168,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.display_name}
               onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="Pro Plan"
               required
             />
@@ -1178,7 +1178,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               rows="3"
               placeholder="Perfect for growing businesses..."
             />
@@ -1191,7 +1191,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="29.99"
                 required
               />
@@ -1202,7 +1202,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 type="number"
                 value={formData.max_pages_per_audit}
                 onChange={(e) => setFormData({ ...formData, max_pages_per_audit: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="10"
                 required
               />
@@ -1213,7 +1213,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <select
               value={formData.max_audits_per_month === 999999 ? 'unlimited' : formData.max_audits_per_month}
               onChange={(e) => setFormData({ ...formData, max_audits_per_month: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="1">1 audit</option>
               <option value="5">5 audits</option>
@@ -1230,7 +1230,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.stripe_price_id}
               onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm"
               placeholder="price_1234567890abcdef"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1243,7 +1243,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               id="is_active"
               checked={formData.is_active}
               onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
+              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500"
             />
             <label htmlFor="is_active" className="text-sm font-medium text-gray-300">
               Plan is active and available for subscription
@@ -1307,7 +1307,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="My Awesome Theme"
               required
             />
@@ -1327,7 +1327,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.primary_color}
                   onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   placeholder="#a78bfa"
                 />
               </div>
@@ -1346,7 +1346,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.secondary_color}
                   onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   placeholder="#fbbf24"
                 />
               </div>
@@ -1365,7 +1365,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.accent_color}
                   onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   placeholder="#34d399"
                 />
               </div>
@@ -1384,7 +1384,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.background_color}
                   onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   placeholder="#0f172a"
                 />
               </div>
@@ -1403,7 +1403,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.surface_color}
                   onChange={(e) => setFormData({ ...formData, surface_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   placeholder="#1e293b"
                 />
               </div>
@@ -1422,7 +1422,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.text_primary}
                   onChange={(e) => setFormData({ ...formData, text_primary: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   placeholder="#f8fafc"
                 />
               </div>
@@ -1441,7 +1441,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.text_secondary}
                   onChange={(e) => setFormData({ ...formData, text_secondary: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                   placeholder="#cbd5e1"
                 />
               </div>
@@ -1518,7 +1518,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
               value={formData.provider}
               onChange={(e) => setFormData({ ...formData, provider: e.target.value, model_name: '' })}
               disabled={!!llm}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
               required
             >
               {providerOptions.map(opt => (
@@ -1532,7 +1532,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
             <select
               value={formData.model_name}
               onChange={(e) => setFormData({ ...formData, model_name: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               required
             >
               <option value="">Select a model...</option>
@@ -1550,7 +1550,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
               type="text"
               value={formData.api_key_ref}
               onChange={(e) => setFormData({ ...formData, api_key_ref: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
               placeholder="GROQ_API_KEY or OPENAI_API_KEY"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1565,7 +1565,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 type="text"
                 value={formData.base_url}
                 onChange={(e) => setFormData({ ...formData, base_url: e.target.value })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
                 placeholder="http://localhost:11434/v1"
               />
             </div>
@@ -1581,7 +1581,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="2"
                 value={formData.temperature}
                 onChange={(e) => setFormData({ ...formData, temperature: parseFloat(e.target.value) })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
             <div>
@@ -1592,7 +1592,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="200000"
                 value={formData.max_tokens}
                 onChange={(e) => setFormData({ ...formData, max_tokens: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
             <div>
@@ -1604,7 +1604,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="1"
                 value={formData.top_p}
                 onChange={(e) => setFormData({ ...formData, top_p: parseFloat(e.target.value) })}
-                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
           </div>
@@ -1614,7 +1614,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               rows="3"
               placeholder="Describe this LLM configuration..."
             />
