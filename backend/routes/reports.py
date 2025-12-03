@@ -125,9 +125,9 @@ async def download_docx_report(
     )
     results = result.scalars().all()
     
-    # Generate DOCX
+    # Generate DOCX with enhanced data
     try:
-        docx_path = await generate_docx_report(audit, results, REPORTS_DIR)
+        docx_path = await generate_enhanced_docx_report(audit, results, REPORTS_DIR)
         
         # Update audit with DOCX path
         audit.report_docx_path = str(docx_path)
