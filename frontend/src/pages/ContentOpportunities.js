@@ -64,15 +64,15 @@ const ContentOpportunitiesPage = () => {
     try {
       setGeneratingBrief(true);
       const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${API_URL}/audits/${auditId}/opportunities/${opportunityId}/generate-brief`,
+      const response = await api.post(
+        `/audits/${auditId}/opportunities/${opportunityId}/generate-brief`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
       // Refresh the opportunity to get the new brief
-      const oppResponse = await axios.get(
-        `${API_URL}/audits/${auditId}/opportunities/${opportunityId}`,
+      const oppResponse = await api.get(
+        `/audits/${auditId}/opportunities/${opportunityId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setSelectedOpportunity(oppResponse.data);
@@ -88,8 +88,8 @@ const ContentOpportunitiesPage = () => {
   const viewOpportunityDetail = async (opportunityId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(
-        `${API_URL}/audits/${auditId}/opportunities/${opportunityId}`,
+      const response = await api.get(
+        `/audits/${auditId}/opportunities/${opportunityId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setSelectedOpportunity(response.data);
@@ -103,8 +103,8 @@ const ContentOpportunitiesPage = () => {
   const updateStatus = async (opportunityId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(
-        `${API_URL}/audits/${auditId}/opportunities/${opportunityId}/status?status=${newStatus}`,
+      await api.put(
+        `/audits/${auditId}/opportunities/${opportunityId}/status?status=${newStatus}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
