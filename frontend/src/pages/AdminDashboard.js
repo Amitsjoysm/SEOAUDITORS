@@ -379,7 +379,7 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <Users className="w-8 h-8 text-purple-400" />
+                <Users className="w-8 h-8 text-indigo-600" />
                 <span className="text-3xl font-bold text-gray-900">{stats.total_users}</span>
               </div>
               <h3 className="text-gray-600">Total Users</h3>
@@ -393,7 +393,7 @@ const AdminDashboard = () => {
             </div>
             <div className="bg-white rounded-xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
-                <CreditCard className="w-8 h-8 text-green-400" />
+                <CreditCard className="w-8 h-8 text-green-600" />
                 <span className="text-3xl font-bold text-gray-900">{stats.active_subscriptions}</span>
               </div>
               <h3 className="text-gray-600">Active Subscriptions</h3>
@@ -413,7 +413,7 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50">
+                <thead className="bg-gray-100">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Email</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Name</th>
@@ -425,12 +425,12 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-800">
                   {users.map((u) => (
-                    <tr key={u.id} className="hover:bg-slate-800/30 transition-colors">
+                    <tr key={u.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-sm text-gray-900">{u.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-300">{u.full_name || '-'}</td>
                       <td className="px-6 py-4 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          u.role === 'superadmin' ? 'bg-purple-500/20 text-purple-400' : 'bg-blue-500/20 text-blue-400'
+                          u.role === 'superadmin' ? 'bg-purple-500/20 text-indigo-600' : 'bg-blue-500/20 text-blue-400'
                         }`}>
                           {u.role}
                         </span>
@@ -439,7 +439,7 @@ const AdminDashboard = () => {
                         <button
                           onClick={() => handleToggleUserStatus(u.id, u.is_active)}
                           className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            u.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                            u.is_active ? 'bg-green-500/20 text-green-600' : 'bg-red-500/20 text-red-400'
                           }`}
                         >
                           {u.is_active ? 'Active' : 'Inactive'}
@@ -490,14 +490,14 @@ const AdminDashboard = () => {
                   </div>
                   <div className="text-sm text-gray-300">
                     <strong>Stripe Price ID:</strong>
-                    <div className="mt-1 font-mono text-xs bg-slate-800 px-2 py-1 rounded text-purple-400 break-all">
+                    <div className="mt-1 font-mono text-xs bg-gray-100 px-2 py-1 rounded text-indigo-600 break-all">
                       {plan.stripe_price_id || 'Not set'}
                     </div>
                   </div>
                 </div>
                 <div className="text-sm">
                   <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    plan.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                    plan.is_active ? 'bg-green-500/20 text-green-600' : 'bg-red-500/20 text-red-400'
                   }`}>
                     {plan.is_active ? 'Active' : 'Inactive'}
                   </span>
@@ -616,7 +616,7 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-slate-800/50">
+                <thead className="bg-gray-100">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Website</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">User</th>
@@ -627,12 +627,12 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-800">
                   {audits.slice(0, 50).map((audit) => (
-                    <tr key={audit.id} className="hover:bg-slate-800/30 transition-colors">
+                    <tr key={audit.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-sm text-gray-900">{audit.website_url}</td>
                       <td className="px-6 py-4 text-sm text-gray-300">{audit.user_email}</td>
                       <td className="px-6 py-4 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          audit.status === 'completed' ? 'bg-green-500/20 text-green-400' :
+                          audit.status === 'completed' ? 'bg-green-500/20 text-green-600' :
                           audit.status === 'failed' ? 'bg-red-500/20 text-red-400' :
                           'bg-yellow-500/20 text-yellow-400'
                         }`}>
@@ -703,7 +703,7 @@ const AdminDashboard = () => {
                   <div className="space-y-3 mb-4">
                     <div>
                       <div className="text-xs text-gray-500 mb-1">Model</div>
-                      <div className="text-sm text-gray-900 font-mono bg-slate-800 px-2 py-1 rounded">
+                      <div className="text-sm text-gray-900 font-mono bg-gray-100 px-2 py-1 rounded">
                         {llm.model_name}
                       </div>
                     </div>
@@ -722,7 +722,7 @@ const AdminDashboard = () => {
                     {llm.api_key_ref && (
                       <div>
                         <div className="text-xs text-gray-500 mb-1">API Key Reference</div>
-                        <div className="text-xs text-purple-400 font-mono">{llm.api_key_ref}</div>
+                        <div className="text-xs text-indigo-600 font-mono">{llm.api_key_ref}</div>
                       </div>
                     )}
                   </div>
@@ -775,7 +775,7 @@ const AdminDashboard = () => {
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-slate-800/50">
+                  <thead className="bg-gray-100">
                     <tr>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Key Name</th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Category</th>
@@ -800,11 +800,11 @@ const AdminDashboard = () => {
                       </tr>
                     ) : (
                       envKeys.map((key) => (
-                      <tr key={key.id} className="hover:bg-slate-800/30 transition-colors">
+                      <tr key={key.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4 text-sm font-mono text-gray-900">{key.key_name}</td>
                         <td className="px-6 py-4 text-sm">
                           <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            key.category === 'payment' ? 'bg-green-500/20 text-green-400' :
+                            key.category === 'payment' ? 'bg-green-500/20 text-green-600' :
                             key.category === 'ai' ? 'bg-blue-500/20 text-blue-400' :
                             key.category === 'email' ? 'bg-yellow-500/20 text-yellow-400' :
                             'bg-gray-500/20 text-gray-600'
@@ -816,7 +816,7 @@ const AdminDashboard = () => {
                         <td className="px-6 py-4 text-sm">
                           {showKeyValue[key.id] ? (
                             <div className="flex items-center gap-2">
-                              <code className="text-xs bg-slate-800 px-2 py-1 rounded text-green-400 max-w-xs overflow-hidden text-ellipsis">
+                              <code className="text-xs bg-gray-100 px-2 py-1 rounded text-green-600 max-w-xs overflow-hidden text-ellipsis">
                                 {showKeyValue[key.id]}
                               </code>
                               <button
@@ -832,7 +832,7 @@ const AdminDashboard = () => {
                         </td>
                         <td className="px-6 py-4 text-sm">
                           <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            key.is_active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                            key.is_active ? 'bg-green-500/20 text-green-600' : 'bg-red-500/20 text-red-400'
                           }`}>
                             {key.is_active ? 'Active' : 'Inactive'}
                           </span>
@@ -910,7 +910,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
           {editingKey ? 'Edit Environment Key' : 'Add New Environment Key'}
         </h2>
@@ -922,7 +922,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
               value={formData.key_name}
               onChange={(e) => setFormData({ ...formData, key_name: e.target.value })}
               disabled={!!editingKey}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 font-mono"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 font-mono"
               placeholder="STRIPE_SECRET_KEY"
               required
             />
@@ -933,7 +933,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
               type="password"
               value={formData.key_value}
               onChange={(e) => setFormData({ ...formData, key_value: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
               placeholder="Enter secret key value"
               required={!editingKey}
             />
@@ -946,7 +946,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="payment">Payment</option>
               <option value="ai">AI</option>
@@ -960,7 +960,7 @@ const KeyModal = ({ editingKey, onClose, onCreate, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Describe what this key is used for..."
             />
@@ -1012,7 +1012,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Edit Plan: {plan.name}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -1021,7 +1021,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.display_name}
               onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Pro Plan"
               required
             />
@@ -1031,7 +1031,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Perfect for growing businesses..."
             />
@@ -1044,7 +1044,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="29.99"
                 required
               />
@@ -1055,7 +1055,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 type="number"
                 value={formData.max_pages_per_audit}
                 onChange={(e) => setFormData({ ...formData, max_pages_per_audit: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="10"
                 required
               />
@@ -1066,7 +1066,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <select
               value={formData.max_audits_per_month === 999999 ? 'unlimited' : formData.max_audits_per_month}
               onChange={(e) => setFormData({ ...formData, max_audits_per_month: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="2">2 audits</option>
               <option value="10">10 audits</option>
@@ -1082,7 +1082,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.stripe_price_id}
               onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
               placeholder="price_1234567890abcdef"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1095,7 +1095,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.razorpay_plan_id}
               onChange={(e) => setFormData({ ...formData, razorpay_plan_id: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
               placeholder="plan_1234567890abcdef"
             />
           </div>
@@ -1105,7 +1105,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               id="is_active"
               checked={formData.is_active}
               onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-              className="w-4 h-4 text-purple-600 bg-slate-800 border-slate-700 rounded focus:ring-purple-500"
+              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
             />
             <label htmlFor="is_active" className="text-sm font-medium text-gray-300">
               Plan is active and available for subscription
@@ -1159,7 +1159,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Edit Plan</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -1168,7 +1168,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.display_name}
               onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Pro Plan"
               required
             />
@@ -1178,7 +1178,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Perfect for growing businesses..."
             />
@@ -1191,7 +1191,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 step="0.01"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="29.99"
                 required
               />
@@ -1202,7 +1202,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
                 type="number"
                 value={formData.max_pages_per_audit}
                 onChange={(e) => setFormData({ ...formData, max_pages_per_audit: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="10"
                 required
               />
@@ -1213,7 +1213,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
             <select
               value={formData.max_audits_per_month === 999999 ? 'unlimited' : formData.max_audits_per_month}
               onChange={(e) => setFormData({ ...formData, max_audits_per_month: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               <option value="1">1 audit</option>
               <option value="5">5 audits</option>
@@ -1230,7 +1230,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               type="text"
               value={formData.stripe_price_id}
               onChange={(e) => setFormData({ ...formData, stripe_price_id: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono text-sm"
               placeholder="price_1234567890abcdef"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1243,7 +1243,7 @@ const PlanModal = ({ plan, onClose, onUpdate }) => {
               id="is_active"
               checked={formData.is_active}
               onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-              className="w-4 h-4 text-purple-600 bg-slate-800 border-slate-700 rounded focus:ring-purple-500"
+              className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
             />
             <label htmlFor="is_active" className="text-sm font-medium text-gray-300">
               Plan is active and available for subscription
@@ -1296,7 +1296,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
           {theme ? 'Edit Theme' : 'Create New Theme'}
         </h2>
@@ -1307,7 +1307,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="My Awesome Theme"
               required
             />
@@ -1327,7 +1327,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.primary_color}
                   onChange={(e) => setFormData({ ...formData, primary_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#a78bfa"
                 />
               </div>
@@ -1346,7 +1346,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.secondary_color}
                   onChange={(e) => setFormData({ ...formData, secondary_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#fbbf24"
                 />
               </div>
@@ -1365,7 +1365,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.accent_color}
                   onChange={(e) => setFormData({ ...formData, accent_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#34d399"
                 />
               </div>
@@ -1384,7 +1384,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.background_color}
                   onChange={(e) => setFormData({ ...formData, background_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#0f172a"
                 />
               </div>
@@ -1403,7 +1403,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.surface_color}
                   onChange={(e) => setFormData({ ...formData, surface_color: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#1e293b"
                 />
               </div>
@@ -1422,7 +1422,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.text_primary}
                   onChange={(e) => setFormData({ ...formData, text_primary: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#f8fafc"
                 />
               </div>
@@ -1441,7 +1441,7 @@ const ThemeModal = ({ theme, onClose, onCreate, onUpdate }) => {
                   type="text"
                   value={formData.text_secondary}
                   onChange={(e) => setFormData({ ...formData, text_secondary: e.target.value })}
-                  className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                  className="flex-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                   placeholder="#cbd5e1"
                 />
               </div>
@@ -1507,7 +1507,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-900 rounded-xl border border-gray-200 p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
           {llm ? 'Edit LLM Configuration' : 'Add New LLM Configuration'}
         </h2>
@@ -1518,7 +1518,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
               value={formData.provider}
               onChange={(e) => setFormData({ ...formData, provider: e.target.value, model_name: '' })}
               disabled={!!llm}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
               required
             >
               {providerOptions.map(opt => (
@@ -1532,7 +1532,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
             <select
               value={formData.model_name}
               onChange={(e) => setFormData({ ...formData, model_name: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               required
             >
               <option value="">Select a model...</option>
@@ -1550,7 +1550,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
               type="text"
               value={formData.api_key_ref}
               onChange={(e) => setFormData({ ...formData, api_key_ref: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
               placeholder="GROQ_API_KEY or OPENAI_API_KEY"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -1565,7 +1565,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 type="text"
                 value={formData.base_url}
                 onChange={(e) => setFormData({ ...formData, base_url: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
                 placeholder="http://localhost:11434/v1"
               />
             </div>
@@ -1581,7 +1581,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="2"
                 value={formData.temperature}
                 onChange={(e) => setFormData({ ...formData, temperature: parseFloat(e.target.value) })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <div>
@@ -1592,7 +1592,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="200000"
                 value={formData.max_tokens}
                 onChange={(e) => setFormData({ ...formData, max_tokens: parseInt(e.target.value) })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <div>
@@ -1604,7 +1604,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
                 max="1"
                 value={formData.top_p}
                 onChange={(e) => setFormData({ ...formData, top_p: parseFloat(e.target.value) })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
@@ -1614,7 +1614,7 @@ const LlmModal = ({ llm, onClose, onCreate, onUpdate, onProviderChange, availabl
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
               rows="3"
               placeholder="Describe this LLM configuration..."
             />
