@@ -568,6 +568,53 @@ backend_enhancements_tested:
           agent: "testing"
           comment: "✅ TESTED: Chat interface fully functional. Can send messages and receive AI responses with context-aware SEO advice. Chat history retrieval working correctly. Integration with Groq Llama 3.3 70B model operational."
 
+  - task: "Admin Dashboard UI and CRUD Operations"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/pages/AdminDashboard.js, /app/frontend/src/contexts/ThemeContext.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: |
+            ❌ CRITICAL ISSUE FOUND: Dark blue background on admin dashboard
+            
+            ✅ WORKING FEATURES:
+            - Login with superadmin credentials (superadmin@test.com / test123) ✅
+            - Navigation to admin dashboard (/admin) ✅
+            - All 8 tabs visible and accessible: Overview, Users, Plans, Themes, LLM Settings, SEO Settings, Audits, Environment Keys ✅
+            - Users tab loads with 4 users displayed ✅
+            - Plans tab shows all 4 plans (Free, Basic, Pro, Enterprise) ✅
+            - Themes tab displays 6 theme cards with 5 "Activate Theme" buttons ✅
+            - LLM Settings tab accessible ✅
+            - SEO Settings tab accessible ✅
+            - Audits tab shows audit list ✅
+            - Environment Keys tab accessible ✅
+            - Integrations button navigates to /admin/integrations ✅
+            - Integrations dashboard loads successfully ✅
+            
+            ❌ CRITICAL UI ISSUE:
+            - Body element has dark blue background: rgb(15, 23, 42) which is #0f172a
+            - This is coming from ThemeContext.js line 72: document.body.style.backgroundColor = themeData.background_color
+            - Active theme "Lavender Dream" has background_color: "#0f172a" (dark blue)
+            - Admin dashboard component has bg-gray-50 class but body background overrides it
+            
+            ✅ CORRECT COLORS FOUND:
+            - Header: WHITE background rgb(255, 255, 255) ✅
+            - Cards: WHITE background rgb(255, 255, 255) ✅
+            - Active tabs: INDIGO background rgb(79, 70, 229) ✅
+            - Inactive tabs: WHITE background rgb(255, 255, 255) with gray text ✅
+            
+            ROOT CAUSE:
+            The ThemeContext applies the active theme's background_color to document.body, which overrides the light gray background intended for the admin dashboard. The active theme "Lavender Dream" has a dark background (#0f172a) which is meant for the main app, not the admin panel.
+            
+            RECOMMENDED FIX:
+            Option 1: Modify ThemeContext.js to NOT apply body background on admin routes
+            Option 2: Create a separate admin theme with light backgrounds
+            Option 3: Override body background in AdminDashboard component using inline styles or !important
+
 ## agent_communication:
   - agent: "testing"
     message: |
