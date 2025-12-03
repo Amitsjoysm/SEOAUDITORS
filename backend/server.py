@@ -18,7 +18,7 @@ load_dotenv(ROOT_DIR / '.env')
 # Import routes
 from routes import auth, audits, plans, admin, chat, api_tokens, reports, themes, env_keys, llm_settings, seo_settings
 from routes import payments_stripe, admin_payments
-from routes import api_key_pool, integrations, competitors, content_opportunities
+from routes import api_key_pool, integrations, competitors, content_opportunities, anomalies
 
 # Configure logging
 logging.basicConfig(
