@@ -147,5 +147,70 @@ class MultiLLMClient:
         
         return response.text
     
+    async def generate(self, prompt: str, max_tokens: int = None) -> str:
+        """
+        Async wrapper for generate - for compatibility
+        Accepts a single prompt string
+        """
+        messages = [{"role": "user", "content": prompt}]
+        return self.generate(messages)
+    
     def __str__(self):
         return f"MultiLLMClient(provider={self.provider}, model={self.model})"
+
+
+async def get_active_llm_client(db):
+    """
+    Get the active LLM client from database settings
+    Returns MultiLLMClient instance configured with active LLM
+    """
+    from sqlalchemy import select
+    from models import LLMSetting
+    import os
+    
+    try:
+        # Get active LLM setting from database
+        result = await db.execute(
+            select(LLMSetting).where(LLMSetting.is_active == True)
+        )
+        llm_setting = result.scalar_one_or_none()
+        
+        if llm_setting:
+            # Get API key from environment (referenced by api_key_ref)
+            api_key = os.getenv(llm_setting.api_key_ref) if llm_setting.api_key_ref else None
+            
+            client = MultiLLMClient(
+                provider=llm_setting.provider.value,
+                model=llm_setting.model_name,
+                api_key=api_key,
+                base_url=llm_setting.base_url,
+                temperature=llm_setting.temperature,
+                max_tokens=llm_setting.max_tokens,
+                top_p=llm_setting.top_p
+            )
+            
+            logger.info(f"Using LLM: {llm_setting.provider.value} - {llm_setting.model_name}")
+            return client
+        
+        else:
+            # Fallback to default Groq
+            logger.warning("No active LLM setting found, using default Groq")
+            return MultiLLMClient(
+                provider="groq",
+                model="llama-3.3-70b-versatile",
+                api_key=os.getenv("GROQ_API_KEY"),
+                temperature=0.7,
+                max_tokens=4096
+            )
+    
+    except Exception as e:
+        logger.error(f"Error getting active LLM: {e}")
+        # Fallback to default
+        return MultiLLMClient(
+            provider="groq",
+            model="llama-3.3-70b-versatile",
+            api_key=os.getenv("GROQ_API_KEY"),
+            temperature=0.7,
+            max_tokens=4096
+        )
+
