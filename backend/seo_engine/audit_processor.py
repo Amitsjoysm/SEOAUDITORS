@@ -213,11 +213,16 @@ async def process_audit_enhanced(audit_id: str, website_url: str, max_pages: int
         audit.score_grade = analytics['grade']
         audit.score_interpretation = analytics['interpretation']
         audit.category_scores = analytics['category_scores']
-        audit.analytics_summary = {
-            **analytics['executive_summary'],
-            'orchestrator_insights': orchestrator_result.get('synthesis', {}).get('synthesis', '') if orchestrator_result.get('success') else None,
-            'sub_agent_analyses': len(orchestrator_result.get('agent_analyses', {})) if orchestrator_result.get('success') else 0
-        }
+        
+        # Build analytics summary with orchestrator insights if available
+        analytics_summary = analytics['executive_summary'].copy()
+        if orchestrator_result.get('success'):
+            synthesis = orchestrator_result.get('synthesis', {})
+            if isinstance(synthesis, dict) and synthesis.get('synthesis'):
+                analytics_summary['orchestrator_insights'] = synthesis.get('synthesis')
+                analytics_summary['sub_agent_count'] = len(orchestrator_result.get('agent_analyses', {}))
+        
+        audit.analytics_summary = analytics_summary
         audit.completed_at = datetime.now(timezone.utc)
         audit.audit_metadata = website_data
         
