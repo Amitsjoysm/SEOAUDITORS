@@ -416,13 +416,13 @@ class ProductionTester:
     
     def test_opportunities_endpoint(self):
         """Test 14: Get content opportunities for audit"""
-        if not self.test_audit_id or not self.user_token:
+        if not self.test_audit_id or not self.superadmin_token:
             self.result.add_result("Opportunities Endpoint", "FAIL", "No audit ID or token")
             return
         
         try:
-            headers = {"Authorization": f"Bearer {self.user_token}"}
-            response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}/opportunities", headers=headers)
+            headers = {"Authorization": f"Bearer {self.superadmin_token}"}
+            response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}/opportunities/", headers=headers)
             
             if response.status_code == 200:
                 opportunities = response.json()
