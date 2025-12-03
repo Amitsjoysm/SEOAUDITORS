@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '@/api/axios';
 import { Toaster, toast } from 'react-hot-toast';
-
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001/api';
 
 const IntegrationsDashboard = () => {
   const navigate = useNavigate();
@@ -19,10 +17,7 @@ const IntegrationsDashboard = () => {
 
   const fetchIntegrations = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/admin/integrations`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/admin/integrations/');
       setIntegrations(response.data);
       setLoading(false);
     } catch (error) {
@@ -31,7 +26,7 @@ const IntegrationsDashboard = () => {
         toast.error('Admin access required');
         navigate('/dashboard');
       } else {
-        toast.error('Failed to load integrations');
+        toast.error(error.response?.data?.detail || 'Failed to load integrations');
       }
       setLoading(false);
     }
@@ -39,10 +34,7 @@ const IntegrationsDashboard = () => {
 
   const fetchOverview = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${API_URL}/admin/integrations/dashboard/overview`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/admin/integrations/dashboard/overview');
       setOverview(response.data);
     } catch (error) {
       console.error('Error fetching overview:', error);
@@ -52,12 +44,7 @@ const IntegrationsDashboard = () => {
   const testIntegration = async (serviceName) => {
     try {
       setTesting(prev => ({ ...prev, [serviceName]: true }));
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${API_URL}/admin/integrations/test/${serviceName}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.post(`/admin/integrations/test/${serviceName}`, {});
       
       if (response.data.success) {
         toast.success(`${serviceName} test passed!`);
@@ -69,7 +56,7 @@ const IntegrationsDashboard = () => {
       fetchIntegrations();
     } catch (error) {
       console.error('Error testing integration:', error);
-      toast.error('Failed to test integration');
+      toast.error(error.response?.data?.detail || 'Failed to test integration');
     } finally {
       setTesting(prev => ({ ...prev, [serviceName]: false }));
     }
