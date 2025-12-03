@@ -129,8 +129,8 @@ const Plans = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
-        <div className="text-white text-xl flex items-center gap-3">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-900 text-xl flex items-center gap-3">
           <Loader2 className="w-6 h-6 animate-spin" />
           Loading plans...
         </div>
@@ -139,18 +139,18 @@ const Plans = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-8"
+          className="flex items-center gap-2 text-gray-400 hover:text-gray-900 transition-colors mb-8"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Home
         </button>
 
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
             Choose Your <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Plan</span>
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
@@ -188,17 +188,17 @@ const Plans = () => {
                 </div>
               )}
 
-              <div className="bg-slate-900 rounded-2xl p-6 h-full flex flex-col">
-                <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${getPlanColor(plan.name)} flex items-center justify-center text-white mb-4`}>
+              <div className="bg-white rounded-2xl p-6 h-full flex flex-col">
+                <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${getPlanColor(plan.name)} flex items-center justify-center text-gray-900 mb-4`}>
                   {getPlanIcon(plan.name)}
                 </div>
 
-                <h3 className="text-2xl font-bold text-white mb-2">{plan.display_name}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.display_name}</h3>
                 <p className="text-gray-400 text-sm mb-4">{plan.description}</p>
 
                 <div className="mb-6">
                   <div className="flex items-baseline">
-                    <span className="text-5xl font-bold text-white">${plan.price}</span>
+                    <span className="text-5xl font-bold text-gray-900">${plan.price}</span>
                     <span className="text-gray-400 ml-2">{plan.price === 0 ? 'forever' : '/month'}</span>
                   </div>
                 </div>
@@ -219,10 +219,10 @@ const Plans = () => {
                   disabled={processingPlanId === plan.id || isCurrentPlan(plan.id)}
                   className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center ${
                     isCurrentPlan(plan.id)
-                      ? 'bg-green-600 text-white cursor-default'
+                      ? 'bg-green-600 text-gray-900 cursor-default'
                       : processingPlanId === plan.id
                       ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                      : `bg-gradient-to-r ${getPlanColor(plan.name)} hover:shadow-xl hover:shadow-purple-500/50 text-white`
+                      : `bg-gradient-to-r ${getPlanColor(plan.name)} hover:shadow-xl hover:shadow-purple-500/50 text-gray-900`
                   }`}
                 >
                   {getButtonText(plan)}

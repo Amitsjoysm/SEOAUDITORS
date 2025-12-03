@@ -67,13 +67,13 @@ const AdminSEOSettings = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">SEO Settings</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">SEO Settings</h2>
           <p className="text-slate-400">Manage meta tags, Open Graph, and analytics for your application</p>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-gray-900 rounded-lg transition-colors disabled:opacity-50"
         >
           {saving ? (
             <>
@@ -105,8 +105,8 @@ const AdminSEOSettings = () => {
       )}
 
       {/* Meta Tags Section */}
-      <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-        <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+      <div className="bg-gray-100/50 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Globe className="w-5 h-5 text-purple-400" />
           Basic Meta Tags
         </h3>
@@ -117,7 +117,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.site_title || ''}
               onChange={(e) => handleChange('site_title', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="MJ SEO - AI-Powered SEO Audit Platform"
             />
           </div>
@@ -127,7 +127,7 @@ const AdminSEOSettings = () => {
               value={formData.site_description || ''}
               onChange={(e) => handleChange('site_description', e.target.value)}
               rows={3}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="Production-ready SEO audit platform with comprehensive checks"
             />
           </div>
@@ -137,7 +137,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.site_keywords || ''}
               onChange={(e) => handleChange('site_keywords', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="SEO audit, SEO tools, website analysis"
             />
           </div>
@@ -147,7 +147,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.author || ''}
               onChange={(e) => handleChange('author', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="MJ SEO Team"
             />
           </div>
@@ -155,8 +155,8 @@ const AdminSEOSettings = () => {
       </div>
 
       {/* Open Graph Section */}
-      <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-        <h3 className="text-xl font-semibold text-white mb-4">Open Graph (Social Media)</h3>
+      <div className="bg-gray-100/50 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Open Graph (Social Media)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-slate-300 mb-2">OG Title</label>
@@ -164,7 +164,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.og_title || ''}
               onChange={(e) => handleChange('og_title', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div className="md:col-span-2">
@@ -173,7 +173,7 @@ const AdminSEOSettings = () => {
               value={formData.og_description || ''}
               onChange={(e) => handleChange('og_description', e.target.value)}
               rows={2}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div>
@@ -182,7 +182,7 @@ const AdminSEOSettings = () => {
               type="url"
               value={formData.og_image || ''}
               onChange={(e) => handleChange('og_image', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="https://example.com/og-image.jpg"
             />
           </div>
@@ -192,7 +192,7 @@ const AdminSEOSettings = () => {
               type="url"
               value={formData.og_url || ''}
               onChange={(e) => handleChange('og_url', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="https://example.com"
             />
           </div>
@@ -200,15 +200,15 @@ const AdminSEOSettings = () => {
       </div>
 
       {/* Twitter Card Section */}
-      <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-        <h3 className="text-xl font-semibold text-white mb-4">Twitter Card</h3>
+      <div className="bg-gray-100/50 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Twitter Card</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Twitter Card Type</label>
             <select
               value={formData.twitter_card || 'summary_large_image'}
               onChange={(e) => handleChange('twitter_card', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             >
               <option value="summary">Summary</option>
               <option value="summary_large_image">Summary Large Image</option>
@@ -220,7 +220,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.twitter_site || ''}
               onChange={(e) => handleChange('twitter_site', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="@mjseo"
             />
           </div>
@@ -230,15 +230,15 @@ const AdminSEOSettings = () => {
               type="url"
               value={formData.twitter_image || ''}
               onChange={(e) => handleChange('twitter_image', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
         </div>
       </div>
 
       {/* Analytics Section */}
-      <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-        <h3 className="text-xl font-semibold text-white mb-4">Analytics & Tracking</h3>
+      <div className="bg-gray-100/50 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Analytics & Tracking</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Google Analytics 4 ID</label>
@@ -246,7 +246,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.google_analytics_id || ''}
               onChange={(e) => handleChange('google_analytics_id', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="G-XXXXXXXXXX"
             />
           </div>
@@ -256,7 +256,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.google_tag_manager_id || ''}
               onChange={(e) => handleChange('google_tag_manager_id', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="GTM-XXXXXXX"
             />
           </div>
@@ -266,7 +266,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.google_site_verification || ''}
               onChange={(e) => handleChange('google_site_verification', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
               placeholder="Verification meta tag content"
             />
           </div>
@@ -276,15 +276,15 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.facebook_domain_verification || ''}
               onChange={(e) => handleChange('facebook_domain_verification', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
         </div>
       </div>
 
       {/* Organization Schema Section */}
-      <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-        <h3 className="text-xl font-semibold text-white mb-4">Organization Information (Schema.org)</h3>
+      <div className="bg-gray-100/50 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Organization Information (Schema.org)</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-2">Organization Name</label>
@@ -292,7 +292,7 @@ const AdminSEOSettings = () => {
               type="text"
               value={formData.organization_name || ''}
               onChange={(e) => handleChange('organization_name', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div>
@@ -301,7 +301,7 @@ const AdminSEOSettings = () => {
               type="url"
               value={formData.organization_logo || ''}
               onChange={(e) => handleChange('organization_logo', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div className="md:col-span-2">
@@ -310,7 +310,7 @@ const AdminSEOSettings = () => {
               value={formData.organization_description || ''}
               onChange={(e) => handleChange('organization_description', e.target.value)}
               rows={2}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div>
@@ -319,7 +319,7 @@ const AdminSEOSettings = () => {
               type="email"
               value={formData.organization_email || ''}
               onChange={(e) => handleChange('organization_email', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div>
@@ -328,17 +328,17 @@ const AdminSEOSettings = () => {
               type="tel"
               value={formData.organization_phone || ''}
               onChange={(e) => handleChange('organization_phone', e.target.value)}
-              className="w-full px-4 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 bg-white/50 border border-slate-600 rounded-lg text-gray-900 focus:ring-2 focus:ring-purple-500"
             />
           </div>
         </div>
       </div>
 
       {/* Performance Settings */}
-      <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-        <h3 className="text-xl font-semibold text-white mb-4">Performance & Optimization</h3>
+      <div className="bg-gray-100/50 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4">Performance & Optimization</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <label className="flex items-center gap-3 p-4 bg-slate-900/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
+          <label className="flex items-center gap-3 p-4 bg-white/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
             <input
               type="checkbox"
               checked={formData.enable_lazy_loading || false}
@@ -346,11 +346,11 @@ const AdminSEOSettings = () => {
               className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
             />
             <div>
-              <div className="text-white font-medium">Lazy Loading</div>
+              <div className="text-gray-900 font-medium">Lazy Loading</div>
               <div className="text-slate-400 text-sm">Enable lazy loading for images</div>
             </div>
           </label>
-          <label className="flex items-center gap-3 p-4 bg-slate-900/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
+          <label className="flex items-center gap-3 p-4 bg-white/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
             <input
               type="checkbox"
               checked={formData.enable_image_optimization || false}
@@ -358,11 +358,11 @@ const AdminSEOSettings = () => {
               className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
             />
             <div>
-              <div className="text-white font-medium">Image Optimization</div>
+              <div className="text-gray-900 font-medium">Image Optimization</div>
               <div className="text-slate-400 text-sm">Optimize images for web</div>
             </div>
           </label>
-          <label className="flex items-center gap-3 p-4 bg-slate-900/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
+          <label className="flex items-center gap-3 p-4 bg-white/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
             <input
               type="checkbox"
               checked={formData.enable_minification || false}
@@ -370,11 +370,11 @@ const AdminSEOSettings = () => {
               className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
             />
             <div>
-              <div className="text-white font-medium">Code Minification</div>
+              <div className="text-gray-900 font-medium">Code Minification</div>
               <div className="text-slate-400 text-sm">Minify CSS and JavaScript</div>
             </div>
           </label>
-          <label className="flex items-center gap-3 p-4 bg-slate-900/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
+          <label className="flex items-center gap-3 p-4 bg-white/50 rounded-lg border border-slate-600 cursor-pointer hover:border-purple-500 transition-colors">
             <input
               type="checkbox"
               checked={formData.enable_compression || false}
@@ -382,7 +382,7 @@ const AdminSEOSettings = () => {
               className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
             />
             <div>
-              <div className="text-white font-medium">Compression</div>
+              <div className="text-gray-900 font-medium">Compression</div>
               <div className="text-slate-400 text-sm">Enable Gzip/Brotli compression</div>
             </div>
           </label>
