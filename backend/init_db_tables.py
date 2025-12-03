@@ -194,6 +194,25 @@ async def init_database():
                 )
                 db.add(superadmin)
                 await db.commit()
+                await db.refresh(superadmin)
+                
+                # Assign enterprise plan to superadmin
+                result = await db.execute(select(Plan).where(Plan.name == "enterprise"))
+                enterprise_plan = result.scalar_one_or_none()
+                if enterprise_plan:
+                    from models import Subscription, SubscriptionStatus
+                    import uuid
+                    subscription = Subscription(
+                        id=str(uuid.uuid4()),
+                        user_id=superadmin.id,
+                        plan_id=enterprise_plan.id,
+                        status=SubscriptionStatus.ACTIVE,
+                        audits_used_this_month=0
+                    )
+                    db.add(subscription)
+                    await db.commit()
+                    logger.info("✅ Enterprise subscription assigned to superadmin")
+                
                 logger.info("✅ Superadmin account created (superadmin@test.com / test123)")
             else:
                 logger.info("Superadmin already exists, skipping...")
