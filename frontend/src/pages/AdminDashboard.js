@@ -364,8 +364,8 @@ const AdminDashboard = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all whitespace-nowrap ${
                 activeTab === tab.id
-                  ? 'bg-purple-500 text-gray-900 shadow-lg shadow-purple-500/50'
-                  : 'bg-slate-800 text-gray-600 hover:bg-slate-700'
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
               }`}
             >
               <tab.icon className="w-5 h-5" />
