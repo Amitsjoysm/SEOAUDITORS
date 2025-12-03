@@ -100,6 +100,30 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/audit/:auditId/competitors"
+        element={
+          <PrivateRoute>
+            <Competitors />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/audit/:auditId/opportunities"
+        element={
+          <PrivateRoute>
+            <ContentOpportunities />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/integrations"
+        element={
+          <PrivateRoute>
+            <IntegrationsDashboard />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   );
 }
