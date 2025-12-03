@@ -17,6 +17,7 @@ from seo_engine import crawl_website, run_all_comprehensive_checks
 from seo_engine.enhanced_orchestrator import enhanced_orchestrator
 from seo_engine.scoring_integration import generate_seo_report_with_scoring
 from services.integration_manager import api_manager
+from services.anomaly_service import anomaly_detector
 from models import APIServiceType
 
 logger = logging.getLogger(__name__)
