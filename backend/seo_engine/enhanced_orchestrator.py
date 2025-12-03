@@ -306,12 +306,21 @@ class EnhancedSEOOrchestrator:
     """
     Enhanced orchestrator that coordinates all sub-agents and API integrations
     Main goal: Help users rank higher in search and LLM recommendations
+    
+    Features:
+    - 6 specialized sub-agents
+    - Retry logic for reliability
+    - Context management for conversations
+    - Research delegation to Exa.ai
+    - Real API data integration
     """
     
     def __init__(self):
         self.llm_client = None
         self.sub_agents: Dict[str, SEOSubAgent] = {}
         self.research_agent = None
+        self.conversation_history: List[Dict[str, str]] = []
+        self.max_context_length = 8000  # tokens
     
     async def initialize(self, db):
         """Initialize orchestrator with LLM and sub-agents"""
