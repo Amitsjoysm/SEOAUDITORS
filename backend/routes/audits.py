@@ -187,15 +187,16 @@ async def create_audit(
     await db.commit()
     await db.refresh(audit)
     
-    # Start background processing
+    # Start background processing with enhanced orchestrator
     background_tasks.add_task(
-        process_audit,
+        process_audit_background_task,
         audit.id,
         audit_data.website_url,
         subscription.plan.max_pages_per_audit
     )
     
-    logger.info(f"Audit created: {audit.id} for {audit_data.website_url}")
+    logger.info(f"✨ Enhanced audit created: {audit.id} for {audit_data.website_url}")
+    logger.info(f"🤖 Will use: DataForSEO + Lighthouse + 6 Sub-Agents")
     
     return audit
 
