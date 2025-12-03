@@ -300,7 +300,7 @@ class EnhancedSEOOrchestrator:
             self.llm_client = await get_active_llm_client(db)
             
             # Initialize research agent
-            self.research_agent = ResearchAgent()
+            self.research_agent = SEOResearchAgent()
             
             # Initialize sub-agents
             self.sub_agents = {
