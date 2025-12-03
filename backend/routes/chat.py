@@ -152,14 +152,14 @@ Provide a helpful, specific answer focused on improving their SEO and ranking hi
         return assistant_message
     
     except Exception as e:
-        logger.error(f"Error in chat: {e}")
+        logger.error(f"Error in chat: {e}", exc_info=True)
         # Create fallback response
         fallback_message = ChatMessage(
             id=str(uuid.uuid4()),
             audit_id=message_data.audit_id,
             user_id=current_user.id,
             role="assistant",
-            content=f"I apologize, but I encountered an error processing your request. Please try again or rephrase your question. Error: {str(e)[:100]}",
+            content=f"I apologize, but I encountered an error processing your request. Please try again or rephrase your question.",
             created_at=datetime.now(timezone.utc)
         )
         db.add(fallback_message)
@@ -167,34 +167,6 @@ Provide a helpful, specific answer focused on improving their SEO and ranking hi
         await db.refresh(fallback_message)
         
         return fallback_message
-            id=str(uuid.uuid4()),
-            audit_id=message_data.audit_id,
-            user_id=current_user.id,
-            role="assistant",
-            content=ai_response,
-            created_at=datetime.now(timezone.utc)
-        )
-        db.add(assistant_message)
-        await db.commit()
-        await db.refresh(assistant_message)
-        
-        return assistant_message
-        
-    except Exception as e:
-        logger.error(f"Error in chat: {str(e)}")
-        # Create error response
-        error_message = ChatMessage(
-            id=str(uuid.uuid4()),
-            audit_id=message_data.audit_id,
-            user_id=current_user.id,
-            role="assistant",
-            content="I'm having trouble processing your request. Please try rephrasing or contact support.",
-            created_at=datetime.now(timezone.utc)
-        )
-        db.add(error_message)
-        await db.commit()
-        await db.refresh(error_message)
-        return error_message
 
 
 @router.get("/{audit_id}", response_model=List[ChatMessageResponse])
