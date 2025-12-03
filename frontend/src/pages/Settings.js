@@ -107,7 +107,7 @@ const Settings = () => {
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                       activeTab === 'profile'
                         ? 'bg-purple-500/20 text-purple-400'
-                        : 'text-gray-600 hover:bg-slate-800 hover:text-gray-900'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                   >
                     <User className="w-5 h-5" />
@@ -118,7 +118,7 @@ const Settings = () => {
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                       activeTab === 'password'
                         ? 'bg-purple-500/20 text-purple-400'
-                        : 'text-gray-600 hover:bg-slate-800 hover:text-gray-900'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                   >
                     <Lock className="w-5 h-5" />
@@ -129,7 +129,7 @@ const Settings = () => {
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                       activeTab === 'subscription'
                         ? 'bg-purple-500/20 text-purple-400'
-                        : 'text-gray-600 hover:bg-slate-800 hover:text-gray-900'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                     }`}
                   >
                     <CreditCard className="w-5 h-5" />
@@ -161,7 +161,7 @@ const Settings = () => {
                         type="text"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
-                        className="w-full bg-slate-800 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full bg-gray-100 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
                     <div>
@@ -172,14 +172,14 @@ const Settings = () => {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-slate-800 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full bg-gray-100 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-300 mb-2">
                         Role
                       </label>
-                      <div className="bg-slate-800 text-gray-600 px-4 py-3 rounded-lg">
+                      <div className="bg-gray-100 text-gray-600 px-4 py-3 rounded-lg">
                         {user?.role === 'superadmin' ? 'Super Admin' : 'User'}
                       </div>
                     </div>
@@ -207,7 +207,7 @@ const Settings = () => {
                         type="password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
-                        className="w-full bg-slate-800 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full bg-gray-100 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         required
                       />
                     </div>
@@ -219,7 +219,7 @@ const Settings = () => {
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full bg-slate-800 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full bg-gray-100 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         required
                       />
                     </div>
@@ -231,7 +231,7 @@ const Settings = () => {
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full bg-slate-800 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full bg-gray-100 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         required
                       />
                     </div>
