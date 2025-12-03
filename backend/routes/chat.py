@@ -1,4 +1,4 @@
-"""Chat routes for SEO Orchestrator interaction"""
+"""Chat routes for Enhanced SEO Orchestrator interaction with 6 Sub-Agents"""
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -11,13 +11,11 @@ from database import get_db
 from models import User, Audit, ChatMessage
 from schemas import ChatMessageCreate, ChatMessageResponse
 from auth import get_current_user
-from seo_engine.orchestrator import SEOOrchestrator
+from seo_engine.enhanced_orchestrator import enhanced_orchestrator
+from seo_engine.multi_llm_client import get_active_llm_client
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 logger = logging.getLogger(__name__)
-
-# Store orchestrator instances per audit (in production, use Redis)
-orchestrators = {}
 
 
 @router.post("/", response_model=ChatMessageResponse, status_code=status.HTTP_201_CREATED)
@@ -26,7 +24,7 @@ async def send_message(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    """Send a message to the SEO orchestrator about a specific audit"""
+    """Send a message to the enhanced SEO orchestrator with 6 specialized sub-agents"""
     # Verify audit exists and belongs to user
     result = await db.execute(
         select(Audit).where(Audit.id == message_data.audit_id)
@@ -57,27 +55,118 @@ async def send_message(
     db.add(user_message)
     await db.commit()
     
-    # Get or create orchestrator for this audit
-    if message_data.audit_id not in orchestrators:
-        orchestrators[message_data.audit_id] = SEOOrchestrator()
-    
-    orchestrator = orchestrators[message_data.audit_id]
-    
-    # Prepare audit context
-    audit_context = {
-        "website_url": audit.website_url,
-        "overall_score": audit.overall_score,
-        "checks_failed": audit.checks_failed,
-        "checks_passed": audit.checks_passed,
-        "pages_crawled": audit.pages_crawled
-    }
-    
     try:
-        # Get AI response
-        ai_response = await orchestrator.chat(message_data.content, audit_context)
+        # Initialize enhanced orchestrator if needed
+        if not enhanced_orchestrator.llm_client:
+            await enhanced_orchestrator.initialize(db)
+        
+        # Determine which sub-agent(s) to use based on user query
+        user_query_lower = message_data.content.lower()
+        
+        # Route to appropriate sub-agent(s)
+        if any(word in user_query_lower for word in ['competitor', 'competition', 'rival', 'vs']):
+            # Use Competitor Analysis Agent
+            agent = enhanced_orchestrator.sub_agents.get('competitor')
+            agent_context = {
+                'url': audit.website_url,
+                'competitor_data': audit.serp_data or {},
+                'serp_data': audit.serp_data or {}
+            }
+            result = await agent.analyze(agent_context) if agent else None
+            ai_response = result.get('analysis', 'Competitor analysis not available') if result else 'Agent unavailable'
+            
+        elif any(word in user_query_lower for word in ['content', 'keyword', 'topic', 'write', 'article']):
+            # Use Content Optimization Agent
+            agent = enhanced_orchestrator.sub_agents.get('content')
+            agent_context = {
+                'url': audit.website_url,
+                'crawl_data': {'pages': []},  # Simplified
+                'keyword_data': audit.keyword_data or {}
+            }
+            result = await agent.analyze(agent_context) if agent else None
+            ai_response = result.get('analysis', 'Content analysis not available') if result else 'Agent unavailable'
+            
+        elif any(word in user_query_lower for word in ['backlink', 'link', 'linking', 'authority']):
+            # Use Backlink Analysis Agent
+            agent = enhanced_orchestrator.sub_agents.get('backlink')
+            agent_context = {
+                'url': audit.website_url,
+                'backlink_data': audit.backlink_data or {}
+            }
+            result = await agent.analyze(agent_context) if agent else None
+            ai_response = result.get('analysis', 'Backlink analysis not available') if result else 'Agent unavailable'
+            
+        elif any(word in user_query_lower for word in ['performance', 'speed', 'slow', 'fast', 'web vitals', 'cwv']):
+            # Use Performance Agent
+            agent = enhanced_orchestrator.sub_agents.get('performance')
+            agent_context = {
+                'url': audit.website_url,
+                'lighthouse_data': audit.lighthouse_data or {}
+            }
+            result = await agent.analyze(agent_context) if agent else None
+            ai_response = result.get('analysis', 'Performance analysis not available') if result else 'Agent unavailable'
+            
+        elif any(word in user_query_lower for word in ['technical', 'crawl', 'index', 'robots', 'sitemap']):
+            # Use Technical SEO Agent
+            agent = enhanced_orchestrator.sub_agents.get('technical')
+            agent_context = {
+                'url': audit.website_url,
+                'crawl_data': {'pages': []},
+                'lighthouse_data': audit.lighthouse_data or {}
+            }
+            result = await agent.analyze(agent_context) if agent else None
+            ai_response = result.get('analysis', 'Technical analysis not available') if result else 'Agent unavailable'
+            
+        else:
+            # Use general LLM for generic questions
+            llm_client = await get_active_llm_client(db)
+            
+            # Build context from audit data
+            context_prompt = f"""You are an expert SEO consultant. Answer the user's question about their website.
+
+Website: {audit.website_url}
+Overall SEO Score: {audit.overall_score}/100
+Pages Crawled: {audit.pages_crawled}
+Checks Passed: {audit.checks_passed}
+Checks Failed: {audit.checks_failed}
+
+User Question: {message_data.content}
+
+Provide a helpful, specific answer focused on improving their SEO and ranking higher in both search engines and LLM recommendations (Claude, GPT, Gemini). Keep response under 300 words."""
+            
+            ai_response = llm_client.generate(context_prompt, max_tokens=500)
         
         # Save assistant message
         assistant_message = ChatMessage(
+            id=str(uuid.uuid4()),
+            audit_id=message_data.audit_id,
+            user_id=current_user.id,
+            role="assistant",
+            content=ai_response,
+            created_at=datetime.now(timezone.utc)
+        )
+        db.add(assistant_message)
+        await db.commit()
+        await db.refresh(assistant_message)
+        
+        return assistant_message
+    
+    except Exception as e:
+        logger.error(f"Error in chat: {e}")
+        # Create fallback response
+        fallback_message = ChatMessage(
+            id=str(uuid.uuid4()),
+            audit_id=message_data.audit_id,
+            user_id=current_user.id,
+            role="assistant",
+            content=f"I apologize, but I encountered an error processing your request. Please try again or rephrase your question. Error: {str(e)[:100]}",
+            created_at=datetime.now(timezone.utc)
+        )
+        db.add(fallback_message)
+        await db.commit()
+        await db.refresh(fallback_message)
+        
+        return fallback_message
             id=str(uuid.uuid4()),
             audit_id=message_data.audit_id,
             user_id=current_user.id,
