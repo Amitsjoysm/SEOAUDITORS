@@ -174,7 +174,7 @@ const APITokens = () => {
                         </span>
                       </div>
                       <div className="flex items-center gap-2 mb-2">
-                        <code className="text-sm text-gray-600 bg-slate-800 px-3 py-1 rounded font-mono">
+                        <code className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded font-mono">
                           {visibleTokens[token.id] ? token.token : maskToken(token.token)}
                         </code>
                         <button
@@ -232,7 +232,7 @@ const APITokens = () => {
       {/* Create Token Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-slate-900 rounded-2xl p-8 max-w-md w-full border border-gray-200">
+          <div className="bg-white rounded-2xl p-8 max-w-md w-full border border-gray-200">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Create API Token</h2>
             
             {newToken ? (
@@ -242,7 +242,7 @@ const APITokens = () => {
                   <p className="text-gray-300 text-sm mb-3">
                     Make sure to copy your token now. You won't be able to see it again!
                   </p>
-                  <div className="bg-slate-800 p-3 rounded-lg">
+                  <div className="bg-gray-100 p-3 rounded-lg">
                     <code className="text-sm text-gray-900 break-all">{newToken}</code>
                   </div>
                 </div>
@@ -265,7 +265,7 @@ const APITokens = () => {
                     setShowCreateModal(false);
                     setNewToken(null);
                   }}
-                  className="w-full bg-slate-800 hover:bg-slate-700 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
+                  className="w-full bg-gray-100 hover:bg-slate-700 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
                 >
                   Close
                 </button>
@@ -281,7 +281,7 @@ const APITokens = () => {
                     value={tokenName}
                     onChange={(e) => setTokenName(e.target.value)}
                     placeholder="e.g., Production API, MCP Server"
-                    className="w-full bg-slate-800 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full bg-gray-100 text-gray-900 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
                 <div className="flex gap-3">
@@ -296,7 +296,7 @@ const APITokens = () => {
                       setShowCreateModal(false);
                       setTokenName('');
                     }}
-                    className="flex-1 bg-slate-800 hover:bg-slate-700 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
+                    className="flex-1 bg-gray-100 hover:bg-slate-700 text-gray-900 py-3 rounded-lg font-semibold transition-colors"
                   >
                     Cancel
                   </button>
