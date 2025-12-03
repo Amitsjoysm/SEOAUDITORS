@@ -243,8 +243,5 @@ async def clear_chat_history(
     
     await db.commit()
     
-    # Clear orchestrator
-    if audit_id in orchestrators:
-        del orchestrators[audit_id]
-    
     return {"message": "Chat history cleared successfully"}
+
