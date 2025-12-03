@@ -44,8 +44,8 @@ async def register(user_data: UserRegister, db: AsyncSession = Depends(get_db)):
     
     db.add(user)
     
-    # Assign free plan
-    result = await db.execute(select(Plan).where(Plan.name == "free"))
+    # Assign free plan (case-insensitive)
+    result = await db.execute(select(Plan).where(Plan.name.ilike("free")))
     free_plan = result.scalar_one_or_none()
     
     if free_plan:
