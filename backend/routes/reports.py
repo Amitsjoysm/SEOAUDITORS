@@ -11,6 +11,7 @@ from database import get_db
 from models import User, Audit, AuditResult
 from auth import get_current_user
 from utils.report_generator import generate_pdf_report, generate_docx_report
+from utils.enhanced_report_generator import generate_enhanced_pdf_report, generate_enhanced_docx_report
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 logger = logging.getLogger(__name__)
