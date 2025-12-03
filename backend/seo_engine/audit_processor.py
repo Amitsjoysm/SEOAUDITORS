@@ -208,9 +208,49 @@ async def process_audit_enhanced(audit_id: str, website_url: str, max_pages: int
         
         await db.commit()
         
+        # ========================================================================
+        # PHASE 8: ANOMALY DETECTION
+        # ========================================================================
+        try:
+            logger.info(f"🔍 Running anomaly detection for audit {audit_id}")
+            
+            # Get historical audits for this website
+            historical_data = await anomaly_detector.get_historical_audits(
+                user_id=audit.user_id,
+                website_url=website_url,
+                limit=10,
+                db=db
+            )
+            
+            if len(historical_data) >= 3:
+                current_data = {
+                    'overall_score': audit.overall_score,
+                    'lighthouse_data': audit.lighthouse_data
+                }
+                
+                anomalies = await anomaly_detector.detect_all_anomalies(
+                    audit_id=audit_id,
+                    user_id=audit.user_id,
+                    current_data=current_data,
+                    historical_data=historical_data,
+                    db=db
+                )
+                
+                audit.anomalies_detected = len(anomalies)
+                await db.commit()
+                
+                if anomalies:
+                    logger.warning(f"⚠️ Detected {len(anomalies)} anomalies for audit {audit_id}")
+            else:
+                logger.info("Not enough historical data for anomaly detection")
+        
+        except Exception as e:
+            logger.error(f"Error in anomaly detection: {e}")
+            # Don't fail the audit if anomaly detection fails
+        
         total_time = (datetime.now(timezone.utc) - start_time).total_seconds()
         logger.info(f"✅ Audit {audit_id} completed in {total_time:.2f}s. Score: {audit.overall_score}/100")
-        logger.info(f"📊 Stats: {audit.competitor_count} competitors, {audit.opportunities_found} opportunities")
+        logger.info(f"📊 Stats: {audit.competitor_count} competitors, {audit.opportunities_found} opportunities, {audit.anomalies_detected} anomalies")
         
     except Exception as e:
         logger.error(f"❌ Error processing audit {audit_id}: {str(e)}", exc_info=True)
