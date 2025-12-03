@@ -348,7 +348,7 @@ class ProductionTester:
             elif response.status_code == 429:
                 self.result.add_result("Create Audit", "WARNING", "Monthly limit reached, will use existing audit")
                 # Try to get existing audit
-                response = self.session.get(f"{BASE_URL}/audits", headers=headers)
+                response = self.session.get(f"{BASE_URL}/audits/", headers=headers)
                 if response.status_code == 200:
                     audits = response.json()
                     if audits and len(audits) > 0:
