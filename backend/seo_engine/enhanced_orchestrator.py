@@ -579,6 +579,257 @@ Keep response under 500 words."""
         except Exception as e:
             logger.error(f"Content brief error: {e}")
             return {"success": False, "error": str(e)}
+    
+    def _manage_context(self, new_message: str) -> List[Dict[str, str]]:
+        """Manage conversation context to stay within token limits"""
+        # Add new message
+        self.conversation_history.append({"role": "user", "content": new_message})
+        
+        # Estimate token count (rough: 1 token ≈ 4 chars)
+        total_chars = sum(len(msg["content"]) for msg in self.conversation_history)
+        estimated_tokens = total_chars // 4
+        
+        # If exceeding limit, keep system message and recent messages
+        if estimated_tokens > self.max_context_length:
+            # Keep last N messages that fit
+            kept_messages = []
+            char_count = 0
+            for msg in reversed(self.conversation_history):
+                msg_chars = len(msg["content"])
+                if char_count + msg_chars < self.max_context_length * 4:
+                    kept_messages.insert(0, msg)
+                    char_count += msg_chars
+                else:
+                    break
+            self.conversation_history = kept_messages
+        
+        return self.conversation_history
+    
+    @retry_on_failure(max_retries=3, delay=2)
+    async def chat(self, user_message: str, audit_context: Optional[Dict[str, Any]] = None) -> str:
+        """
+        Interactive chat about SEO audit results with intelligent sub-agent routing
+        
+        Args:
+            user_message: User's question
+            audit_context: Context about the current audit
+        
+        Returns:
+            AI-generated response
+        """
+        # Build context-aware prompt
+        system_prompt = """You are an expert SEO consultant with access to 6 specialized sub-agents:
+1. Technical SEO Agent - for technical issues
+2. Content Optimization Agent - for content strategy and LLM ranking
+3. Competitor Analysis Agent - for competitive intelligence
+4. Backlink Analysis Agent - for link building
+5. Performance Agent - for speed and Core Web Vitals
+6. Keyword Research Agent - for keyword opportunities
+
+Provide specific, actionable advice. Be concise but thorough. Use bullet points for clarity.
+Focus on helping sites rank higher in both search engines and AI/LLM recommendations."""
+        
+        # Add audit context if provided
+        if audit_context:
+            context_summary = f"""
+Current Audit Context:
+- Website: {audit_context.get('website_url', 'N/A')}
+- Overall Score: {audit_context.get('overall_score', 'N/A')}/100
+- Failed Checks: {audit_context.get('checks_failed', 0)}
+- Pages Crawled: {audit_context.get('pages_crawled', 0)}
+- Competitors Found: {audit_context.get('competitor_count', 0)}
+- Content Opportunities: {audit_context.get('opportunities_found', 0)}
+"""
+            system_prompt += f"\n\n{context_summary}"
+        
+        # Manage conversation context
+        messages = self._manage_context(user_message)
+        
+        # Add system prompt at the start
+        full_messages = [{"role": "system", "content": system_prompt}] + messages
+        
+        try:
+            response = self.llm_client.generate(full_messages)
+            
+            # Add assistant response to history
+            self.conversation_history.append({"role": "assistant", "content": response})
+            
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error in chat: {str(e)}")
+            return "I'm having trouble processing your request. Please try rephrasing or ask a different question."
+    
+    @retry_on_failure(max_retries=3, delay=2)
+    async def analyze_audit_results(self, audit_results: List[Dict[str, Any]]) -> str:
+        """Analyze audit results and provide comprehensive insights"""
+        # Prepare summary of results
+        failed_checks = [r for r in audit_results if r.get('status') == 'fail']
+        warning_checks = [r for r in audit_results if r.get('status') == 'warning']
+        passed_checks = [r for r in audit_results if r.get('status') == 'pass']
+        
+        summary = f"""
+SEO Audit Results Summary:
+- Total Checks: {len(audit_results)}
+- Failed: {len(failed_checks)}
+- Warnings: {len(warning_checks)}
+- Passed: {len(passed_checks)}
+
+Top Issues:
+"""
+        for check in failed_checks[:5]:
+            summary += f"\n- {check.get('check_name')}: {check.get('cons', [])[0] if check.get('cons') else 'Issue detected'}"
+        
+        prompt = f"""
+You are an expert SEO consultant analyzing a comprehensive website audit.
+
+{summary}
+
+Provide:
+1. Executive Summary (2-3 sentences)
+2. Top 3 Critical Issues requiring immediate attention
+3. Quick Wins (3-5 easy fixes with high impact)
+4. Long-term Recommendations
+5. Estimated Impact on Rankings
+6. LLM Optimization Tips (how to rank higher in AI model recommendations)
+
+Be specific, actionable, and prioritize by impact.
+"""
+        
+        try:
+            analysis = self.llm_client.generate(prompt, max_tokens=2000)
+            logger.info("Successfully generated AI analysis")
+            return analysis
+            
+        except Exception as e:
+            logger.error(f"Error in AI analysis: {str(e)}")
+            return "Unable to generate AI analysis. Please review the detailed check results."
+    
+    async def research_topic(self, topic: str, use_exa: bool = True) -> str:
+        """Research SEO topic using Exa.ai research agent"""
+        try:
+            if use_exa and self.research_agent:
+                # Delegate to research agent
+                logger.info(f"Delegating research to Exa.ai agent for topic: {topic}")
+                research_results = await self.research_agent.research_keyword_trends(topic)
+                
+                # Combine Exa research with LLM analysis
+                exa_insights = f"""
+Research Results from Exa.ai:
+- Keyword: {research_results.get('keyword')}
+- Sources Found: {len(research_results.get('sources', []))}
+
+Top Sources:
+"""
+                for source in research_results.get('sources', [])[:5]:
+                    exa_insights += f"\n- {source.get('title')} ({source.get('url')})"
+                
+                # Now synthesize with LLM
+                prompt = f"""
+Based on the latest research data:
+
+{exa_insights}
+
+Provide comprehensive information about: {topic}
+
+Include:
+1. Current best practices (2024-2025)
+2. Key insights from the research
+3. Common mistakes to avoid
+4. Implementation steps
+5. Tools and resources
+6. Expected results/timeline
+7. LLM optimization strategies
+
+Be detailed and actionable.
+"""
+            else:
+                # Fallback to direct LLM query
+                prompt = f"""
+Research and provide comprehensive information about this SEO topic:
+
+Topic: {topic}
+
+Include:
+1. Current best practices (2024-2025)
+2. Common mistakes to avoid
+3. Implementation steps
+4. Tools and resources
+5. Expected results/timeline
+6. LLM optimization strategies
+
+Be detailed and actionable.
+"""
+            
+            response = self.llm_client.generate(prompt, max_tokens=2000)
+            return response
+            
+        except Exception as e:
+            logger.error(f"Error in research: {str(e)}")
+            return "Unable to complete research. Please try again."
+    
+    async def delegate_to_sub_agent(self, agent_type: str, context: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Delegate task to specific sub-agent
+        
+        Args:
+            agent_type: One of: technical, content, competitor, backlink, performance, keyword
+            context: Context data for the agent
+        
+        Returns:
+            Agent analysis result
+        """
+        try:
+            agent = self.sub_agents.get(agent_type)
+            if not agent:
+                return {"success": False, "error": f"Agent '{agent_type}' not found"}
+            
+            logger.info(f"Delegating task to {agent.name}")
+            result = await agent.analyze(context)
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error delegating to {agent_type} agent: {str(e)}")
+            return {"success": False, "error": str(e)}
+    
+    async def delegate_to_research_agent(self, task: str, **kwargs) -> Dict[str, Any]:
+        """Delegate specialized research tasks to the Exa.ai research sub-agent"""
+        try:
+            if not self.research_agent:
+                self.research_agent = SEOResearchAgent()
+            
+            logger.info(f"Delegating task to research agent: {task}")
+            
+            if task == "keyword_trends":
+                return await self.research_agent.research_keyword_trends(kwargs.get('keyword', ''))
+            elif task == "competitor_analysis":
+                return await self.research_agent.analyze_competitors(
+                    kwargs.get('domain', ''),
+                    kwargs.get('keywords', [])
+                )
+            elif task == "backlink_opportunities":
+                return await self.research_agent.find_backlink_opportunities(
+                    kwargs.get('topic', ''),
+                    kwargs.get('industry', '')
+                )
+            elif task == "content_ideas":
+                return await self.research_agent.get_content_ideas(
+                    kwargs.get('niche', ''),
+                    kwargs.get('keywords', [])
+                )
+            elif task == "technical_updates":
+                return await self.research_agent.research_technical_seo_updates()
+            else:
+                return {"error": f"Unknown task: {task}"}
+                
+        except Exception as e:
+            logger.error(f"Error delegating to research agent: {str(e)}")
+            return {"error": str(e)}
+    
+    def reset_conversation(self):
+        """Reset conversation history"""
+        self.conversation_history = []
+        logger.info("Conversation history reset")
 
 
 # Global instance
