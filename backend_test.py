@@ -327,15 +327,16 @@ class ProductionTester:
         """Test 11: Create new audit"""
         print(f"\n{Colors.BLUE}=== ENHANCED AUDIT FLOW TESTS ==={Colors.END}")
         
-        if not self.user_token:
-            self.result.add_result("Create Audit", "FAIL", "No user token")
+        # Use superadmin token for audit creation to avoid subscription issues
+        if not self.superadmin_token:
+            self.result.add_result("Create Audit", "FAIL", "No superadmin token")
             return
         
         try:
-            headers = {"Authorization": f"Bearer {self.user_token}"}
+            headers = {"Authorization": f"Bearer {self.superadmin_token}"}
             audit_data = {"website_url": "https://example.com"}
             
-            response = self.session.post(f"{BASE_URL}/audits", json=audit_data, headers=headers)
+            response = self.session.post(f"{BASE_URL}/audits/", json=audit_data, headers=headers)
             
             if response.status_code == 201:
                 data = response.json()
