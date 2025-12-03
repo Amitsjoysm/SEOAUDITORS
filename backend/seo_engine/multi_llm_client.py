@@ -63,24 +63,42 @@ class MultiLLMClient:
         else:
             raise ValueError(f"Unsupported provider: {provider}")
     
-    def generate(self, messages: List[Dict[str, str]], system_prompt: str = None) -> str:
+    def generate(self, prompt_or_messages, system_prompt: str = None, max_tokens: int = None) -> str:
         """
-        Generate completion from messages
+        Generate completion from prompt or messages
         
         Args:
-            messages: List of message dicts with 'role' and 'content'
+            prompt_or_messages: Either a string prompt OR list of message dicts with 'role' and 'content'
             system_prompt: Optional system prompt to prepend
+            max_tokens: Override max_tokens for this call
             
         Returns:
             Generated text response
         """
         try:
+            # Convert string prompt to messages format
+            if isinstance(prompt_or_messages, str):
+                messages = [{"role": "user", "content": prompt_or_messages}]
+            else:
+                messages = prompt_or_messages
+            
+            # Use provided max_tokens or default
+            original_max_tokens = self.max_tokens
+            if max_tokens:
+                self.max_tokens = max_tokens
+            
+            # Generate
             if self.provider in ["groq", "openai", "ollama"]:
-                return self._generate_openai_compatible(messages, system_prompt)
+                result = self._generate_openai_compatible(messages, system_prompt)
             elif self.provider == "anthropic":
-                return self._generate_anthropic(messages, system_prompt)
+                result = self._generate_anthropic(messages, system_prompt)
             elif self.provider == "gemini":
-                return self._generate_gemini(messages, system_prompt)
+                result = self._generate_gemini(messages, system_prompt)
+            
+            # Restore original max_tokens
+            self.max_tokens = original_max_tokens
+            
+            return result
         except Exception as e:
             logger.error(f"Error generating with {self.provider}: {str(e)}")
             raise
