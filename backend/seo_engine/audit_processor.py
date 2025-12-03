@@ -71,6 +71,8 @@ async def process_audit_enhanced(audit_id: str, website_url: str, max_pages: int
         # ========================================================================
         logger.info(f"🤖 Running enhanced orchestrator with 6 sub-agents for audit {audit_id}")
         
+        orchestrator_result = {"success": False}  # Default
+        
         try:
             orchestrator_result = await enhanced_orchestrator.run_comprehensive_analysis(
                 url=website_url,
@@ -87,19 +89,21 @@ async def process_audit_enhanced(audit_id: str, website_url: str, max_pages: int
                 audit.keyword_data = api_data.get('keywords', {})
                 
                 # Record API successes
-                if audit.lighthouse_data:
+                if audit.lighthouse_data and audit.lighthouse_data.get('success'):
                     await api_manager.record_success(
                         db, APIServiceType.LIGHTHOUSE,
-                        orchestrator_result.get('api_data', {}).get('lighthouse', {}).get('response_time_ms', 0)
+                        audit.lighthouse_data.get('response_time_ms', 0)
                     )
                 
                 logger.info(f"✅ Orchestrator analysis completed in {orchestrator_result.get('execution_time_seconds')}s")
             else:
-                logger.error(f"❌ Orchestrator failed: {orchestrator_result.get('error')}")
+                logger.warning(f"⚠️ Orchestrator completed with issues: {orchestrator_result.get('error', 'Unknown')}")
+                # Continue anyway with standard checks
         
         except Exception as e:
-            logger.error(f"Error in orchestrator: {e}")
+            logger.error(f"❌ Error in orchestrator (continuing with standard checks): {e}")
             # Continue with standard checks even if orchestrator fails
+            orchestrator_result = {"success": False, "error": str(e)}
         
         # ========================================================================
         # PHASE 3: RUN STANDARD SEO CHECKS
