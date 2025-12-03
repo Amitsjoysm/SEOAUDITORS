@@ -361,12 +361,12 @@ class ProductionTester:
     
     def test_get_audit_details(self):
         """Test 12: Get audit details with enhanced fields"""
-        if not self.test_audit_id or not self.user_token:
+        if not self.test_audit_id or not self.superadmin_token:
             self.result.add_result("Get Audit Details", "FAIL", "No audit ID or token")
             return
         
         try:
-            headers = {"Authorization": f"Bearer {self.user_token}"}
+            headers = {"Authorization": f"Bearer {self.superadmin_token}"}
             response = self.session.get(f"{BASE_URL}/audits/{self.test_audit_id}", headers=headers)
             
             if response.status_code == 200:
