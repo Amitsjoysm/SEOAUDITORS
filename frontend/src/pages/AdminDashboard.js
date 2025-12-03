@@ -335,7 +335,7 @@ const AdminDashboard = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => navigate('/admin/integrations')}
-                className="bg-indigo-600 hover:bg-indigo-700 text-gray-900 px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
               >
                 <Settings className="w-4 h-4" />
                 Integrations
