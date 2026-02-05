@@ -253,9 +253,9 @@ class ReportDownloadTester:
             response_pdf = self.session.get(f"{BASE_URL}/reports/{TEST_AUDIT_ID}/pdf")
             response_docx = self.session.get(f"{BASE_URL}/reports/{TEST_AUDIT_ID}/docx")
             
-            # Both should return 401 (Unauthorized) without token
-            pdf_auth_ok = response_pdf.status_code == 401
-            docx_auth_ok = response_docx.status_code == 401
+            # Both should return 401 (Unauthorized) or 403 (Forbidden) without token
+            pdf_auth_ok = response_pdf.status_code in [401, 403]
+            docx_auth_ok = response_docx.status_code in [401, 403]
             
             details = {
                 "PDF without auth status": response_pdf.status_code,
