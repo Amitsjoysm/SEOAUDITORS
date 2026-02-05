@@ -96,7 +96,7 @@ class ReportDownloadTester:
             if response.status_code == 200:
                 data = response.json()
                 if "access_token" in data:
-                    self.superladmin_token = data["access_token"]
+                    self.superadmin_token = data["access_token"]
                     self.result.add_result("Superadmin Login", "PASS", 
                         f"Successfully logged in as {SUPERADMIN_EMAIL}")
                 else:
