@@ -111,7 +111,7 @@ class ReportDownloadTester:
         """Test 2: Check if the specified audit exists and is completed"""
         print(f"\n{Colors.BLUE}=== AUDIT VERIFICATION TEST ==={Colors.END}")
         
-        if not self.superladmin_token:
+        if not self.superadmin_token:
             self.result.add_result("Audit Existence Check", "FAIL", "No superladmin token available")
             return
         
@@ -150,7 +150,7 @@ class ReportDownloadTester:
         """Test 3: Test PDF report download"""
         print(f"\n{Colors.BLUE}=== PDF DOWNLOAD TEST ==={Colors.END}")
         
-        if not self.superladmin_token:
+        if not self.superadmin_token:
             self.result.add_result("PDF Download", "FAIL", "No superladmin token available")
             return
         
@@ -199,7 +199,7 @@ class ReportDownloadTester:
         """Test 4: Test DOCX report download"""
         print(f"\n{Colors.BLUE}=== DOCX DOWNLOAD TEST ==={Colors.END}")
         
-        if not self.superladmin_token:
+        if not self.superadmin_token:
             self.result.add_result("DOCX Download", "FAIL", "No superladmin token available")
             return
         
