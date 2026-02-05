@@ -116,7 +116,7 @@ class ReportDownloadTester:
             return
         
         try:
-            headers = {"Authorization": f"Bearer {self.superladmin_token}"}
+            headers = {"Authorization": f"Bearer {self.superadmin_token}"}
             response = self.session.get(f"{BASE_URL}/audits/{TEST_AUDIT_ID}", headers=headers)
             
             if response.status_code == 200:
@@ -155,7 +155,7 @@ class ReportDownloadTester:
             return
         
         try:
-            headers = {"Authorization": f"Bearer {self.superladmin_token}"}
+            headers = {"Authorization": f"Bearer {self.superadmin_token}"}
             response = self.session.get(f"{BASE_URL}/reports/{TEST_AUDIT_ID}/pdf", headers=headers)
             
             if response.status_code == 200:
@@ -204,7 +204,7 @@ class ReportDownloadTester:
             return
         
         try:
-            headers = {"Authorization": f"Bearer {self.superladmin_token}"}
+            headers = {"Authorization": f"Bearer {self.superadmin_token}"}
             response = self.session.get(f"{BASE_URL}/reports/{TEST_AUDIT_ID}/docx", headers=headers)
             
             if response.status_code == 200:
