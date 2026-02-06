@@ -105,10 +105,20 @@ const AuditDetail = () => {
       const response = await api.get(`/reports/${id}/pdf`, {
         responseType: 'blob'
       });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      
+      // Check if response is actually a blob or an error
+      if (response.data.type && response.data.type.includes('application/json')) {
+        // Response is JSON error, not a PDF blob
+        const text = await response.data.text();
+        const errorData = JSON.parse(text);
+        throw new Error(errorData.detail || 'Failed to generate PDF');
+      }
+      
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `seo-audit-${audit.website_url.replace(/[^a-z0-9]/gi, '-')}.pdf`);
+      const safeFilename = `seo-audit-${(audit?.website_url || 'report').replace(/[^a-z0-9]/gi, '-')}.pdf`;
+      link.setAttribute('download', safeFilename);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -121,7 +131,7 @@ const AuditDetail = () => {
       console.error('Error downloading PDF:', error);
       toast({
         title: "Download Failed",
-        description: error.response?.data?.detail || "Failed to download PDF report. Please try again.",
+        description: error.message || error.response?.data?.detail || "Failed to download PDF report. Please try again.",
         variant: "destructive",
       });
     } finally {
