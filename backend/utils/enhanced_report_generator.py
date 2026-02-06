@@ -276,6 +276,49 @@ async def generate_enhanced_docx_report(audit, results: List, reports_dir: Path)
                 doc.add_heading('🤖 AI Orchestrator Insights', 1)
                 doc.add_paragraph(insights[:2000])
         
+        # Detailed 132-Point Check Results
+        doc.add_page_break()
+        doc.add_heading('📋 Detailed 132-Point SEO Analysis', 1)
+        
+        # Group results by category
+        categories = {}
+        for result in results:
+            cat = result.category
+            if cat not in categories:
+                categories[cat] = []
+            categories[cat].append(result)
+        
+        # Iterate through each category
+        for category, cat_results in categories.items():
+            # Category header with statistics
+            passed_in_cat = len([r for r in cat_results if r.status.value == 'pass'])
+            failed_in_cat = len([r for r in cat_results if r.status.value == 'fail'])
+            warning_in_cat = len([r for r in cat_results if r.status.value == 'warning'])
+            
+            doc.add_heading(f'🔹 {category} ({passed_in_cat} ✅ | {failed_in_cat} ❌ | {warning_in_cat} ⚠️)', 2)
+            
+            # Add each check result
+            for result in cat_results:
+                status_icon = {"pass": "✅", "fail": "❌", "warning": "⚠️", "info": "ℹ️"}
+                icon = status_icon.get(result.status.value, '•')
+                
+                # Check name with status
+                check_para = doc.add_paragraph(f'{icon} {result.check_name}')
+                check_para.runs[0].bold = True
+                
+                # Details
+                details_para = doc.add_paragraph()
+                details_para.add_run(f'Impact Score: ').bold = True
+                details_para.add_run(f'{result.impact_score or 0}/100\n')
+                
+                if result.current_value:
+                    details_para.add_run('Details: ').bold = True
+                    details_value = result.current_value[:500] + '...' if len(result.current_value) > 500 else result.current_value
+                    details_para.add_run(details_value)
+                
+                # Add spacing
+                doc.add_paragraph()
+        
         doc.save(str(filepath))
         return filepath
     
