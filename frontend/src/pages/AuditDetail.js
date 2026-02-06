@@ -145,10 +145,20 @@ const AuditDetail = () => {
       const response = await api.get(`/reports/${id}/docx`, {
         responseType: 'blob'
       });
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      
+      // Check if response is actually a blob or an error
+      if (response.data.type && response.data.type.includes('application/json')) {
+        // Response is JSON error, not a DOCX blob
+        const text = await response.data.text();
+        const errorData = JSON.parse(text);
+        throw new Error(errorData.detail || 'Failed to generate DOCX');
+      }
+      
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `seo-audit-${audit.website_url.replace(/[^a-z0-9]/gi, '-')}.docx`);
+      const safeFilename = `seo-audit-${(audit?.website_url || 'report').replace(/[^a-z0-9]/gi, '-')}.docx`;
+      link.setAttribute('download', safeFilename);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -161,7 +171,7 @@ const AuditDetail = () => {
       console.error('Error downloading DOCX:', error);
       toast({
         title: "Download Failed",
-        description: error.response?.data?.detail || "Failed to download DOCX report. Please try again.",
+        description: error.message || error.response?.data?.detail || "Failed to download DOCX report. Please try again.",
         variant: "destructive",
       });
     } finally {
