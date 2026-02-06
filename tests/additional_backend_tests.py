@@ -8,7 +8,7 @@ import json
 import sys
 
 # Configuration
-BASE_URL = "https://insight-troubleshoot.preview.emergentagent.com/api"
+BASE_URL = "https://api-sync-1.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 

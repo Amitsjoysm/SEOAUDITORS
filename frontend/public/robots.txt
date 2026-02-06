@@ -18,4 +18,4 @@ Allow: /*.webp$
 Allow: /*.svg$
 
 # Sitemap location
-Sitemap: https://insight-troubleshoot.preview.emergentagent.com/sitemap.xml
+Sitemap: https://api-sync-1.preview.emergentagent.com/sitemap.xml
