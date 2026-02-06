@@ -207,9 +207,11 @@ async def generate_enhanced_docx_report(audit, results: List, reports_dir: Path)
         
         # AI Insights
         if audit.analytics_summary and audit.analytics_summary.get('orchestrator_insights'):
-            doc.add_heading('🤖 AI Orchestrator Insights', 1)
             insights = audit.analytics_summary.get('orchestrator_insights', '')
-            doc.add_paragraph(insights[:2000])
+            # Only show if it's not an error message
+            if insights and not insights.startswith('Error generating'):
+                doc.add_heading('🤖 AI Orchestrator Insights', 1)
+                doc.add_paragraph(insights[:2000])
         
         doc.save(str(filepath))
         return filepath
