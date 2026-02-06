@@ -134,6 +134,69 @@ async def generate_enhanced_pdf_report(audit, results: List, reports_dir: Path) 
                 story.append(Paragraph(escape_html(insights[:1000]), styles['BodyText']))
                 story.append(Spacer(1, 0.3*inch))
         
+        # Detailed 132-Point Check Results
+        story.append(PageBreak())
+        story.append(Paragraph("📋 Detailed 132-Point SEO Analysis", styles['Heading1']))
+        story.append(Spacer(1, 0.2*inch))
+        
+        # Group results by category
+        categories = {}
+        for result in results:
+            cat = result.category
+            if cat not in categories:
+                categories[cat] = []
+            categories[cat].append(result)
+        
+        # Iterate through each category
+        for category, cat_results in categories.items():
+            # Category header with statistics
+            passed_in_cat = len([r for r in cat_results if r.status.value == 'pass'])
+            failed_in_cat = len([r for r in cat_results if r.status.value == 'fail'])
+            warning_in_cat = len([r for r in cat_results if r.status.value == 'warning'])
+            
+            category_header = f"🔹 {category} ({passed_in_cat} ✅ | {failed_in_cat} ❌ | {warning_in_cat} ⚠️)"
+            story.append(Paragraph(category_header, styles['Heading2']))
+            story.append(Spacer(1, 0.1*inch))
+            
+            # Create table data for this category
+            table_data = [["Status", "Check Name", "Impact", "Details"]]
+            
+            for result in cat_results:
+                status_icon = {"pass": "✅", "fail": "❌", "warning": "⚠️", "info": "ℹ️"}
+                icon = status_icon.get(result.status.value, '•')
+                
+                # Truncate details if too long
+                details = result.current_value or ""
+                if len(details) > 100:
+                    details = details[:100] + "..."
+                
+                table_data.append([
+                    icon,
+                    result.check_name[:50],
+                    f"{result.impact_score or 0}/100",
+                    escape_html(details)
+                ])
+            
+            # Create and style the table
+            col_widths = [0.5*inch, 2.2*inch, 0.8*inch, 3*inch]
+            check_table = Table(table_data, colWidths=col_widths)
+            check_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#4f46e5')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 9),
+                ('FONTSIZE', (0, 1), (-1, -1), 8),
+                ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+                ('TOPPADDING', (0, 0), (-1, -1), 8),
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e5e7eb')),
+                ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9fafb')])
+            ]))
+            
+            story.append(check_table)
+            story.append(Spacer(1, 0.3*inch))
+        
         # Build PDF
         doc.build(story)
         return filepath
