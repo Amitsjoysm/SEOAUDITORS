@@ -1,0 +1,53 @@
+/* Apollo.io Professional Light Theme - Clean B2B Design */
+
+:root {
+  --light-primary: #6366f1;
+  --light-primary-dark: #4f46e5;
+  --light-secondary: #8b5cf6;
+  --light-accent: #06b6d4;
+  --light-success: #10b981;
+  --light-warning: #f59e0b;
+  --light-error: #ef4444;
+  --light-background: #ffffff;
+  --light-surface: #f9fafb;
+  --light-text-primary: #111827;
+  --light-text-secondary: #6b7280;
+  --light-border: #e5e7eb;
+}
+
+/* Remove all dark mode overrides */
+body {
+  background: #f9fafb !important;
+  color: #111827 !important;
+}
+
+/* Card styles */
+.card,
+.apollo-card {
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  color: #111827 !important;
+}
+
+/* Button styles */
+.btn-primary,
+.apollo-btn-primary {
+  background: #6366f1 !important;
+  color: white !important;
+}
+
+/* Navigation */
+nav,
+.navbar,
+.apollo-navbar {
+  background: white !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Footer */
+footer,
+.footer,
+.apollo-footer {
+  background: #111827 !important;
+  color: #9ca3af !important;
+}
