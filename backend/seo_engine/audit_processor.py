@@ -219,8 +219,13 @@ async def process_audit_enhanced(audit_id: str, website_url: str, max_pages: int
         if orchestrator_result.get('success'):
             synthesis = orchestrator_result.get('synthesis', {})
             if isinstance(synthesis, dict) and synthesis.get('synthesis'):
-                analytics_summary['orchestrator_insights'] = synthesis.get('synthesis')
-                analytics_summary['sub_agent_count'] = len(orchestrator_result.get('agent_analyses', {}))
+                synthesis_text = synthesis.get('synthesis')
+                # Only save if it's not an error message
+                if synthesis_text and not synthesis_text.startswith('Error generating'):
+                    analytics_summary['orchestrator_insights'] = synthesis_text
+                    analytics_summary['sub_agent_count'] = len(orchestrator_result.get('agent_analyses', {}))
+                else:
+                    logger.warning(f"Synthesis generation failed for audit {audit_id}, skipping orchestrator insights")
         
         audit.analytics_summary = analytics_summary
         audit.completed_at = datetime.now(timezone.utc)
