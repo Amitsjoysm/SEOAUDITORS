@@ -52,11 +52,17 @@ async def generate_enhanced_pdf_report(audit, results: List, reports_dir: Path) 
         # Executive Summary with REAL data
         story.append(Paragraph("📊 Executive Summary", styles['Heading2']))
         
+        # Safe access to attributes with defaults
+        overall_score = audit.overall_score or 0
+        potential_score = audit.potential_score or 0
+        score_grade = audit.score_grade or 'N/A'
+        score_gap = potential_score - overall_score
+        
         summary_text = f"""<b>Website:</b> {audit.website_url}<br/>
 <b>Audit Date:</b> {audit.created_at.strftime("%B %d, %Y")}<br/>
-<b>Current SEO Score:</b> {audit.overall_score:.1f}/100 (Grade: {audit.score_grade})<br/>
-<b>Potential Score:</b> {audit.potential_score:.1f}/100 (if all issues fixed)<br/>
-<b>Score Gap:</b> {audit.potential_score - audit.overall_score:.1f} points available<br/>
+<b>Current SEO Score:</b> {overall_score:.1f}/100 (Grade: {score_grade})<br/>
+<b>Potential Score:</b> {potential_score:.1f}/100 (if all issues fixed)<br/>
+<b>Score Gap:</b> {score_gap:.1f} points available<br/>
 <b>Pages Analyzed:</b> {audit.pages_crawled}<br/>
 <b>Total Checks:</b> {audit.total_checks_run}<br/>"""
         
