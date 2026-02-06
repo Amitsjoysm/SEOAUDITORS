@@ -11,7 +11,7 @@ import sys
 from typing import Dict, Any
 
 # Configuration
-BASE_URL = "https://codebase-sync-49.preview.emergentagent.com/api"
+BASE_URL = "https://report-fix-12.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 TEST_USER_EMAIL = "newuser@test.com"
