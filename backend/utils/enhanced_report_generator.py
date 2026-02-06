@@ -160,9 +160,16 @@ async def generate_enhanced_docx_report(audit, results: List, reports_dir: Path)
         # Executive Summary
         doc.add_heading('📊 Executive Summary', 1)
         doc.add_paragraph(f'Audit Date: {audit.created_at.strftime("%B %d, %Y")}')
-        doc.add_paragraph(f'Current SEO Score: {audit.overall_score:.1f}/100 (Grade: {audit.score_grade})')
-        doc.add_paragraph(f'Potential Score: {audit.potential_score:.1f}/100')
-        doc.add_paragraph(f'Score Improvement Available: {audit.potential_score - audit.overall_score:.1f} points')
+        
+        # Safe access to attributes with defaults
+        overall_score = audit.overall_score or 0
+        potential_score = audit.potential_score or 0
+        score_grade = audit.score_grade or 'N/A'
+        score_gap = potential_score - overall_score
+        
+        doc.add_paragraph(f'Current SEO Score: {overall_score:.1f}/100 (Grade: {score_grade})')
+        doc.add_paragraph(f'Potential Score: {potential_score:.1f}/100')
+        doc.add_paragraph(f'Score Improvement Available: {score_gap:.1f} points')
         
         # Real Lighthouse Data
         if audit.lighthouse_data:
