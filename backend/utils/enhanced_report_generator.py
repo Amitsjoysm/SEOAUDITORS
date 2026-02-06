@@ -125,12 +125,14 @@ async def generate_enhanced_pdf_report(audit, results: List, reports_dir: Path) 
         story.append(impact_table)
         story.append(Spacer(1, 0.3*inch))
         
-        # AI Orchestrator Insights (if available)
+        # AI Orchestrator Insights (if available and not an error)
         if audit.analytics_summary and audit.analytics_summary.get('orchestrator_insights'):
-            story.append(Paragraph("🤖 AI Orchestrator Strategic Insights", styles['Heading2']))
             insights = audit.analytics_summary.get('orchestrator_insights', '')
-            story.append(Paragraph(escape_html(insights[:1000]), styles['BodyText']))
-            story.append(Spacer(1, 0.3*inch))
+            # Only show if it's not an error message
+            if insights and not insights.startswith('Error generating'):
+                story.append(Paragraph("🤖 AI Orchestrator Strategic Insights", styles['Heading2']))
+                story.append(Paragraph(escape_html(insights[:1000]), styles['BodyText']))
+                story.append(Spacer(1, 0.3*inch))
         
         # Build PDF
         doc.build(story)
