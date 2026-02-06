@@ -10,7 +10,7 @@ import sys
 from typing import Dict, Any, Optional
 
 # Configuration
-BASE_URL = "https://report-fix-12.preview.emergentagent.com/api"
+BASE_URL = "https://insight-troubleshoot.preview.emergentagent.com/api"
 SUPERADMIN_EMAIL = "superadmin@test.com"
 SUPERADMIN_PASSWORD = "test123"
 TEST_USER_EMAIL = "testuser@mjseo.com"
