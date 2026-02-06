@@ -16,6 +16,7 @@ from typing import List
 from pathlib import Path
 from datetime import datetime
 import html
+import asyncio
 
 
 def escape_html(text: str) -> str:
