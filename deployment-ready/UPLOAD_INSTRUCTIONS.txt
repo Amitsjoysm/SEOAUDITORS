@@ -1,0 +1,67 @@
+================================================================================
+MJ SEO - UPLOAD INSTRUCTIONS
+================================================================================
+
+STEP 1: UPLOAD THIS FOLDER
+---------------------------
+Upload the entire "deployment-ready" folder to your server:
+
+Location: /www/wwwroot/MarketAutoMailer.mj.publicvm.com/
+
+You can use:
+- aaPanel File Manager
+- FTP/SFTP client (FileZilla, WinSCP)
+- SCP command: scp -r deployment-ready user@server:/www/wwwroot/MarketAutoMailer.mj.publicvm.com/
+
+
+STEP 2: SSH INTO YOUR SERVER
+-----------------------------
+ssh user@marketautomailer.mj.publicvm.com
+
+
+STEP 3: RUN DEPLOYMENT SCRIPTS
+-------------------------------
+cd /www/wwwroot/MarketAutoMailer.mj.publicvm.com/deployment-ready/scripts
+
+# Make scripts executable
+chmod +x *.sh
+
+# Run in order:
+./1-setup-database.sh       # Create PostgreSQL database
+./2-setup-backend.sh        # Setup Python backend
+# (Run ./3-build-frontend.sh on your LOCAL machine)
+./4-start-services.sh       # Start all services
+
+
+STEP 4: BUILD FRONTEND (ON YOUR LOCAL COMPUTER)
+------------------------------------------------
+On your local machine, navigate to:
+cd deployment-ready/scripts/
+
+Run:
+./3-build-frontend.sh
+
+Then upload the contents of:
+deployment-ready/frontend-source/build/*
+
+To server location:
+/www/wwwroot/MarketAutoMailer.mj.publicvm.com/
+
+
+STEP 5: ACCESS YOUR APPLICATION
+--------------------------------
+Open: https://marketautomailer.mj.publicvm.com
+
+Login with:
+Email: superadmin@test.com
+Password: test123
+
+⚠️ CHANGE PASSWORD IMMEDIATELY!
+
+
+NEED HELP?
+----------
+- Read: deployment-ready/README.md
+- Check: deployment-ready/docs/DEPLOYMENT_CHECKLIST.md
+
+================================================================================
