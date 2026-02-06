@@ -544,8 +544,13 @@ Keep total response under 400 words. Be specific and actionable."""
                 "generated_at": datetime.utcnow().isoformat()
             }
         except Exception as e:
-            logger.error(f"Synthesis error: {e}")
-            return {"synthesis": "Error generating synthesis", "error": str(e)}
+            logger.error(f"Synthesis generation failed: {e}", exc_info=True)
+            # Return error but mark as failed so it won't be saved
+            return {
+                "synthesis": f"Error generating synthesis: {str(e)}", 
+                "error": str(e),
+                "failed": True
+            }
     
     async def generate_content_brief(
         self,
