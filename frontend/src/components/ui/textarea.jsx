@@ -10,7 +10,12 @@ const Textarea = React.forwardRef(({ className, ...props }, ref) => {
         className
       )}
       ref={ref}
-      {...props} />
+      {...props}
+      style={{ 
+        color: '#111827',
+        backgroundColor: '#ffffff',
+        ...props.style 
+      }} />
   );
 })
 Textarea.displayName = "Textarea"

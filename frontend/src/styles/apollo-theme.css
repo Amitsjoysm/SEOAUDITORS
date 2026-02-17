@@ -132,12 +132,18 @@ body {
   font-size: 0.875rem;
   transition: all 0.15s ease;
   background: var(--apollo-white);
+  color: var(--apollo-gray-900) !important;
+}
+
+.apollo-input::placeholder {
+  color: var(--apollo-gray-400) !important;
 }
 
 .apollo-input:focus {
   outline: none;
   border-color: var(--apollo-primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  color: var(--apollo-gray-900) !important;
 }
 
 /* Apollo-style Badge */
