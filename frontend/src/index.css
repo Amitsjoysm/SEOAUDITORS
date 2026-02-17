@@ -80,6 +80,18 @@ code {
     body {
         @apply bg-background text-foreground;
     }
+    
+    /* Ensure all input elements have proper text color */
+    input,
+    textarea,
+    select {
+        color: #111827 !important;
+    }
+    
+    input::placeholder,
+    textarea::placeholder {
+        color: #9ca3af !important;
+    }
 }
 
 @layer base {
