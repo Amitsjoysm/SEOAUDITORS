@@ -1,0 +1,16 @@
+[Unit]
+Description=MJ SEO Backend Service
+After=network.target
+
+[Service]
+Type=simple
+User=www
+Group=www
+WorkingDirectory=/www/wwwroot/yourdomain.com/backend
+Environment="PATH=/www/wwwroot/yourdomain.com/backend/venv/bin"
+ExecStart=/www/wwwroot/yourdomain.com/backend/venv/bin/uvicorn server:app --host 127.0.0.1 --port 9599 --workers 4
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
